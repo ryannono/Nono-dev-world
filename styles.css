@@ -16,6 +16,9 @@ body{
 
 div{padding: 20px;}
 
+.left { padding-right: 10px; }
+.right { padding-left: 10px; }
+
 h1{
 	color: #ffffff;
 	font-size: 16px;
