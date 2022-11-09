@@ -16,7 +16,7 @@ void opening_statement(){
 
     printf("\nWelcome to my Doubling-Time Calculator (MDTC)\n");
     printf("\nThis calculator can compute the time to double");
-    printf("\nany some of money at a specific rate of return, or");
+    printf("\nany sum of money at a specific rate of return, or");
     printf("\nIt can tell you the rate of return needed for you to");
     printf("\ndouble your money in a specific amount of time\n\n");
 
@@ -122,6 +122,9 @@ int main() {
                 // years needed rounded
                 Ytime = Mtime / 12;
                 Months = fmod((Mtime), 12);
+
+                //print answer
+                printf("\n---------------------------------------------------------------\n");
                 printf("\nThe needed time to double your money at a %.2f%% rate of return is: %d years and %d months\n\n",input, Ytime, Months);
 
                 // see if user wants to restart
@@ -144,7 +147,9 @@ int main() {
 
                 //find yearly interest rate in full percentage
                 Yinterest = Minterest * 12 * 100;
-
+                
+                // print answer
+                printf("\n---------------------------------------------------------------\n");
                 printf("\nThe needed interest rate to double your money in %d years is: %.2f%%\n\n",(int)input, Yinterest);
 
                 // see if user wants to restart
