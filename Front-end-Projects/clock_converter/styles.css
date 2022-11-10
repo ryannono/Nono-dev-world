@@ -70,18 +70,18 @@ select{
     appearance:none;
 	background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
 	background-repeat: no-repeat;
-	background-position-x: 100%;
+	background-color: #fffcf9;
+	background-position-x: 35px;
   	background-position-y: 17px;
 	width: 60px;
 	box-sizing: content-box;
-	padding: 16px 25px 16px 10px;
+	padding: 16px 25px 16px 16px;
 	height: 100%;
 	color: #565450;
 	border-bottom: 1px solid #ffb23c;
 	border-top: 1px solid #ffb23c;
 	border-left: 0px solid transparent;
 	border-right: 0px solid transparent;
-
 }
 
 
