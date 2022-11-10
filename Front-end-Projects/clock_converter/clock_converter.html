@@ -19,9 +19,20 @@
             <h1>AM/PM To Military Time converter</h1>
             <h2>Please enter the time you would like to have converted to military: </h2>
             
+            <!--Get input-->
             <div id = "CTA">
-                <!--Get input-->
-                <input id = "main_input" placeholder = "hh:mm:ssAM or hh:mm:ssPM"><button id = "converter" >Convert Time</button>
+
+                <!--Input field-->
+                <input id = "main_input" placeholder = "hh:mm:ssAM or hh:mm:ssPM">
+
+                <!--selection options-->
+                <select id = "AM_PM">
+                        <option value = "AM">AM</option>
+                        <option value="PM">PM</option>
+                </select>
+                
+                <!--confirmation button-->
+                <button id = "converter" >Convert Time</button>
             </div>
 
             <!--result-->

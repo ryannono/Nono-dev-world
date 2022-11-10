@@ -1,17 +1,18 @@
 body{
+	box-sizing: border-box;
 	height: 100vh;
 	margin: 0px;
-	padding-top: 40px;
-	padding-left: 60px;
-	padding-right: 60px;
+	padding: 55px;
 	font-family: poppins;
 	background-image: linear-gradient(45deg, rgb(173, 73, 173), rgb(105, 184, 240));
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	color: #12100c;
+	overflow: hidden;
 }
 
 .flexbox_container {
+	margin: 0px;
 	display: flex;
 	justify-content: space-between;
 	padding: 90px;
@@ -46,19 +47,51 @@ p{
 	margin: 0px 0px 20px 0px;
 }
 
-#cta{
+.left{
+	max-width: 550px;
+	display: flex;
+	flex-direction: column;
+}
+
+#CTA{
+	height: 30px;
 	display: flex;
 	flex-direction: row;
-	row-gap: 0px;
+	row-gap: 10px;
+	align-items: stretch;
+	width: 500px;
+	margin-top: 30px;
+	margin-bottom: 60px;
 }
+
+select{
+	-moz-appearance:none; /* Firefox */
+    -webkit-appearance:none; /* Safari and Chrome */
+    appearance:none;
+	background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+	background-repeat: no-repeat;
+	background-position-x: 100%;
+  	background-position-y: 17px;
+	width: 60px;
+	box-sizing: content-box;
+	padding: 16px 25px 16px 10px;
+	height: 100%;
+	color: #565450;
+	border-bottom: 1px solid #ffb23c;
+	border-top: 1px solid #ffb23c;
+	border-left: 0px solid transparent;
+	border-right: 0px solid transparent;
+
+}
+
+
 
 button{
 	box-sizing: content-box;
-	width: 100px;
+	width: 200px;
 	padding: 15px 25px 15px 25px;
-	margin-top: 30px;
-	margin-left: -1px;
-	margin-bottom: 60px;
+	height: 100%;
+	margin-left: 0px;
 	border-color: transparent;
 	background-color: #ffb23c;
 	border-radius: 0px 20px 20px 0px;
@@ -68,20 +101,16 @@ button{
 
 input{
 	box-sizing: content-box;
-	width: 300px;
-	padding: 17px 25px 16px 25px;
+	height: 100%;
+	width: 400px;
+	padding: 16px 25px 16px 25px;
 	border-radius: 20px 0px 0px 20px;
 	border: 1px solid #ffb23c;
+	border-right: 0px;
 	box-shadow: transparent inset ;
 	color: #565450;
-	
 }
 
-.left{
-	max-width: 550px;
-	display: flex;
-	flex-direction: column;
-}
 
 .hero{
 	max-width: 500px;
