@@ -5,14 +5,17 @@
 // hh:mm:ssAM or hh:mm:ssPM 
 function timeConversion(s: string): string {
     
-    // If time was in pm
-    if (s[8] === 'P' && s[0] != '1'){
+    // If time was in pm and not 12
+    if (s[8] === 'P' && s.substring(0,2) != "12"){
 
         // build hours
         var hours: number = Number(s.substring(0,2));
 
         // increment by 12 for military time
         hours += 12;
+
+        // proper functionning check
+        console.log(hours);
 
         // create new string
         if (hours > 9){
@@ -21,7 +24,6 @@ function timeConversion(s: string): string {
         else{
             s = "0" + hours + s.substring(2);
         }
-
     }
 
     return s;
@@ -31,25 +33,26 @@ function timeConversion(s: string): string {
 // currenttly entered value as a string
 // requires id is a valid input field id
 function get_value(id: string): string {
-    var input = document.getElementById(id) as HTMLInputElement;
-    var time_value = input.value;
+    const input = document.getElementById(id) as HTMLInputElement;
+    const time_value = input.value;
 
     return time_value;
 }
 
-
+// gets input field value and asigns its
+// conversion to the heading
 function assign_value(): void{
     // converts time that is in the the input field
-    var time: string = timeConversion(get_value("main_input"));
+    const converted_time: string = timeConversion(get_value("main_input"));
 
     // assigns converted time to heading
-    var heading = document.getElementById("result_text");
-    heading.innerHTML = timeConversion(time);
+    const heading = document.getElementById("result_text");
+    heading.innerHTML = converted_time;
 }
 
 
 
-var button = document.getElementById("converter");
+const button = document.getElementById("converter");
 button.addEventListener("click", assign_value);
 
 

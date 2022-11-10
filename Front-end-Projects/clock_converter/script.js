@@ -3,12 +3,14 @@
 // requires s is a valid time string of format
 // hh:mm:ssAM or hh:mm:ssPM 
 function timeConversion(s) {
-    // If time was in pm
-    if (s[8] === 'P' && s[0] != '1') {
+    // If time was in pm and not 12
+    if (s[8] === 'P' && s.substring(0, 2) != "12") {
         // build hours
         var hours = Number(s.substring(0, 2));
         // increment by 12 for military time
         hours += 12;
+        // proper functionning check
+        console.log(hours);
         // create new string
         if (hours > 9) {
             s = hours + s.substring(2);
@@ -27,12 +29,14 @@ function get_value(id) {
     var time_value = input.value;
     return time_value;
 }
+// gets input field value and asigns its
+// conversion to the heading
 function assign_value() {
     // converts time that is in the the input field
-    var time = timeConversion(get_value("main_input"));
+    var converted_time = timeConversion(get_value("main_input"));
     // assigns converted time to heading
     var heading = document.getElementById("result_text");
-    heading.innerHTML = timeConversion(time);
+    heading.innerHTML = converted_time;
 }
 var button = document.getElementById("converter");
 button.addEventListener("click", assign_value);
