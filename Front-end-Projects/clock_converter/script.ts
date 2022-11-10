@@ -27,15 +27,36 @@ function timeConversion(s: string): string {
     return s;
 }
 
-function get_input(): string {
+// returns the passed input field id's
+// currenttly entered value as a string
+// requires id is a valid input field id
+function get_value(id: string): string {
+    var input = document.getElementById(id) as HTMLInputElement;
+    var time_value = input.value;
 
-    var user_input: string = prompt("Please enter the AM/PM time: ");
-    return user_input;
+    return time_value;
 }
 
 
-    var time: string = get_input();
+function assign_value(): void{
+    // converts time that is in the the input field
+    var time: string = timeConversion(get_value("main_input"));
+
+    // assigns converted time to heading
     var heading = document.getElementById("result_text");
     heading.innerHTML = timeConversion(time);
+}
+
+
+
+var button = document.getElementById("converter");
+button.addEventListener("click", assign_value);
+
+
+
+
+
+
+
     
 
