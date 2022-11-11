@@ -1,44 +1,56 @@
 body{
 	box-sizing: border-box;
-	height: 100vh;
-	margin: 0px;
-	padding: 55px;
+	min-height: 100vh;
+	padding: 50px 50px 50px 50px;
 	font-family: poppins;
 	background-image: linear-gradient(45deg, rgb(173, 73, 173), rgb(105, 184, 240));
 	background-color: black;
 	background-repeat: no-repeat;
-	background-size: 100% 100%;
+	background-size:cover;
 	color: #12100c;
-	overflow: auto;
 }
 
 .flexbox_container {
-	margin: 0px;
 	display: flex;
 	justify-content: space-between;
-	padding: 90px;
+	padding: 80px;
 	min-height: 500px;
 	flex-direction: row;
 	align-items: center;
-	flex: 1 1 auto;
 	background-color: #f5f4f4;
 	border-radius: 20px;
 	box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 h1 {
-	font-size: 60px;
+	font-size: 55px;
 	font-weight: 600;
+	line-height: 75px;
 	padding: 0px;
-	margin: 0px 0px 20px 0px;
+	margin: 0px 0px 10px 0px;
 }
 
 h2{
 	color: #565450;
-	font-size: 22px;
+	max-width: 90%;
+	font-size: 18px;
 	font-weight: 400;
 	padding: 0px;
-	margin: 0px 0px 20px 0px;
+	margin: 15px 0px 10px 0px;
+}
+
+h3{
+	margin: 15px 0px 0px 0px;
+	margin: 0px;
+	font-size: 35px;
+	font-weight: 400;
+}
+
+h4{
+	margin: 0px 0px 15px 0px;
+	font-size: 16px;
+	font-weight: 300;
+	color: #565450;
 }
 
 p{
@@ -54,6 +66,19 @@ p{
 	flex-direction: column;
 }
 
+.result_box{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 500px;
+	min-height: 200px;
+	background-color: #f9f9f9;
+	box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.03);
+	padding: 20px 0px 0px 0px;
+	border-radius: 20px 0px 20px 20px;
+}
+
 #CTA{
 	height: 30px;
 	display: flex;
@@ -62,7 +87,8 @@ p{
 	align-items: stretch;
 	width: 500px;
 	margin-top: 30px;
-	margin-bottom: 60px;
+	margin-bottom: 0px;
+	z-index: 1;
 }
 
 select{
@@ -113,7 +139,24 @@ input{
 }
 
 
-.hero{
+.hero1{
 	max-width: 500px;
+	padding-top: 20px;
+	margin-right: 60px;
 }
 
+.hero2{
+	max-width: 150px;
+	position: absolute;
+	top: 80px;
+  	right: 120px;
+	rotate: 5deg;
+}
+
+.hero3{
+	max-width: 80px;
+	position: absolute;
+	top: 600px;
+  	right: 120px;
+	rotate: 5deg;
+}

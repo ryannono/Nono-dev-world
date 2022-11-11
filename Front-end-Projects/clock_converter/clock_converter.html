@@ -19,32 +19,38 @@
             <h1>AM/PM To Military Time converter</h1>
             <h2>Please enter the time you would like to have converted to military: </h2>
             
-            <!--Get input-->
-            <div id = "CTA">
+            
+                <!--Get input-->
+                <div id = "CTA">
 
-                <!--Input field-->
-                <input id = "main_input" placeholder = "hh:mm:ssAM or hh:mm:ssPM">
+                    <!--Input field-->
+                    <input id = "main_input" placeholder = "HH : MM : SS" maxlength = "12">
 
-                <!--selection options-->
-                <select id = "AM_PM">
-                        <option value = "AM">AM</option>
-                        <option value= "PM">PM</option>
-                </select>
+                    <!--selection options-->
+                    <select id = "AM_PM">
+                            <option value = "AM">AM</option>
+                            <option value= "PM">PM</option>
+                    </select>
+                    
+                    <!--confirmation button-->
+                    <button id = "converter" >Convert Time</button>
+                </div>
+            
+                <div class="result_box">
                 
-                <!--confirmation button-->
-                <button id = "converter" >Convert Time</button>
-            </div>
+                    <!--Result-->
+                    <h4 id = "result_helper_text">Please enter a time for conversion</h4>
+                    <h3 id = "result_value">HH : MM : SS</h3>
 
-            <!--result-->
-            <div class="result_box">
-                <h4 id = "result_text">Please enter a time for conversion</h1>
-            </div>
+                </div>
             
         </div>
 
         <!--Right side of hero container-->
         <div class = "right">
-            <img class = "hero" src="Images/undraw_time_management_re_tk5w.svg">
+            <img class = "hero1" src="Images/undraw_time_management_re_tk5w.svg">
+            <img class = "hero2" src="Images/undraw_having_fun_re_vj4h.svg">
+            <img class = "hero3" src="Images/undraw_messaging_fun_re_vic9.svg">
         </div>
 
     </div>
