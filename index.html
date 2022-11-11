@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan's Clock converter</title>
+</head>
+<body>
+    <!--Hero-->
+    <div class = "flexbox_container">
+
+        <!--Left side of hero container-->
+        <div class = "left">
+    
+            <!--Intro text-->
+            <h1>AM/PM To Military Time converter</h1>
+            <h2>Please enter the time you would like to have converted to military: </h2>
+            
+            
+                <!--Get input-->
+                <div id = "CTA">
+
+                    <!--Input field-->
+                    <input id = "main_input" placeholder = "HH : MM : SS" maxlength = "12">
+
+                    <!--selection options-->
+                    <select id = "AM_PM">
+                            <option value = "AM">AM</option>
+                            <option value= "PM">PM</option>
+                    </select>
+                    
+                    <!--confirmation button-->
+                    <button id = "converter" >Convert Time</button>
+                </div>
+            
+                <div class="result_box">
+                
+                    <!--Result-->
+                    <h4 id = "result_helper_text">Please enter a time for conversion</h4>
+                    <h3 id = "result_value">HH : MM : SS</h3>
+
+                </div>
+            
+        </div>
+
+        <!--Right side of hero container-->
+        <div class = "right">
+            <img class = "hero1" src="Images/undraw_time_management_re_tk5w.svg">
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
