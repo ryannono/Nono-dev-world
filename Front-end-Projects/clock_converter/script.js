@@ -47,7 +47,7 @@ function get_value(id) {
     return time_value;
 }
 // gets input field value and asigns its
-// conversion to the heading
+// converted value to the military time element
 function assign_value() {
     // converts time that is in the the input field
     var intial_time = get_value("main_input");
@@ -64,6 +64,7 @@ function assign_value() {
         helper_text_element.innerHTML = intial_time + " " + am_pm_value + " in military time is:";
     }
 }
+// formats user input to: HH : MM : SS
 function auto_format() {
     var input_element = document.getElementById("main_input");
     var input_string = input_element.value;
@@ -81,11 +82,11 @@ function auto_format() {
     }
 }
 // auto format user input on keyup
+// when input is emptied update helper text
 var input = document.getElementById("main_input");
 input.addEventListener("keydown", auto_format);
 input.addEventListener("emptied", auto_format);
-// button event listner 
-// on click the value in the input field gets converted
+// on button click the value in the input field gets converted
 // and assigned to the heading
 var button = document.getElementById("converter");
 button.addEventListener("click", assign_value);

@@ -58,7 +58,7 @@ function get_value(id: string): string {
 }
 
 // gets input field value and asigns its
-// conversion to the heading
+// converted value to the military time element
 function assign_value(): void{
     // converts time that is in the the input field
     const intial_time: string = get_value("main_input");
@@ -79,6 +79,7 @@ function assign_value(): void{
     }
 }
 
+// formats user input to: HH : MM : SS
 function auto_format(): void{
     const input_element = document.getElementById("main_input") as HTMLInputElement;
     const input_string: string = input_element.value;
@@ -98,12 +99,12 @@ function auto_format(): void{
 }
 
 // auto format user input on keyup
+// when input is emptied update helper text
 const input = document.getElementById("main_input");
 input.addEventListener("keydown", auto_format);
 input.addEventListener("emptied", auto_format);
 
-// button event listner 
-// on click the value in the input field gets converted
+// on button click the value in the input field gets converted
 // and assigned to the heading
 const button = document.getElementById("converter");
 button.addEventListener("click", assign_value);

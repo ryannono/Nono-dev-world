@@ -111,7 +111,10 @@ select{
 	border-right: 0px solid transparent;
 }
 
-
+select:focus{
+	outline: 0;
+	background-color: #ffd99f9a;
+}
 
 button{
 	box-sizing: content-box;
