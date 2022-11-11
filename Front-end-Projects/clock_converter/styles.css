@@ -5,10 +5,11 @@ body{
 	padding: 55px;
 	font-family: poppins;
 	background-image: linear-gradient(45deg, rgb(173, 73, 173), rgb(105, 184, 240));
+	background-color: black;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 	color: #12100c;
-	overflow: hidden;
+	overflow: auto;
 }
 
 .flexbox_container {

@@ -4,28 +4,46 @@
 // requires s is a valid time string of format
 // hh:mm:ssAM or hh:mm:ssPM 
 function timeConversion(s: string): string {
+
+    // get selection element
+    const selection = document.getElementById("AM_PM") as HTMLSelectElement;
+
+    // count number of hour digits were inputted
+    var hour_digit_count: number = 0;
+    for (var i: number = 0 ; s[i] != ":" ; i++){
+        hour_digit_count++;
+    }
     
     // If time was in pm and not 12
-    if (s[8] === 'P' && s.substring(0,2) != "12"){
+    // convert the time to military
+    if (selection.value === "PM" && s.substring(0,2) != "12"){
 
         // build hours
-        var hours: number = Number(s.substring(0,2));
-
-        // increment by 12 for military time
-        hours += 12;
-
-        // proper functionning check
-        console.log(hours);
-
-        // create new string
-        if (hours > 9){
-            s = hours + s.substring(2);
+        if (hour_digit_count === 2) {
+            var hours: number = Number(s.substring(0,2));
         }
         else{
-            s = "0" + hours + s.substring(2);
+            var hours: number = Number(s.substring(0,1));
+        }
+
+        // increment by 12 for military time conversion
+        hours += 12;
+
+        // create new string
+        // if only 1 hour digit was entered
+        if (hour_digit_count != 2){
+            s = hours + s.substring(1);
+        }
+        // if a number with 
+        else{
+            s = hours + s.substring(2);
         }
     }
-
+    // fix user input if hours did not have 2 digits
+    else if (hour_digit_count != 2){
+        s = "0" + s;
+    }
+    
     return s;
 }
 
@@ -49,7 +67,6 @@ function assign_value(): void{
     const heading = document.getElementById("result_text");
     heading.innerHTML = converted_time;
 }
-
 
 
 const button = document.getElementById("converter");
