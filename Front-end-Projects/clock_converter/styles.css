@@ -141,22 +141,4 @@ input{
 
 .hero1{
 	max-width: 500px;
-	padding-top: 20px;
-	margin-right: 60px;
-}
-
-.hero2{
-	max-width: 150px;
-	position: absolute;
-	top: 80px;
-  	right: 120px;
-	rotate: 5deg;
-}
-
-.hero3{
-	max-width: 80px;
-	position: absolute;
-	top: 600px;
-  	right: 120px;
-	rotate: 5deg;
 }
