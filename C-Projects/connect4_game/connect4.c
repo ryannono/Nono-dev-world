@@ -272,9 +272,11 @@ void test_make_move(){
         '-','-','-','-','-','-','-',
         'X','-','-','-','-','-','-'};
 
+    // check the move was made
     assert(make_move(board, 0, 'X') == true);
-    bool same = true;
+    
     // check if the boards are the same
+    // (move made at the right spot)
     for (int r = 0; r < 6 ; r++){
         for (int c = 0; c < 7; c++){
             assert(board1[r][c] == board[r][c]);
@@ -297,8 +299,11 @@ void test_make_move(){
         'O','-','-','-','-','-','-',
         'X','-','-','-','-','-','-'};
 
-    assert(make_move(board2, 0, 'X') == false);    
+    // check the move was made
+    assert(make_move(board2, 0, 'X') == false); 
+
     // check if the boards are the same
+    // (move made at the right spot)
     for (int r = 0; r < 6 ; r++){
         for (int c = 0; c < 7; c++){
             assert(board2[r][c] == board3[r][c]);
