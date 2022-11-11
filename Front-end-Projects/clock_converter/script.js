@@ -82,7 +82,7 @@ function auto_format() {
 }
 // auto format user input on keyup
 var input = document.getElementById("main_input");
-input.addEventListener("keyup", auto_format);
+input.addEventListener("keydown", auto_format);
 input.addEventListener("emptied", auto_format);
 // button event listner 
 // on click the value in the input field gets converted

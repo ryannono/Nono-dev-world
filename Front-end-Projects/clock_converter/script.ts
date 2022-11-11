@@ -99,7 +99,7 @@ function auto_format(): void{
 
 // auto format user input on keyup
 const input = document.getElementById("main_input");
-input.addEventListener("keyup", auto_format);
+input.addEventListener("keydown", auto_format);
 input.addEventListener("emptied", auto_format);
 
 // button event listner 
