@@ -83,7 +83,7 @@ function valid_input_check(n: string): boolean{
     input_element.style.transition = "all 0.5s";
     input_element.style.transitionTimingFunction = "ease";
 
-    var temp_n:number = Number(n);
+    
 
     
 
@@ -93,10 +93,10 @@ function valid_input_check(n: string): boolean{
     if (125959 >= Number(n) && Number(n) >= 10000 && intial_len >= 11) {
         input_element.style.backgroundColor = "white";
         
-        
+        var temp_n:number = Number(n);
         // check minutes and seconds are below 60
         while (temp_n > 0){
-            if (((temp_n % 100)/10) > 5){
+            if (Math.floor((temp_n % 100)/10) > 5){
                 input_element.style.backgroundColor = "#ff5656";
                 console.log("invalid input: " + n);
                 return false
