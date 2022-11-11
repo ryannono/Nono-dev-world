@@ -67,12 +67,28 @@ function valid_input_check(n) {
     var input_element = document.getElementById("main_input");
     input_element.style.transition = "all 0.5s";
     input_element.style.transitionTimingFunction = "ease";
+    var temp_n = Number(n);
     // if n is now a number between 0 and 125959 (12:59:59)
     // then the input was valid
     // colour the input field based on the result
-    if (125959 >= Number(n) && Number(n) >= 0 && intial_len >= 11) {
+    if (125959 >= Number(n) && Number(n) >= 10000 && intial_len >= 11) {
         input_element.style.backgroundColor = "white";
+        // check minutes and seconds are below 60
+        while (temp_n > 0) {
+            if (((temp_n % 100) / 10) > 5) {
+                input_element.style.backgroundColor = "#ff5656";
+                console.log("invalid input: " + n);
+                return false;
+            }
+            temp_n /= 100;
+        }
+        console.log("Valid input: " + Number(n));
         return true;
+    }
+    else if (Number(n) < 10000 && intial_len >= 11) {
+        input_element.style.backgroundColor = "#ff5656";
+        console.log("invalid input: " + n);
+        return false;
     }
     else if (125959 >= Number(n) && Number(n) >= 0) {
         input_element.style.backgroundColor = "white";
