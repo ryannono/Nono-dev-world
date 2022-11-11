@@ -16,7 +16,7 @@ function timeConversion(s: string): string {
     
     // If time was in pm and not 12
     // convert the time to military
-    if (selection.value === "PM" && s.substring(0,2) != "12"){
+    if (selection.value === "PM"){
 
         // build hours
         if (hour_digit_count === 2) {
@@ -29,9 +29,12 @@ function timeConversion(s: string): string {
         // increment by 12 for military time conversion
         hours += 12;
 
+        if (hours === 24){
+            s = "00" + s.substring(2);
+        }
         // create new string
         // if only 1 hour digit was entered
-        if (hour_digit_count != 2){
+        else if (hour_digit_count != 2){
             s = hours + s.substring(1);
         }
         // if a number with 
