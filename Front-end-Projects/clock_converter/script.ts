@@ -103,6 +103,7 @@ function valid_input_check(n: string): boolean{
 // gets input field value and asigns its
 // converted value to the military time element
 function assign_value(): void{
+    
     // converts time that is in the the input field
     const intial_time: string = get_value("main_input");
     const am_pm_element = document.getElementById("AM_PM") as HTMLInputElement;
@@ -123,7 +124,7 @@ function assign_value(): void{
 }
 
 // formats user input to: HH : MM : SS
-    function auto_format(): void{
+function auto_format(): void{
     const input_element = document.getElementById("main_input") as HTMLInputElement;
     const input_string: string = input_element.value;
     const len: number = input_string.length;
