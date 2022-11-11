@@ -46,6 +46,42 @@ function get_value(id) {
     var time_value = input.value;
     return time_value;
 }
+// returns true if the user input was comprised of only 
+// "", " ", ":", and integers
+function valid_input_check(n) {
+    var intial_len = n.length;
+    // remove all the extra letters in the input
+    // 11 : 11 : 11 -> 111111
+    // only remove 2 colons
+    // only remove 4 spaces
+    // if there are more then the input was invalid
+    for (var spa_rep_count = 0; spa_rep_count < 4; spa_rep_count++) {
+        n = n.replace(/\s/, '');
+    }
+    for (var col_rep_count = 0; col_rep_count < 2; col_rep_count++) {
+        n = n.replace(':', '');
+    }
+    var input_element = document.getElementById("main_input");
+    input_element.style.transition = "all 0.5s";
+    input_element.style.transitionTimingFunction = "ease";
+    // if n is now a number between 0 and 125959 (12:59:59)
+    // then the input was valid
+    // colour the input field based on the result
+    if (125959 >= Number(n) && Number(n) >= 0 && intial_len >= 11) {
+        input_element.style.backgroundColor = "white";
+        return true;
+    }
+    else if (125959 >= Number(n) && Number(n) >= 0) {
+        input_element.style.backgroundColor = "white";
+        console.log("invalid input: " + n);
+        return false;
+    }
+    else {
+        input_element.style.backgroundColor = "#ff5656";
+        console.log("invalid input: " + n);
+        return false;
+    }
+}
 // gets input field value and asigns its
 // converted value to the military time element
 function assign_value() {
@@ -54,7 +90,7 @@ function assign_value() {
     var am_pm_element = document.getElementById("AM_PM");
     var am_pm_value = am_pm_element.value;
     var converted_time;
-    if (intial_time.length === 12) {
+    if (valid_input_check(intial_time)) {
         converted_time = timeConversion(intial_time);
         // assigns converted time to heading
         var military_time_element = document.getElementById("result_value");
@@ -85,7 +121,9 @@ function auto_format() {
 // when input is emptied update helper text
 var input = document.getElementById("main_input");
 input.addEventListener("keydown", auto_format);
+input.addEventListener("keyup", function () { return valid_input_check(input.value); });
 input.addEventListener("emptied", auto_format);
+input.addEventListener("emptied", function () { return valid_input_check(input.value); });
 // on button click the value in the input field gets converted
 // and assigned to the heading
 var button = document.getElementById("converter");

@@ -98,11 +98,11 @@ select{
 	background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
 	background-repeat: no-repeat;
 	background-color: #fffcf9;
-	background-position-x: 35px;
-  	background-position-y: 17px;
+	background-position-x: 42px;
+  	background-position-y: 18px;
 	width: 60px;
 	box-sizing: content-box;
-	padding: 16px 25px 16px 16px;
+	padding: 16px 25px 16px 20px;
 	height: 100%;
 	color: #565450;
 	border-bottom: 1px solid #ffb23c;
@@ -138,7 +138,9 @@ input{
 	border: 1px solid #ffb23c;
 	border-right: 0px;
 	box-shadow: transparent inset ;
+	font-size: 20px;
 	color: #565450;
+	background-color: white;
 }
 
 
