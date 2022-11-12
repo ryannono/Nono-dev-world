@@ -202,7 +202,6 @@ function auto_format(input: HTMLInputElement): void{
 
 
 
-
 // get DOM input and select elements
 const input = document.getElementById("main_input") as HTMLInputElement;
 const select = document.getElementById("AM_PM") as HTMLSelectElement;
