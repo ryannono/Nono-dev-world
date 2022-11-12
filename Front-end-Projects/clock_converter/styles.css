@@ -1,7 +1,11 @@
 body{
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	margin: 0px;
 	box-sizing: border-box;
 	min-height: 100vh;
-	padding: 50px 50px 50px 50px;
+	padding: 20px;
 	font-family: poppins;
 	background-image: linear-gradient(45deg, rgb(173, 73, 173), rgb(105, 184, 240));
 	background-color: black;
@@ -12,10 +16,10 @@ body{
 
 .flexbox_container {
 	display: flex;
+	align-self: center;
 	justify-content: space-between;
-	padding: 80px;
-	min-height: 500px;
-	flex-direction: row;
+	padding: 50px 30px 70px 30px;
+	flex-direction: column;
 	align-items: center;
 	background-color: #f5f4f4;
 	border-radius: 20px;
@@ -23,16 +27,14 @@ body{
 }
 
 h1 {
-	font-size: 55px;
-	font-weight: 600;
-	line-height: 75px;
+	text-align: center;
 	padding: 0px;
-	margin: 0px 0px 10px 0px;
+	margin: 0px 0px 20px 0px;
+
 }
 
 h2{
 	color: #565450;
-	max-width: 90%;
 	font-size: 18px;
 	font-weight: 400;
 	padding: 0px;
@@ -61,31 +63,33 @@ p{
 }
 
 .left{
-	max-width: 550px;
+	max-width: 100%;
 	display: flex;
 	flex-direction: column;
 }
 
+.right{
+	display: none;
+}
+
 .result_box{
+	margin-top: -20px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	width: 500px;
 	min-height: 200px;
 	background-color: #f9f9f9;
 	box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.03);
-	padding: 20px 0px 0px 0px;
 	border-radius: 20px 0px 20px 20px;
 }
 
 #CTA{
-	height: 30px;
+	height: 70px;
+	width: 100%;
 	display: flex;
 	flex-direction: row;
 	row-gap: 10px;
-	align-items: stretch;
-	width: 500px;
 	margin-top: 30px;
 	margin-bottom: 0px;
 	z-index: 1;
@@ -98,12 +102,13 @@ select{
 	background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
 	background-repeat: no-repeat;
 	background-color: #fffcf9;
-	background-position-x: 42px;
-  	background-position-y: 18px;
-	width: 60px;
+	background-position-x: 35px;
+  	background-position-y: 50%;
+	width: 10%;
+	min-width: 30px;
+	max-width: 60px;
 	box-sizing: content-box;
-	padding: 16px 25px 16px 20px;
-	height: 100%;
+	padding: 10px 15px 10px 15px;
 	color: #565450;
 	border-bottom: 1px solid #ffb23c;
 	border-top: 1px solid #ffb23c;
@@ -118,9 +123,8 @@ select:focus{
 
 button{
 	box-sizing: content-box;
-	width: 200px;
-	padding: 15px 25px 15px 25px;
-	height: 100%;
+	width: 35%;
+	padding: 10px 15px 10px 15px;
 	margin-left: 0px;
 	border-color: transparent;
 	background-color: #ffb23c;
@@ -131,19 +135,78 @@ button{
 
 input{
 	box-sizing: content-box;
-	height: 100%;
-	width: 400px;
-	padding: 16px 25px 16px 25px;
+	width: 50%;
+	padding: 10px 25px 10px 25px;
 	border-radius: 20px 0px 0px 20px;
 	border: 1px solid #ffb23c;
 	border-right: 0px;
 	box-shadow: transparent inset ;
-	font-size: 20px;
+	font-size: 18px;
 	color: #565450;
 	background-color: white;
 }
 
 
 .hero1{
-	max-width: 500px;
+	display: none;
+	max-width: 150px;
+}
+
+@media (min-width: 1400px) {
+
+	body {
+		padding: 50px;
+	}
+
+	.flexbox_container{
+		width: 100%;
+		padding: 80px;
+		flex-direction: row;
+		min-height: 500px;
+	}
+	
+	
+	h1 {
+		text-align: left;
+		margin: 0px 0px 10px 0px;
+		font-size: 55px;
+		font-weight: 600;
+		line-height: 75px;
+	}
+
+	h2 {
+		max-width: 90%;
+	}
+
+	.left {
+		max-width: 550px;
+	}
+
+	.right {
+		display: block;
+	}
+
+	.result_box {
+		width: 500px;
+		padding: 0px 0px 0px 0px;
+	}
+
+	#CTA {
+		width: 500px;
+	}
+
+	button {
+		width: 200px;
+	}
+
+	input {
+		width: 400px;
+		font-size: 20px;
+		padding: 16px 25px 16px 25px;
+	}
+
+	.hero1 {
+		display: block;
+		max-width: 500px;
+	}
 }
