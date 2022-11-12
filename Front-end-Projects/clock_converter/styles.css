@@ -26,6 +26,12 @@ body{
 	box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.15);
 }
 
+.left{
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 h1 {
 	text-align: center;
 	padding: 0px;
@@ -41,49 +47,6 @@ h2{
 	margin: 15px 0px 10px 0px;
 }
 
-h3{
-	margin: 15px 0px 0px 0px;
-	margin: 0px;
-	font-size: 35px;
-	font-weight: 400;
-}
-
-h4{
-	margin: 0px 0px 15px 0px;
-	font-size: 16px;
-	font-weight: 300;
-	color: #565450;
-}
-
-p{
-	color: rgb(107, 106, 106);
-	font-size: 15px;
-	padding: 0px;
-	margin: 0px 0px 20px 0px;
-}
-
-.left{
-	max-width: 100%;
-	display: flex;
-	flex-direction: column;
-}
-
-.right{
-	display: none;
-}
-
-.result_box{
-	margin-top: -20px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 200px;
-	background-color: #f9f9f9;
-	box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.03);
-	border-radius: 20px 0px 20px 20px;
-}
-
 #CTA{
 	height: 70px;
 	width: 100%;
@@ -93,6 +56,20 @@ p{
 	margin-top: 30px;
 	margin-bottom: 0px;
 	z-index: 1;
+}
+
+input{
+	transition: all 0.3s;
+	box-sizing: content-box;
+	width: 50%;
+	padding: 10px 25px 10px 25px;
+	border-radius: 20px 0px 0px 20px;
+	border: 1px solid #ffb23c;
+	border-right: 0px;
+	box-shadow: transparent inset ;
+	font-size: 18px;
+	color: #565450;
+	background-color: white;
 }
 
 select{
@@ -118,7 +95,6 @@ select{
 	border-right: 0px solid transparent;
 }
 
-
 button{
 	box-sizing: content-box;
 	width: 35%;
@@ -131,18 +107,34 @@ button{
 	font-weight: 600;
 }
 
-input{
-	transition: all 0.3s;
-	box-sizing: content-box;
-	width: 50%;
-	padding: 10px 25px 10px 25px;
-	border-radius: 20px 0px 0px 20px;
-	border: 1px solid #ffb23c;
-	border-right: 0px;
-	box-shadow: transparent inset ;
-	font-size: 18px;
+.result_box{
+	margin-top: -20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 200px;
+	background-color: #f9f9f9;
+	box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.03);
+	border-radius: 20px 0px 20px 20px;
+}
+
+h3{
+	margin: 15px 0px 0px 0px;
+	margin: 0px;
+	font-size: 35px;
+	font-weight: 400;
+}
+
+h4{
+	margin: 0px 0px 15px 0px;
+	font-size: 16px;
+	font-weight: 300;
 	color: #565450;
-	background-color: white;
+}
+
+.right{
+	display: none;
 }
 
 .hero1{
@@ -162,7 +154,10 @@ input{
 		flex-direction: row;
 		min-height: 500px;
 	}
-	
+
+	.left {
+		max-width: 550px;
+	}
 	
 	h1 {
 		text-align: left;
@@ -176,12 +171,18 @@ input{
 		max-width: 90%;
 	}
 
-	.left {
-		max-width: 550px;
+	#CTA {
+		width: 500px;
 	}
 
-	.right {
-		display: block;
+	input {
+		width: 400px;
+		font-size: 20px;
+		padding: 16px 25px 16px 25px;
+	}
+
+	button {
+		width: 200px;
 	}
 
 	.result_box {
@@ -189,18 +190,8 @@ input{
 		padding: 0px 0px 0px 0px;
 	}
 
-	#CTA {
-		width: 500px;
-	}
-
-	button {
-		width: 200px;
-	}
-
-	input {
-		width: 400px;
-		font-size: 20px;
-		padding: 16px 25px 16px 25px;
+	.right {
+		display: block;
 	}
 
 	.hero1 {
