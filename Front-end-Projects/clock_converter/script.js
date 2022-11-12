@@ -16,7 +16,7 @@ function timeConversion(input_value, select_value) {
         // the amount of digits initially entered 
         // Ex. input = 12:00:00 get substring from 0 to 2 (12)
         // Ex. input = 1:00:00 get substring from 0 to 1 (1)
-        var input_hours;
+        var input_hours = void 0;
         if (hour_digit_count === 2) {
             input_hours = Number(input_value.substring(0, 2));
         }
@@ -78,7 +78,7 @@ function valid_input_check(input, select) {
             // for regular time is: 01. For minutes and seconds it is: 00
             // therefore the smallest acceptable input is 10000 or 1:00:00
             if (input_val_num >= 10000) {
-                // initialise temp variable for manipulation
+                // initialise temp letiable for manipulation
                 var temp_n = input_val_num;
                 // checks minutes and seconds are below 60
                 // if they are not return false
@@ -159,12 +159,17 @@ function assign_value(input, select) {
 function auto_format(input) {
     var input_value = input.value;
     var input_len = input_value.length;
-    // initialise the variable that will house
+    // initialise the letiable that will house
     // the formated version of the input
     var new_value;
     // when length of input is 3 or 8 insert " : " styling to input field
     if (input_len === 3 || input_len === 8) {
-        new_value = input_value.substring(0, input_len - 1) + " : " + input_value[input_len - 1];
+        if (input_value[input_len - 1] === ":") {
+            new_value = input_value.substring(0, input_len - 1) + " " + input_value[input_len - 1] + " ";
+        }
+        else {
+            new_value = input_value.substring(0, input_len - 1) + " : " + input_value[input_len - 1];
+        }
         input.value = new_value;
     }
 }
@@ -190,7 +195,7 @@ input.addEventListener("blur", function () {
     select.style.borderRight = "0px solid transparent";
 });
 // auto format, and check user input validity on keydown and keyup respectively
-input.addEventListener("keydown", function () { return auto_format(input); });
+input.addEventListener("keypress", function () { return auto_format(input); });
 input.addEventListener("keyup", function () { return valid_input_check(input, select); });
 // when input is emptied run input check to see re-colour input box
 input.addEventListener("emptied", function () { return valid_input_check(input, select); });

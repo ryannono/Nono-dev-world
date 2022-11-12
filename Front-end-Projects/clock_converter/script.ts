@@ -6,8 +6,8 @@
 function timeConversion(input_value: string, select_value:string): string {
 
     // count number of hour digits were inputted
-    var hour_digit_count: number = 0;
-    for (var i: number = 0 ; input_value[i] != " " ; i++){
+    let hour_digit_count: number = 0;
+    for (let i: number = 0 ; input_value[i] != " " ; i++){
         hour_digit_count++;
     }
     
@@ -20,7 +20,7 @@ function timeConversion(input_value: string, select_value:string): string {
         // the amount of digits initially entered 
         // Ex. input = 12:00:00 get substring from 0 to 2 (12)
         // Ex. input = 1:00:00 get substring from 0 to 1 (1)
-        var input_hours: number;
+        let input_hours: number;
 
         if (hour_digit_count === 2) {
             input_hours = Number(input_value.substring(0,2));
@@ -62,7 +62,7 @@ function timeConversion(input_value: string, select_value:string): string {
 // - the minutes and second sections of the input are < 60
 function valid_input_check(input: HTMLInputElement, select: HTMLSelectElement): boolean{
     
-    var input_value: string = input.value;
+    let input_value: string = input.value;
     const input_len: number = input_value.length;
 
     // remove all the extra letters in the input
@@ -70,15 +70,15 @@ function valid_input_check(input: HTMLInputElement, select: HTMLSelectElement): 
     // only remove 2 colons
     // only remove 4 spaces
     // if there are more then the input was invalid
-    for ( var spa_rep_count: number = 0; spa_rep_count < 4 ; spa_rep_count++){
+    for ( let spa_rep_count: number = 0; spa_rep_count < 4 ; spa_rep_count++){
         input_value = input_value.replace(/\s/, '');
     }
-    for (var col_rep_count:number = 0; col_rep_count < 2 ; col_rep_count++){
+    for (let col_rep_count:number = 0; col_rep_count < 2 ; col_rep_count++){
         input_value = input_value.replace(':', '');
     }
 
     // get numerical value of parsed/reworked user input
-    var input_val_num:number = Number(input_value);
+    let input_val_num:number = Number(input_value);
 
     // check input was a number smaller than the 
     // max regular time (12:59:59 or 125959)
@@ -94,8 +94,8 @@ function valid_input_check(input: HTMLInputElement, select: HTMLSelectElement): 
             // therefore the smallest acceptable input is 10000 or 1:00:00
             if (input_val_num >= 10000){
 
-                // initialise temp variable for manipulation
-                var temp_n:number = input_val_num;
+                // initialise temp letiable for manipulation
+                let temp_n:number = input_val_num;
 
                 // checks minutes and seconds are below 60
                 // if they are not return false
@@ -185,13 +185,18 @@ function auto_format(input: HTMLInputElement): void{
     const input_value: string = input.value;
     const input_len: number = input_value.length;
 
-    // initialise the variable that will house
+    // initialise the letiable that will house
     // the formated version of the input
-    var new_value: string;
+    let new_value: string;
 
     // when length of input is 3 or 8 insert " : " styling to input field
     if (input_len === 3 || input_len === 8){
-        new_value = input_value.substring(0, input_len-1) + " : " + input_value[input_len-1];
+        if (input_value[input_len-1] === ":") {
+            new_value = input_value.substring(0,input_len-1) + " " + input_value[input_len-1] + " ";
+        }
+        else{
+            new_value = input_value.substring(0, input_len-1) + " : " + input_value[input_len-1];
+        }
         input.value = new_value;
     }
 }
@@ -229,7 +234,7 @@ input.addEventListener("blur", () => {
 });
 
 // auto format, and check user input validity on keydown and keyup respectively
-input.addEventListener("keydown", () => auto_format(input));
+input.addEventListener("keypress", () => auto_format(input));
 input.addEventListener("keyup", () => valid_input_check(input,select));
 
 // when input is emptied run input check to see re-colour input box
