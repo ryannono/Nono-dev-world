@@ -1,150 +1,202 @@
+// functions() start /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // timeConversion converts a AM/PM time
 // to its military equivalent
 // requires s is a valid time string of format
 // hh:mm:ssAM or hh:mm:ssPM 
-function timeConversion(s) {
-    // get selection element
-    var selection = document.getElementById("AM_PM");
+function timeConversion(input_value, select_value) {
     // count number of hour digits were inputted
     var hour_digit_count = 0;
-    for (var i = 0; s[i] != " "; i++) {
+    for (var i = 0; input_value[i] != " "; i++) {
         hour_digit_count++;
     }
-    // If time was in pm and not 12
+    // If time was in pm
     // convert the time to military
-    if (selection.value === "PM") {
-        // build hours
+    if (select_value === "PM") {
+        // get hours number
+        // substring slice to get depends on 
+        // the amount of digits initially entered 
+        // Ex. input = 12:00:00 get substring from 0 to 2 (12)
+        // Ex. input = 1:00:00 get substring from 0 to 1 (1)
+        var input_hours;
         if (hour_digit_count === 2) {
-            var hours = Number(s.substring(0, 2));
+            input_hours = Number(input_value.substring(0, 2));
         }
         else {
-            var hours = Number(s.substring(0, 1));
+            input_hours = Number(input_value.substring(0, 1));
         }
-        // increment by 12 for military time conversion
-        hours += 12;
-        if (hours === 24) {
-            s = "00" + s.substring(2);
+        // convert the hours to millitary time by
+        // incrementing the number by 12
+        input_hours += 12;
+        // if after incrementring the hours number === 24
+        // then change it to 00
+        if (input_hours === 24) {
+            input_value = "00" + input_value.substring(2);
         }
-        // create new string
         // if only 1 hour digit was entered
         else if (hour_digit_count != 2) {
-            s = hours + s.substring(1);
+            input_value = input_hours + input_value.substring(1);
         }
-        // if a number with 
+        // if 2 hour digit2 were entered
         else {
-            s = hours + s.substring(2);
+            input_value = input_hours + input_value.substring(2);
         }
     }
     // fix user input if hours did not have 2 digits
     else if (hour_digit_count != 2) {
-        s = "0" + s;
+        input_value = "0" + input_value;
     }
-    return s;
+    return input_value;
 }
-// returns the passed input field id's
-// currenttly entered value as a string
-// requires id is a valid input field id
-function get_value(id) {
-    var input = document.getElementById(id);
-    var time_value = input.value;
-    return time_value;
-}
-// returns true if the user input was comprised of only 
-// "", " ", ":", and integers
-function valid_input_check(n) {
-    var intial_len = n.length;
+// valid_input_check returns true if the user input was:
+// - a number smaller than the max regular time (12:59:59 or 125959)
+// - user inputed enough characters (>=11)
+// - the hours section of the input is >= 01
+// - the minutes and second sections of the input are < 60
+function valid_input_check(input, select) {
+    var input_value = input.value;
+    var input_len = input_value.length;
     // remove all the extra letters in the input
     // 11 : 11 : 11 -> 111111
     // only remove 2 colons
     // only remove 4 spaces
     // if there are more then the input was invalid
     for (var spa_rep_count = 0; spa_rep_count < 4; spa_rep_count++) {
-        n = n.replace(/\s/, '');
+        input_value = input_value.replace(/\s/, '');
     }
     for (var col_rep_count = 0; col_rep_count < 2; col_rep_count++) {
-        n = n.replace(':', '');
+        input_value = input_value.replace(':', '');
     }
-    var input_element = document.getElementById("main_input");
-    input_element.style.transition = "all 0.5s";
-    input_element.style.transitionTimingFunction = "ease";
-    // if n is now a number between 0 and 125959 (12:59:59)
-    // then the input was valid
-    // colour the input field based on the result
-    if (125959 >= Number(n) && Number(n) >= 10000 && intial_len >= 11) {
-        input_element.style.backgroundColor = "white";
-        var temp_n = Number(n);
-        // check minutes and seconds are below 60
-        while (temp_n > 0) {
-            if (Math.floor((temp_n % 100) / 10) > 5) {
-                input_element.style.backgroundColor = "#ff5656";
-                console.log("invalid input: " + n);
+    // get numerical value of parsed/reworked user input
+    var input_val_num = Number(input_value);
+    // check input was a number smaller than the 
+    // max regular time (12:59:59 or 125959)
+    if (125959 >= input_val_num && input_val_num >= 0) {
+        // check user has inputed enough characters 
+        // to constitute a full time input
+        if (input_len >= 11) {
+            // check the time inputted is a valid regular time value
+            // the smallest number you can have in the hours section
+            // for regular time is: 01. For minutes and seconds it is: 00
+            // therefore the smallest acceptable input is 10000 or 1:00:00
+            if (input_val_num >= 10000) {
+                // initialise temp variable for manipulation
+                var temp_n = input_val_num;
+                // checks minutes and seconds are below 60
+                // if they are not return false
+                while (temp_n > 0) {
+                    if (Math.floor((temp_n % 100) / 10) > 5) {
+                        input.style.backgroundColor = "#ff5656";
+                        select.style.backgroundColor = "#ff5656";
+                        console.log("invalid input: " + input_value + "minutes or seconds are too high");
+                        return false;
+                    }
+                    temp_n /= 100;
+                }
+                // if minutes and seconds are below 60
+                // return true
+                input.style.backgroundColor = "white";
+                select.style.backgroundColor = "white";
+                console.log("Valid input");
+                return true;
+            }
+            // if the full time has been entered and the 
+            // value is too low to be a valid time
+            // return false and colour input box red
+            else {
+                input.style.backgroundColor = "#ff5656";
+                select.style.backgroundColor = "#ff5656";
+                console.log("invalid input, number to low for regular time: " + input_value + "becomes" + input_val_num);
                 return false;
             }
-            temp_n /= 100;
         }
-        console.log("Valid input: " + Number(n));
-        return true;
+        // if the input field is empty colour select and input white
+        // but return false
+        else if (input_value === '') {
+            input.style.backgroundColor = "white";
+            select.style.backgroundColor = "white";
+        }
+        // if the input is a number but the user hasn't 
+        // entered enough digit for a full time yet 
+        // keep input box white but return false
+        else {
+            input.style.backgroundColor = "white";
+            select.style.backgroundColor = "white";
+            console.log("invalid input full time hasn't be entered yet: " + input_value + "becomes" + input_val_num);
+            return false;
+        }
     }
-    else if (Number(n) < 10000 && intial_len >= 11) {
-        input_element.style.backgroundColor = "#ff5656";
-        console.log("invalid input: " + n);
-        return false;
-    }
-    else if (125959 >= Number(n) && Number(n) >= 0) {
-        input_element.style.backgroundColor = "white";
-        console.log("invalid input: " + n);
-        return false;
-    }
+    // If the input is not a number or is out of range (n > 125959)
+    // color input box red and return false
     else {
-        input_element.style.backgroundColor = "#ff5656";
-        console.log("invalid input: " + n);
+        input.style.backgroundColor = "#ff5656";
+        select.style.backgroundColor = "#ff5656";
+        console.log("invalid input: " + input_value);
         return false;
     }
 }
-// gets input field value and asigns its
-// converted value to the military time element
-function assign_value() {
-    // converts time that is in the the input field
-    var intial_time = get_value("main_input");
-    var am_pm_element = document.getElementById("AM_PM");
-    var am_pm_value = am_pm_element.value;
-    var converted_time;
-    if (valid_input_check(intial_time)) {
-        converted_time = timeConversion(intial_time);
-        // assigns converted time to heading
+// assign_value gets input field value
+// checks if it valid by calling valid_input_check on it
+// if valid it converts it by calling timeConversion on the input
+// then it assigns that input to the DOM military_time_element
+// lastly it updates the DOM helper_text_element to present the military time
+function assign_value(input, select) {
+    var input_value = input.value;
+    var select_value = select.value;
+    // if the input was valid
+    // convert it by calling timeConversion on the input time
+    // and assign the new converted value to the military_time_element
+    if (valid_input_check(input, select)) {
+        var converted_input_value = timeConversion(input_value, select_value);
+        // assigns converted time to military time heading element
+        // and override helper text element to give context to the conversion
+        // xx : xx : xx xx is xx : xx : xx in military time
         var military_time_element = document.getElementById("result_value");
-        military_time_element.innerHTML = converted_time;
-        // get rid of helper text
+        military_time_element.innerHTML = converted_input_value;
         var helper_text_element = document.getElementById("result_helper_text");
-        helper_text_element.innerHTML = intial_time + " " + am_pm_value + " in military time is:";
+        helper_text_element.innerHTML = input_value + " " + select_value + " in military time is:";
     }
 }
-// formats user input to: HH : MM : SS
-function auto_format() {
-    var input_element = document.getElementById("main_input");
-    var input_string = input_element.value;
-    var len = input_string.length;
+// auto_format formats user input to: HH : MM : SS syntax
+function auto_format(input) {
+    var input_value = input.value;
+    var input_len = input_value.length;
+    // initialise the variable that will house
+    // the formated version of the input
     var new_value;
-    // if input field is empty
-    if (len === 0) {
-        // show helper text
-        var helper_text_element = document.getElementById("result_helper_text");
-        helper_text_element.innerHTML = "Please enter a time for conversion";
-    }
-    else if (len === 3 || len === 8) {
-        new_value = input_string.substring(0, len - 1) + " : " + input_string[len - 1];
-        input_element.value = new_value;
+    // when length of input is 3 or 8 insert " : " styling to input field
+    if (input_len === 3 || input_len === 8) {
+        new_value = input_value.substring(0, input_len - 1) + " : " + input_value[input_len - 1];
+        input.value = new_value;
     }
 }
-// auto format user input on keyup
-// when input is emptied update helper text
+// main() start /////////////////////////////////////////////////////////////////////////////////////////////////////////
+// get DOM input and select elements
 var input = document.getElementById("main_input");
-input.addEventListener("keydown", auto_format);
-input.addEventListener("keyup", function () { return valid_input_check(input.value); });
-input.addEventListener("emptied", auto_format);
-input.addEventListener("emptied", function () { return valid_input_check(input.value); });
+var select = document.getElementById("AM_PM");
+// colour input and select elements approprietly on focus and blur (inverse of focus)
+input.addEventListener("focus", function () {
+    input.style.border = "3px solid #ffb23c";
+    input.style.borderRight = "0";
+    input.style.outline = "0";
+    select.style.borderTop = "3px solid #ffb23c";
+    select.style.borderBottom = "3px solid #ffb23c";
+    select.style.borderRight = "3px solid #ffb23c";
+});
+input.addEventListener("blur", function () {
+    input.style.border = "1px solid #ffb23c";
+    input.style.borderRight = "0";
+    input.style.outline = "0";
+    select.style.borderTop = "1px solid #ffb23c";
+    select.style.borderBottom = "1px solid #ffb23c";
+    select.style.borderRight = "0px solid transparent";
+});
+// auto format, and check user input validity on keydown and keyup respectively
+input.addEventListener("keydown", function () { return auto_format(input); });
+input.addEventListener("keyup", function () { return valid_input_check(input, select); });
+// when input is emptied run input check to see re-colour input box
+input.addEventListener("emptied", function () { return valid_input_check(input, select); });
 // on button click the value in the input field gets converted
 // and assigned to the heading
 var button = document.getElementById("converter");
-button.addEventListener("click", assign_value);
+button.addEventListener("click", function () { return assign_value(input, select); });
 //# sourceMappingURL=script.js.map

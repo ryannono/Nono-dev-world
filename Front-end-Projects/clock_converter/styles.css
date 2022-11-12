@@ -99,6 +99,8 @@ select{
 	-moz-appearance:none; /* Firefox */
     -webkit-appearance:none; /* Safari and Chrome */
     appearance:none;
+	transition: all 0.3s;
+	outline: 0;
 	background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
 	background-repeat: no-repeat;
 	background-color: #fffcf9;
@@ -116,10 +118,6 @@ select{
 	border-right: 0px solid transparent;
 }
 
-select:focus{
-	outline: 0;
-	background-color: #ffd99f9a;
-}
 
 button{
 	box-sizing: content-box;
@@ -134,6 +132,7 @@ button{
 }
 
 input{
+	transition: all 0.3s;
 	box-sizing: content-box;
 	width: 50%;
 	padding: 10px 25px 10px 25px;
@@ -144,6 +143,12 @@ input{
 	font-size: 18px;
 	color: #565450;
 	background-color: white;
+}
+
+input:focus{
+	border: 3px solid #ffb23c;
+	border-right: 0;
+	outline: 0;
 }
 
 
