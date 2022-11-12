@@ -1,7 +1,6 @@
-// functions() start /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // timeConversion converts a AM/PM time
 // to its military equivalent
-// requires s is a valid time string of format
+// requires input_value is a valid time string of format:
 // hh:mm:ssAM or hh:mm:ssPM 
 function timeConversion(input_value, select_value) {
     // count number of hour digits were inputted
