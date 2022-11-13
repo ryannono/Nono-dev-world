@@ -86,7 +86,7 @@ function valid_input_check(input: HTMLInputElement, select: HTMLSelectElement): 
         
         // check user has inputed enough characters 
         // to constitute a full time input
-        if (input_len >= 11){
+        if (input_len === 12){
             
             // check the time inputted is a valid regular time value
             // the smallest number you can have in the hours section
@@ -187,29 +187,48 @@ function auto_format(input: HTMLInputElement): void{
 
     // initialise the letiable that will house
     // the formated version of the input
-    let new_value: string;
+    let new_value: string = input_value;
 
-    // if the user wanted to input 
-    // a single digit for the hours 
-    // add a zero in front
+    
+    // when input length is 2
+    // check if hours input was a 
+    // single digit input and reformat
     // Ex. "1:" becomes "01 : "
-    if (input_len === 2 && Number(input_value[0]) <= 9 && Number(input_value[0]) > 0 && input_value[1] === ':'){
-        input.value = "0" + input_value[0] + " : ";
-    }
-
-    // when length of input is 3 or 8 
-    // check if user manually inputted the colon
-    // if they did add the proper spacing ":" becomes " : "
-    // if they did not enter a colon insert " : " for them
-    else if (input_len === 3 || input_len === 8){
-        if (input_value[input_len-1] === ":") {
-            new_value = input_value.substring(0,input_len-1) + " " + input_value[input_len-1] + " ";
+    // if not single digit input reformat
+    // Ex. "12" becomes "12 : "
+    if (input_len === 2 ){
+        if (input_value[1] === ':') {
+            new_value = "0" + input_value[0] + " : ";
         }
         else{
-            new_value = input_value.substring(0, input_len-1) + " : " + input_value[input_len-1];
+            new_value = input_value + " : ";
         }
-        input.value = new_value;
     }
+    // Ex. "123" becomes "12 : 3" and "12 : 321" becomes "12 : 32 : 1"
+    else if ((input_len === 3 || input_len === 8) && input_value[input_len-1] != ' '){
+            new_value = input_value.substring(0,input_len-1) + ' : ' + input_value[input_len-1];
+    }
+    // Ex. "12 :1" becomes "12 : 1" and "01 : 01 :1" becomes "01 : 01 : "
+    else if ((input_len === 5 || input_len === 10) && input_value[input_len-1] != ' '){
+        new_value = input_value.substring(0,input_len-1) + ' ' + input_value[input_len-1];
+    }
+    // when input length is 7
+    // check if minute input was a 
+    // single digit input and reformat
+    // Ex. "01 : 1:" becomes "01 : 01 : "
+    // if not single digit input reformat
+    // Ex. "12 : 12" becomes "12 : 12 : "
+    else if (input_len === 7){
+        if (input_value[6] === ':') {
+            new_value = input_value.substring(0,5) + '0' + input_value[5] + " : ";
+        }
+        else{
+            new_value = input_value + " : ";
+        }
+    }
+    
+
+    input.value = new_value;
 }
 
 
@@ -245,7 +264,7 @@ input.addEventListener("blur", () => {
 });
 
 // auto format, and check user input validity on keydown and keyup respectively
-input.addEventListener("keypress", () => auto_format(input));
+input.addEventListener("keyup", () => auto_format(input));
 input.addEventListener("keyup", () => valid_input_check(input,select));
 
 // when input is emptied run input check to see re-colour input box
