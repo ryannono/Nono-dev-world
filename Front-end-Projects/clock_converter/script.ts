@@ -157,7 +157,7 @@ function valid_input_check(input: HTMLInputElement, select: HTMLSelectElement): 
 // if valid it converts it by calling timeConversion on the input
 // then it assigns that input to the DOM military_time_element
 // lastly it updates the DOM helper_text_element to present the military time
-function assign_value(input:HTMLInputElement, select: HTMLSelectElement): void{
+function assign_value(input: HTMLInputElement, select: HTMLSelectElement): void{
     
     const input_value: string = input.value;
     const select_value = select.value;
@@ -189,8 +189,19 @@ function auto_format(input: HTMLInputElement): void{
     // the formated version of the input
     let new_value: string;
 
-    // when length of input is 3 or 8 insert " : " styling to input field
-    if (input_len === 3 || input_len === 8){
+    // if the user wanted to input 
+    // a single digit for the hours 
+    // add a zero in front
+    // Ex. "1:" becomes "01 : "
+    if (input_len === 2 && Number(input_value[0]) <= 9 && Number(input_value[0]) > 0 && input_value[1] === ':'){
+        input.value = "0" + input_value[0] + " : ";
+    }
+
+    // when length of input is 3 or 8 
+    // check if user manually inputted the colon
+    // if they did add the proper spacing ":" becomes " : "
+    // if they did not enter a colon insert " : " for them
+    else if (input_len === 3 || input_len === 8){
         if (input_value[input_len-1] === ":") {
             new_value = input_value.substring(0,input_len-1) + " " + input_value[input_len-1] + " ";
         }

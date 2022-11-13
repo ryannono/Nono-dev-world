@@ -162,8 +162,18 @@ function auto_format(input) {
     // initialise the letiable that will house
     // the formated version of the input
     var new_value;
-    // when length of input is 3 or 8 insert " : " styling to input field
-    if (input_len === 3 || input_len === 8) {
+    // if the user wanted to input 
+    // a single digit for the hours 
+    // add a zero in front
+    // Ex. "1:" becomes "01 : "
+    if (input_len === 2 && Number(input_value[0]) <= 9 && Number(input_value[0]) > 0 && input_value[1] === ':') {
+        input.value = "0" + input_value[0] + " : ";
+    }
+    // when length of input is 3 or 8 
+    // check if user manually inputted the colon
+    // if they did add the proper spacing ":" becomes " : "
+    // if they did not enter a colon insert " : " for them
+    else if (input_len === 3 || input_len === 8) {
         if (input_value[input_len - 1] === ":") {
             new_value = input_value.substring(0, input_len - 1) + " " + input_value[input_len - 1] + " ";
         }
