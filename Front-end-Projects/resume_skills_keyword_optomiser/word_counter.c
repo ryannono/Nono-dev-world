@@ -48,8 +48,8 @@ bool identify_word(struct word_count *word_ptr, char str[], int length, int star
         // assign str's word characters to my word in word_count struct
         word_ptr->word[i - start_point] = str[i];
 
-        // word end is met when we reach a space
-        if (str[i] == ' ' || str[i] == ',' || str[i] == '.' || str[i] == '\0'){
+        // word end is met when we reach a special character
+        if ((str[i] < 65) || (str[i] > 90 && str[i] < 97) || (str[i] > 122)){
             word_ptr->word[i - start_point] = '\0';
             break;
         }
@@ -82,8 +82,8 @@ int count_occurences(struct word_count *word_ptr, char str[], int length){
             // transfer each word char to current word
             current_word[sub_start - i] = str[sub_start];
 
-            // word end is met when we reach a space
-            if (str[sub_start] == ' ' || str[sub_start] == ',' || str[sub_start] == '.' || str[sub_start] == '\0'){
+            // word end is met when we reach a special character
+            if ((str[sub_start] < 65) || (str[sub_start] > 90 && str[sub_start] < 97) || (str[sub_start] > 122)){
                 current_word[sub_start - i] = '\0';
                 i = sub_start;
                 break;
@@ -229,7 +229,7 @@ void reverse_list(struct word_list *list_ptr){
 
 int main() {
 
-    char str1[] = "hey hey my name is quite quite long some might say, it is Ryan Joyce Kouanang Nono and I think it is quite exotic";
+    char str1[] = "Hey this program takes in the string you input here and returns a list with the word and how many times it was used in the string. *Note, this a the precursor to a project i have coming up!";
     
     // create structure variable
     // create pointer to the structure type element
@@ -240,12 +240,13 @@ int main() {
     qsort_list(list_ptr);
     reverse_list(list_ptr);
 
-    // print the word_list and its length
+    // print the list and its length
+    printf("\n\nOccurences\tWords\n\n");
     for (int i = 0; i < list_ptr->len ; i++){
-        printf("(%s,", list_ptr->words[i]);
-        printf("%d), ", list_ptr->counts[i]);
+        printf("[%d]\t", list_ptr->counts[i]);
+        printf("\t- %s\n", list_ptr->words[i]);
     }
-    printf("\n\n%d\n\n", list_ptr->len);
+    printf("\n\nNumber of unique words used: %d\n\n", list_ptr->len);
 
     return 0;
 }
