@@ -166,7 +166,7 @@ void create_list(struct word_list *list_ptr, char str[]){
     }
 }
 
-// swap_list_item swaps the 2 list items and the indexes that were passed
+// swap_list_item swaps the 2 list items at the indexes that were passed
 void swap_list_item(struct word_list *list_ptr, int index_a, int index_b){
 
      // set temp
@@ -174,11 +174,11 @@ void swap_list_item(struct word_list *list_ptr, int index_a, int index_b){
     char temp_word[20] = "";
     strcpy(temp_word, list_ptr->words[index_a]);
 
-    // copy element before pivot (count and word) to current location
+    // swap a with b
     list_ptr->counts[index_a] = list_ptr->counts[index_b];
     strcpy(list_ptr->words[index_a], list_ptr->words[index_b]);
 
-    // copy element before pivot (count and word) to current location
+    // b with temp(previous a)
     list_ptr->counts[index_b] = temp_count;
     strcpy(list_ptr->words[index_b], temp_word);
 }
