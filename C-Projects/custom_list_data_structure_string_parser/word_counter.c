@@ -101,10 +101,10 @@ int count_occurences(struct word_count *word_ptr, char str[], int length){
     return count;
 }
 
-// in_list returns true if the word in the
+// in_list_check returns true if the word in the
 // word struct is found in the list struct
 // if not it returns false
-bool in_list(struct word_count * word_ptr, struct word_list * list_ptr){
+bool in_list_check(struct word_count * word_ptr, struct word_list * list_ptr){
 
     for (int i = 0; i < 100000; i++){
         if (strcmp(word_ptr->word,list_ptr->words[i]) == 0){
@@ -159,7 +159,7 @@ void create_list(struct word_list *list_ptr, char str[]){
             
             // if the word in word struct is not in
             // word_list append word to list
-            if (in_list(word_ptr,list_ptr) == false){
+            if (in_list_check(word_ptr,list_ptr) == false){
                 append_list(word_ptr,list_ptr);
             }
         }
@@ -227,6 +227,19 @@ void reverse_list(struct word_list *list_ptr){
     }
 }
 
+// print_listprints the passed list
+void print_list(struct word_list *list_ptr){
+    
+    printf("\n\nOccurences\tWords\n\n");
+
+    for (int i = 0; i < list_ptr->len ; i++){
+        printf("[%d]\t", list_ptr->counts[i]);
+        printf("\t- %s\n", list_ptr->words[i]);
+    }
+
+    printf("\n\nNumber of unique words used: %d\n\n", list_ptr->len);
+}
+
 int main() {
 
     char str1[] = "Hey this program takes in the string you input here and returns a list with the word and how many times it was used in the string. *Note, this a the precursor to a project i have coming up!";
@@ -239,14 +252,8 @@ int main() {
     create_list(list_ptr, str1);
     qsort_list(list_ptr);
     reverse_list(list_ptr);
-
-    // print the list and its length
-    printf("\n\nOccurences\tWords\n\n");
-    for (int i = 0; i < list_ptr->len ; i++){
-        printf("[%d]\t", list_ptr->counts[i]);
-        printf("\t- %s\n", list_ptr->words[i]);
-    }
-    printf("\n\nNumber of unique words used: %d\n\n", list_ptr->len);
+    print_list(list_ptr);
+    
 
     return 0;
 }
