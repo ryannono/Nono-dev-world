@@ -62,7 +62,7 @@ input{
 	transition: all 0.3s;
 	box-sizing: content-box;
 	width: 50%;
-	padding: 10px 25px 10px 25px;
+	padding: 10px 12px 10px 12px;
 	border-radius: 20px 0px 0px 20px;
 	border: 1px solid #ffb23c;
 	border-right: 0px;
