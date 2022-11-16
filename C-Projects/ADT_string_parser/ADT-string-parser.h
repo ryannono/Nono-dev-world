@@ -66,7 +66,7 @@ struct word_count * identify_word(char str[], int length, int start_point){
     init_word(word_ptr);
     
     // transfer word characters from start point to end of word
-    for (i = start_point; str[i] ; i++){
+    for (i = start_point; i < true_length ; i++){
         
         // assign str's word characters to my word in word_count struct
         if (word_ptr->len == word_ptr->max_len){
