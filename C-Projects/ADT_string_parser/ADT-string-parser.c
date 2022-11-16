@@ -13,9 +13,9 @@ int main() {
     qsort_list(list_ptr,'r');
     print_list(list_ptr);
 
-    // reset list
-    init_list(list_ptr);
-  
+    // free memory
+    list_ptr = NULL;
+    free(list_ptr);
     
     return 0;
 }
