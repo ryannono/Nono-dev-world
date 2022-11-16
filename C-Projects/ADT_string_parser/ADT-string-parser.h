@@ -321,10 +321,10 @@ void print_list(struct word_list *list_ptr){
     printf("\n\nNumber of unique words used: %d\n\n", list_ptr->len);
 }
 
-// my_scanf takes in an unlimited(dynamically allocates memory)
+// get_string takes in an unlimited(dynamically allocates memory)
 // amount of input from the user untill they press enter and
 // returns a pointer to this string
-char * my_scanf(){
+char * get_string(){
 
     char * string_input = (char *)malloc(1*sizeof(char));
     int len = 0;
