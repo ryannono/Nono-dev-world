@@ -82,4 +82,5 @@ void print_list(struct word_list *list_ptr);
 // get_string takes in an unlimited(dynamically allocates memory)
 // amount of input from the user untill they press enter and
 // returns a pointer to this string
+// O(n)
 char * get_string();
