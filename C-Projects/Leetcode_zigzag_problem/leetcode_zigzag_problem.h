@@ -25,7 +25,7 @@ void init_list(struct zigzag_list * list_ptr){
 struct zigzag_list * append_list(struct zigzag_list * list_ptr, char str, int row, int col){
     
     if (list_ptr->len == list_ptr->max_len){
-        list_ptr->max_len += 1;
+        list_ptr->max_len *= 2;
         list_ptr->col = (int*)realloc(list_ptr->col,list_ptr->max_len*sizeof(int));
         list_ptr->row = (int*)realloc(list_ptr->row,list_ptr->max_len*sizeof(int));
         list_ptr->letters = (char*)realloc(list_ptr->letters,list_ptr->max_len*sizeof(char));
