@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan's Github Page</title>
+    <link id="lightmode" rel="stylesheet" type="text/css" href="styles_light.css">
 </head>
 <body>
+    <script src="loadscript.js"></script>
 
     <!--Nav-->
     <div class="nav_bar_container">
@@ -66,6 +67,132 @@
         </a>
     </div>
 
+    <!--Main section/body-->
+    <div class="content_wrapper">
+        <div class="content_container" id="left_container">
+            
+            <h3>Experience</h3>
+
+            <!--Experience block 1-->
+            <div class="experience_block">
+
+                <div class="name_and_year_wrapper">
+                    <h4 class="company_name">Lithios Apps</h4>
+                    <p class="year">(Feb 2022-Present)</p>
+                </div>
+
+                <h5 class="role">Product Designer (contractor)</h5>
+
+                <ul class="experience_list">
+                    <li>Currently designing end-to-end experiences for a mix of client sizes at the Lithios design agency.</li>
+                </ul>
+            </div>
+
+            <div class="seperator"></div>
+
+            <!--Experience block 2-->
+            <div class="experience_block">
+
+                <div class="name_and_year_wrapper">
+                    <h4 class="company_name">Palantir Technologies</h4>
+                    <p class="year">(June - Aug 2022)</p>
+                </div>
+
+                <h5 class="role">Product Design Intern</h5>
+
+                <ul class="experience_list">
+                    <li>Designed a new end-to-end workflow that enabled ‘live-entity proximity alerting’.</li>
+                    <li>Redesigned the ‘live-entity observation log’ in a way that now enabled Palantir to give users insights based on the logged observations data we were collecting. The new observation log was also better adapted for a large scale of data.</li>
+                    <li>Presented to multiple stakeholders including the design “Group Lead” (Director of design).</li>
+                </ul>
+            </div>
+            
+            <div class="seperator"></div>
+
+            <!--Experience block 3-->
+            <div class="experience_block">
+
+                <div class="name_and_year_wrapper">
+                    <h4 class="company_name">Intuit</h4>
+                    <p class="year">(Sept - Dec 2021)</p>
+                </div>
+
+                <h5 class="role">Product Design Intern</h5>
+
+                <ul class="experience_list">
+                    <li>Helped introduce upsells to the Canadian Turbotax product. This addition was set to increase average revenue per user (ARPU) by 10$+ for the business.</li>
+                    <li>Conducted user tests and prepared UX research reports that impacted in-product and marketing website design decisions.</li>
+                    <li>Designed and shipped key pages for TurboTax Canada’s 2021 remodel.</li>
+                    <li>Built responsive components in Figma allowing the XD team to design at 1.5X the previous speeds.</li>
+                </ul>
+            </div>
+
+            <div class="seperator"></div>
+
+            <!--Experience block 4-->
+            <div class="experience_block">
+
+                <div class="name_and_year_wrapper">
+                    <h4 class="company_name">University of Toronto</h4>
+                    <p class="year">(Feb - June 2021)</p>
+                </div>
+
+                <h5 class="role">UX/UI Bootcamp Assistant Instructor</h5>
+
+                <ul class="experience_list">
+                    <li>Facilitated growth of 30+ driven students  in design, with a 90% certificate obtention rate.</li>
+                    <li>Aided students in the comprehension of : user-centric design, research, prototyping, wireframing, storyboarding, HTML5, CSS, interaction design, JavaScript basics etc.</li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="content_container" id="right_container">
+
+            <!--Content blobk 1-->
+            <div class="content_block">
+                <h3>Summary</h3>
+                <p class="body_text">
+                    I’m a new grad Product designer who’s, while in school, managed to provide value to various products and teams. I’m now looking for a full-time position where my designs will be able to have an impact, and where I’ll be able to learn from design industry leaders! <br><br> Sounds like a match? Let’s talk!
+                </p>
+            </div>
+
+            <!--Content blobk 1-->
+            <div class="content_block">
+                <h3>Education</h3>
+                <p class="body_text" id="education">
+                    B.Sc, General Science, Concentration in Computer Science
+                </p>
+                <p id="education_subtitle">
+                    University of Windsor (2023)
+                </p>
+            </div>
+
+            <!--Content blobk 1-->
+            <div class="content_block">
+                <h3>Tools & Technologies</h3>
+                <p class="body_text">
+                    Figma, Sketch, Adobe Suite, Python, C, JavaScript, Typescript, HTML, CSS.
+                </p>
+            </div>
+
+            <!--Content blobk 1-->
+            <div class="content_block">
+                <h3>Skills</h3>
+                <p class="body_text">
+                    User testing, experience strategy, User centred design, Information architecture, Wireframing, UI design, User testing, Prototyping,  Responsive web design (RWD),  Interaction design,  HTML5, CSS3, Heuristics evaluation, usability testing, competitive analysis, storyboarding.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!--Light mode toggle-->
+    <div class="toggle_container">
+
+            <img class="mode_toggle" id="dark" src="Images/DarkMode-off.svg">
+            <img class="mode_toggle" id="light"  src="Images/LightMode-on.svg">
+            
+        <p id="toggle_text">Toggle to light mode</p>
+    </div>
+    <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>
