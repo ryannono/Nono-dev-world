@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link id="lightmode" rel="stylesheet" type="text/css" href="styles/lightmode.css">
+    <script src="scripts/dist/loadscript.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan's Github Page</title>
-    <link id="lightmode" rel="stylesheet" type="text/css" href="styles_light.css">
+    <title>Ryan's Landing Page</title>
 </head>
 <body>
-    <script src="loadscript.js"></script>
 
     <!--Nav-->
+    <div id="nav_wrapper">
+
     <div class="nav_bar_container">
 
         <!--Left block-->
         <div id="profile_container">
 
-            <img id="profile_pic" src="Images/Profile_Picture.svg">
+            <img id="profile_pic" src="Images/Profile_Picture_Mobile.png">
 
             <div id="profile_text_container">
                 <h1>Ryan Nono</h1>
@@ -59,10 +63,12 @@
         </div>
 
         <!--Right block-->
-        <a href="https://github.com/ryannono/Resume/raw/main/Ryan-Nono-Resume-Fall2022_compressed.pdf" target="_blank" id="resume_button">
+        <a class="download_button" href="https://github.com/ryannono/Resume/raw/main/Ryan-Nono-Resume-Fall2022_compressed.pdf" target="_blank" id="resume_button">
                 <img class="icon_img" src="Images/Icon=Resume.svg">
                 <p class="button_text">Download Resume</p>
         </a>
+    </div>
+
     </div>
 
     <!--Main section/body-->
@@ -141,9 +147,9 @@
                     <li>Facilitated growth of 30+ driven students  in design, with a 90% certificate obtention rate.</li>
                     <li>Aided students in the comprehension of : user-centric design, research, prototyping, wireframing, storyboarding, HTML5, CSS, interaction design, JavaScript basics etc.</li>
                 </ul>
-            </div>
-
         </div>
+
+    </div>
         <div class="content_container" id="right_container">
 
             <!--Content blobk 1-->
@@ -182,15 +188,21 @@
             </div>
         </div>
     </div>
-
-    <!--Light mode toggle-->
-    <div class="toggle_container">
+    
+    <div id="toggle_wrapper">
+        
+        <!--Dark mode toggle-->
+        <div class="toggle_container">
 
             <img class="mode_toggle" id="dark" src="Images/DarkMode-off.svg">
             <img class="mode_toggle" id="light"  src="Images/LightMode-on.svg">
             
-        <p id="toggle_text">Toggle to light mode</p>
+            <p id="toggle_text">Toggle to dark mode</p>
+        </div>
+        
     </div>
-    <script src="script.js"></script>
+
+    <script src="scripts/dist/script.js"></script>
+        
 </body>
 </html>
