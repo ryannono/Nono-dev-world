@@ -13,13 +13,3 @@ if ((darkThemePreference.matches || darkmodeState === "enabled") && darkmodeStat
     style.id = "darkmode";
     currentTheme = "dark";
 }
-
-let initialView = window.matchMedia("(min-width: 1240px)") as MediaQueryList;
-
-// check if window is of desktop size if it is
-// swap image to desktop optimised one
-if (initialView.matches) {
-
-    let profilePic = document.getElementById("profile_pic") as HTMLImageElement;
-    profilePic.src = "Images/Profile_Picture.svg";
-}
