@@ -82,7 +82,7 @@ h2{
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    column-gap: 15px;
+    column-gap: .5%;
     padding: 0px 26px;
 }
 
@@ -290,6 +290,11 @@ li{
     transform: scale(1.1);
 }
 
+#toggle_text{
+    font-size: 14px;
+    width: 150px;
+}
+
 @media (min-width: 1240px) {
     
     body{
@@ -432,7 +437,7 @@ li{
         padding: 24px;
         background: rgba(255, 255, 255, 0.9);
         color: black;
-        box-shadow: 6px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.3);
         border-radius: 10px;
     
         display: flex;

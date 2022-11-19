@@ -69,7 +69,7 @@ h2{
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    column-gap: 15px;
+    column-gap: .5%;
     padding: 0px 26px;
 }
 
@@ -274,6 +274,11 @@ li{
 
 .mode_toggle:hover{
     transform: scale(1.1);
+}
+
+#toggle_text{
+    font-size: 14px;
+    width: 150px;
 }
 
 @media (min-width: 1240px) {
