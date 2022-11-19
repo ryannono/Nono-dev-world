@@ -38,10 +38,10 @@ function themeSwap(trigger) {
         swapToLight();
     }
 }
-function mode_toggleClickListener() {
-    let targetClass = document.getElementsByClassName("mode_toggle");
+function addClassListener(className, eventName, funtionToExecute) {
+    let targetClass = document.getElementsByClassName(className);
     for (let i = 0; i < targetClass.length; i++) {
-        targetClass[i].addEventListener("click", () => themeSwap(targetClass[i]));
+        targetClass[i].addEventListener(eventName, () => funtionToExecute(targetClass[i]));
     }
 }
 function swapProfilePic() {
@@ -66,8 +66,7 @@ swapProfilePic();
 window.addEventListener("resize", swapProfilePic);
 if (currentTheme === "dark") {
     swapToggles(currentTheme);
-    localStorage.setItem("darkmode", "system preference");
 }
-mode_toggleClickListener();
+addClassListener("mode_toggle", "click", themeSwap);
 let downloadButton = document.getElementById("resume_button");
 downloadButton.addEventListener("click", themedCVDownload);

@@ -6,7 +6,6 @@ body{
     justify-content: center;
     padding: 33px 22px 90px 22px;
     background-color: #222222;
-    background-image: url(Images/Background_Dark.svg);
     background-repeat: no-repeat;
     background-position: top center;
     color: #FFFFFF;
@@ -290,7 +289,6 @@ li{
         justify-content: center;
         padding: 36px 36px 36px 36px;
         background-color: #222222;
-        background-image: url(Images/Background_Dark.svg);
         background-repeat: no-repeat;
         color: #FFFFFF;
         font-family: poppins, Verdana, Tahoma, sans-serif;

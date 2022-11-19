@@ -48,7 +48,7 @@ function swapToDark (): void {
 // theme swap identifies if the theme should be
 // swapped to light, dark on no change based on
 // which toggle was pressed and the current theme
-function themeSwap (trigger: HTMLImageElement) : void{
+function themeSwap (trigger: HTMLElement) : void{
 
     if (trigger.id === "dark" && currentTheme === "light") {
 
@@ -60,16 +60,18 @@ function themeSwap (trigger: HTMLImageElement) : void{
     }
 }
 
-// mode_toggleClickListener adds an "on click" themeSwap
-// event listener to all mode_toggle class elements
-function mode_toggleClickListener() : void {
+// addClassListener adds an the "eventName" passed event trigger
+// to every item in the passed "className" class to trigger a 
+// "functionToExecute"
+function addClassListener(className:string, eventName:string, funtionToExecute: Function) : void {
     
-    let targetClass = document.getElementsByClassName("mode_toggle") as HTMLCollectionOf<HTMLImageElement>
+    let targetClass = document.getElementsByClassName(className) as HTMLCollectionOf<HTMLElement>;
 
     for (let i = 0; i < targetClass.length; i++) {
 
-        targetClass[i].addEventListener("click", () => themeSwap(targetClass[i]));
+        targetClass[i].addEventListener(eventName, () => funtionToExecute(targetClass[i]));
     }
+
 }
 
 // swapProfilePic swaps from smaller png profile
@@ -113,9 +115,8 @@ window.addEventListener("resize", swapProfilePic);
 // and listen for future toggle clicks (theme swap requests) 
 if (currentTheme === "dark") {
     swapToggles(currentTheme);
-    localStorage.setItem("darkmode", "system preference");
 }
-mode_toggleClickListener();
+addClassListener("mode_toggle","click",themeSwap);
 
 //depending on light or dark mode download appropriate resume
 let downloadButton = document.getElementById("resume_button") as HTMLLinkElement;
