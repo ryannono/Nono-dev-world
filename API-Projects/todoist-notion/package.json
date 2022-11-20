@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@doist/todoist-api-typescript": "^2.1.2",
+    "@notionhq/client": "^2.2.2",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9"
+  }
+}
