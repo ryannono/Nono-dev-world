@@ -12,6 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = require("dotenv");
 const todoist_api_typescript_1 = require("@doist/todoist-api-typescript");
 const client_1 = require("@notionhq/client");
+dotenv.config();
+const todoistKey = String(process.env.TODOISTKEY);
+const notionKey = String(process.env.NOTIONKEY);
+const databaseId = String(process.env.DATABASEID);
+const todoistApi = new todoist_api_typescript_1.TodoistApi(todoistKey);
+const notionApi = new client_1.Client({ auth: notionKey });
 function newNotionTask(todoistTask) {
     return __awaiter(this, void 0, void 0, function* () {
         notionApi.pages.create({
@@ -50,7 +56,7 @@ function newNotionTask(todoistTask) {
         });
     });
 }
-function searchNotion(ID) {
+function IDSearchNotion(ID) {
     return __awaiter(this, void 0, void 0, function* () {
         const searchResults = yield notionApi.databases.query({
             database_id: databaseId,
@@ -63,30 +69,30 @@ function searchNotion(ID) {
                     }]
             }
         });
-        console.log(searchResults);
         if (searchResults.results.length === 0) {
-            console.log("yup");
+            return false;
         }
-        return (searchResults === null) ? false : true;
+        return true;
     });
 }
-function todoistToNotion(lastCheckedDate) {
+function notionUpToDateCheck() {
     return __awaiter(this, void 0, void 0, function* () {
         const taskList = yield todoistApi.getTasks({
             filter: "created: today"
         });
         console.log(taskList);
         let latestElement = taskList[taskList.length - 1];
-        let latestElementDate = new Date(latestElement.createdAt);
-        if (latestElementDate > lastCheckedDate) {
-            newNotionTask(latestElement);
+        let upToDate = yield IDSearchNotion(Number(latestElement.id));
+        if (upToDate === false) {
+            for (let i = 0; i < taskList.length; i++) {
+                const todoistTask = taskList[i];
+                const ID = Number(todoistTask.id);
+                const notionSearchResult = yield IDSearchNotion(ID);
+                if (notionSearchResult === false) {
+                    newNotionTask(todoistTask);
+                }
+            }
         }
     });
 }
-dotenv.config();
-const todoistKey = String(process.env.TODOISTKEY);
-const notionKey = String(process.env.NOTIONKEY);
-const databaseId = String(process.env.DATABASEID);
-const todoistApi = new todoist_api_typescript_1.TodoistApi(todoistKey);
-const notionApi = new client_1.Client({ auth: notionKey });
-searchNotion(12);
+notionUpToDateCheck();
