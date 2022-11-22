@@ -122,28 +122,30 @@ function IDSearchNotion(ID) {
 function notionUpToDateCheck(lastCheckedIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         const taskList = yield todoistApi.getTasks({
-            filter: "created: today"
+            filter: "created after: -24hours"
         });
-        console.log(taskList);
         let latestElement = taskList[taskList.length - 1];
-        let upToDate = yield IDSearchNotion(Number(latestElement.id));
-        if (upToDate === false) {
-            for (let i = lastCheckedIndex + 1; i < taskList.length; i++) {
-                const todoistTask = taskList[i];
-                const ID = Number(todoistTask.id);
-                const notionSearchResult = yield IDSearchNotion(ID);
-                if (notionSearchResult === false) {
-                    newNotionTask(todoistTask);
-                }
-                if (i === taskList.length - 1) {
-                    return i;
+        if (latestElement != null) {
+            let upToDate = yield IDSearchNotion(Number(latestElement.id));
+            if (upToDate === false) {
+                for (let i = lastCheckedIndex + 1; i < taskList.length; i++) {
+                    const todoistTask = taskList[i];
+                    const ID = Number(todoistTask.id);
+                    const notionSearchResult = yield IDSearchNotion(ID);
+                    if (notionSearchResult === false) {
+                        newNotionTask(todoistTask);
+                    }
+                    if (i === taskList.length - 1) {
+                        return i;
+                    }
                 }
             }
         }
         return taskList.length - 1;
     });
 }
-let latestIndex = 13;
-const indexPromise = notionUpToDateCheck(latestIndex);
-indexPromise.then(value => latestIndex = value);
-indexPromise.then(console.log);
+let latestIndex = 0;
+setInterval(() => {
+    notionUpToDateCheck(latestIndex)
+        .then((value) => latestIndex = value);
+}, 2000);
