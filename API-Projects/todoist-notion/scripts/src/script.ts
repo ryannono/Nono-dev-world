@@ -20,47 +20,100 @@ const notionApi: Client = new Client({auth: notionKey});
 // database matching the values in the todoist task
 async function newNotionTask(todoistTask: Task){
     
-    notionApi.pages.create({
+    // If a due date exists create a new page with a
+    // due date if not create a page without one
+    let dueDate = todoistTask.due
+    if (dueDate != null) {
+        notionApi.pages.create({
 
-        "parent": {
-            "type": "database_id",
-            "database_id": databaseId
-        },
-
-        "properties": {
-
-                "Task": {
-                    "title": [{
-                        "text": { 
-                            "content": todoistTask.content
+            "parent": {
+                "type": "database_id",
+                "database_id": databaseId
+            },
+    
+            "properties": {
+    
+                    "Task": {
+                        "title": [{
+                            "text": { 
+                                "content": todoistTask.content
+                            }
+                        }]
+                    },
+                    "Due date":{
+                        "date" : {
+                            "start" : dueDate.date
+                        }
+                    },
+                    "ID":{
+                        "number" : Number(todoistTask.id)
+                    },
+                    "Status":{
+                        "checkbox" : todoistTask.isCompleted
+                    },
+                    "URL": {
+                        "url": todoistTask.url
+                    }
+                    
+    
+            },
+    
+            "children": [{
+                "object": "block",
+                "paragraph": {
+                    "rich_text": [{
+                        "text": {
+                            "content": todoistTask.description
                         }
                     }]
-                },
-                "ID":{
-                    "number" : Number(todoistTask.id)
-                },
-                "Status":{
-                    "checkbox" : todoistTask.isCompleted
-                },
-                "URL": {
-                    "url": todoistTask.url
                 }
-                
+            }]
+    
+        });
+    }
+    else{
+        notionApi.pages.create({
 
-        },
-
-        "children": [{
-            "object": "block",
-            "paragraph": {
-                "rich_text": [{
-                    "text": {
-                        "content": todoistTask.description
+            "parent": {
+                "type": "database_id",
+                "database_id": databaseId
+            },
+    
+            "properties": {
+    
+                    "Task": {
+                        "title": [{
+                            "text": { 
+                                "content": todoistTask.content
+                            }
+                        }]
+                    },
+                    "ID":{
+                        "number" : Number(todoistTask.id)
+                    },
+                    "Status":{
+                        "checkbox" : todoistTask.isCompleted
+                    },
+                    "URL": {
+                        "url": todoistTask.url
                     }
-                }]
-            }
-        }]
-
-    });
+                    
+    
+            },
+    
+            "children": [{
+                "object": "block",
+                "paragraph": {
+                    "rich_text": [{
+                        "text": {
+                            "content": todoistTask.description
+                        }
+                    }]
+                }
+            }]
+    
+        });
+    }
 }
 
 // searchNotion queries notion for an ID and returns

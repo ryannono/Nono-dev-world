@@ -20,40 +20,84 @@ const todoistApi = new todoist_api_typescript_1.TodoistApi(todoistKey);
 const notionApi = new client_1.Client({ auth: notionKey });
 function newNotionTask(todoistTask) {
     return __awaiter(this, void 0, void 0, function* () {
-        notionApi.pages.create({
-            "parent": {
-                "type": "database_id",
-                "database_id": databaseId
-            },
-            "properties": {
-                "Task": {
-                    "title": [{
-                            "text": {
-                                "content": todoistTask.content
-                            }
-                        }]
+        let dueDate = todoistTask.due;
+        if (dueDate != null) {
+            notionApi.pages.create({
+                "parent": {
+                    "type": "database_id",
+                    "database_id": databaseId
                 },
-                "ID": {
-                    "number": Number(todoistTask.id)
-                },
-                "Status": {
-                    "checkbox": todoistTask.isCompleted
-                },
-                "URL": {
-                    "url": todoistTask.url
-                }
-            },
-            "children": [{
-                    "object": "block",
-                    "paragraph": {
-                        "rich_text": [{
+                "properties": {
+                    "Task": {
+                        "title": [{
                                 "text": {
-                                    "content": todoistTask.description
+                                    "content": todoistTask.content
                                 }
                             }]
+                    },
+                    "Due date": {
+                        "date": {
+                            "start": dueDate.date
+                        }
+                    },
+                    "ID": {
+                        "number": Number(todoistTask.id)
+                    },
+                    "Status": {
+                        "checkbox": todoistTask.isCompleted
+                    },
+                    "URL": {
+                        "url": todoistTask.url
                     }
-                }]
-        });
+                },
+                "children": [{
+                        "object": "block",
+                        "paragraph": {
+                            "rich_text": [{
+                                    "text": {
+                                        "content": todoistTask.description
+                                    }
+                                }]
+                        }
+                    }]
+            });
+        }
+        else {
+            notionApi.pages.create({
+                "parent": {
+                    "type": "database_id",
+                    "database_id": databaseId
+                },
+                "properties": {
+                    "Task": {
+                        "title": [{
+                                "text": {
+                                    "content": todoistTask.content
+                                }
+                            }]
+                    },
+                    "ID": {
+                        "number": Number(todoistTask.id)
+                    },
+                    "Status": {
+                        "checkbox": todoistTask.isCompleted
+                    },
+                    "URL": {
+                        "url": todoistTask.url
+                    }
+                },
+                "children": [{
+                        "object": "block",
+                        "paragraph": {
+                            "rich_text": [{
+                                    "text": {
+                                        "content": todoistTask.description
+                                    }
+                                }]
+                        }
+                    }]
+            });
+        }
     });
 }
 function IDSearchNotion(ID) {
