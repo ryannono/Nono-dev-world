@@ -2,172 +2,112 @@
 import dotenv = require("dotenv"); // key environment
 import { Task, TodoistApi } from "@doist/todoist-api-typescript"; // todoist api
 import { Client } from "@notionhq/client"; // notion api
+import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
-// {
-//     "and": [
-//       {
-//         "property": "Done",
-//         "checkbox": {
-//           "equals": true
-//         }
-//       }, 
-//       {
-//         "or": [
-//           {
-//             "property": "Tags",
-//             "contains": "A"
-//           },
-//           {
-//             "property": "Tags",
-//             "contains": "B"
-//           }
-//         ]
-//       }
-//     ]
-//   }
+// async function getTodoistLatestUpdateTime(previousLatestTaskTime: string) {
+    
+//     if (previousLatestTaskTime != "none") {
+//         const timeDifference = 1;
+//         const latestUpdateTime: string = await todoistApi.getTasks();
+//     }
+    
+// }
 
+// newNotionTask creates a new page in the notion
+// database matching the values in the todoist task
+async function newNotionTask(todoistTask: Task){
+    
+    notionApi.pages.create({
 
-
-const response = await notion.pages.create({
-    "cover": {
-        "type": "external",
-        "external": {
-            "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Tuscankale.jpg"
-        }
-    },
-    "icon": {
-        "type": "emoji",
-        "emoji": "🥬"
-    },
-    "parent": {
-        "type": "database_id",
-        "database_id": "d9824bdc-8445-4327-be8b-5b47500af6ce"
-    },
-    "properties": {
-        "Name": {
-            "title": [
-                {
-                    "text": {
-                        "content": "Tuscan kale"
-                    }
-                }
-            ]
+        "parent": {
+            "type": "database_id",
+            "database_id": databaseId
         },
-        "Description": {
-            "rich_text": [
-                {
-                    "text": {
-                        "content": "A dark green leafy vegetable"
-                    }
-                }
-            ]
-        },
-        "Food group": {
-            "select": {
-                "name": "🥬 Vegetable"
-            }
-        }
-    },
-    "children": [
-        {
-            "object": "block",
-            "heading_2": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": "Lacinato kale"
+
+        "properties": {
+
+                "Task": {
+                    "title": [{
+                        "text": { 
+                            "content": todoistTask.content
                         }
-                    }
-                ]
-            }
+                    }]
+                },
+                "ID":{
+                    "number" : Number(todoistTask.id)
+                },
+                "Status":{
+                    "checkbox" : todoistTask.isCompleted
+                },
+                "URL": {
+                    "url": todoistTask.url
+                }
+                
+
         },
-        {
+
+        "children": [{
             "object": "block",
             "paragraph": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": "Lacinato kale is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.",
-                            "link": {
-                                "url": "https://en.wikipedia.org/wiki/Lacinato_kale"
-                            }
-                        },
-                        "href": "https://en.wikipedia.org/wiki/Lacinato_kale"
+                "rich_text": [{
+                    "text": {
+                        "content": todoistTask.description
                     }
-                ],
-                "color": "default"
+                }]
             }
-        }
-    ]
-});
-async function addTasktoNotion() {
+        }]
+
+    });
+}
+
+// searchNotion queries notion for an ID and returns
+// true if an element was found with the ID and false if not
+async function searchNotion(ID:number) {
     
-    const taskList:Array<Task> = await todoistApi.getTasks();
-
-    // iterate through todoist's active tasks
-    for (let i = 0; i < taskList.length; i++) {
-        
-        const task:Task = taskList[i];
-        
-        // if task is not yet completed check that it
-        // is present in notion database
-        if (task.isCompleted === false) {
-
-            const notionDatabaseSearchResult = await notionApi.databases.query({
-                database_id: databaseId,
-                filter: {
-                    "and": [{
-                        "property": "URL",
-                            "url": {
-                                "equals" : task.url
-                            }
-                    }]
+    const searchResults: QueryDatabaseResponse = await notionApi.databases.query({
+        database_id: databaseId,
+        filter: {
+            and: [{
+                property: "ID",
+                number: {
+                    equals: ID
                 }
-            });
-
-            if (notionDatabaseSearchResult.results.length === 0) {
-                let newNotionTask = notionApi.pages.create({
-                    "parent": {
-                        "type": "database_id",
-                        "database_id": databaseId
-                    },
-                    "properties": {
-                        "Name": {
-                            "title": [{
-                                "text": {
-                                    "content": task.content
-                                }
-                            }]
-                        },
-                        "ID": {
-                            "URL": {
-                                "text": {
-                                    "content": task.url
-                                }
-                            }
-                        }
-                    },
-                    "children": [{
-                        "object": "block",
-                        "paragraph": {
-                            "rich_text": [{
-                                "text": {
-                                    "content": task.description
-                                }
-                            }]
-                        }
-                    }]
-                });
-            }
+            }]
         }
+    });
 
-        
+    //console.log(searchResults);
+
+    if (searchResults.results.length === 0) {
+        //console.log("yup");
+        return false
     }
+    return true
 }
 
-async function addTasktoTodoist() {
-    return await notionApi.databases.retrieve({database_id: databaseId});
+async function todoistToNotion(lastCheckedDate: Date) {
+    
+    // get all tasks 
+    const taskList:Array<Task> = await todoistApi.getTasks({
+        filter: "created: today"
+    });
+    console.log(taskList);
+
+    let latestElement:Task = taskList[taskList.length-1];
+    let latestElementDate = new Date(latestElement.createdAt);
+    if (latestElementDate > lastCheckedDate) {
+        newNotionTask(latestElement);
+    }
+
+
+
+    
+
 }
+
+// async function addTasktoTodoist() {
+//     return await notionApi.databases.retrieve({database_id: databaseId});
+// }
 
 // get keys from environment
 dotenv.config();
@@ -180,10 +120,11 @@ const databaseId:string = String(process.env.DATABASEID)
 const todoistApi: TodoistApi = new TodoistApi(todoistKey);
 const notionApi: Client = new Client({auth: notionKey});
 
-// 
-// fetchTodoistTasks().then( taskList => {
+// let date = new Date("2011-08-12T20:17:46.384Z")
+// todoistToNotion(date).then( taskList => {
 //     console.log(taskList);
 // })
+searchNotion(12);
 
 
 // retrieveNotionDatabse().then( databaseItems => {

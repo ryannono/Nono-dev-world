@@ -12,14 +12,75 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = require("dotenv");
 const todoist_api_typescript_1 = require("@doist/todoist-api-typescript");
 const client_1 = require("@notionhq/client");
-function fetchTodoistTasks() {
+function newNotionTask(todoistTask) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield todoistApi.getTasks();
+        notionApi.pages.create({
+            "parent": {
+                "type": "database_id",
+                "database_id": databaseId
+            },
+            "properties": {
+                "Task": {
+                    "title": [{
+                            "text": {
+                                "content": todoistTask.content
+                            }
+                        }]
+                },
+                "ID": {
+                    "number": Number(todoistTask.id)
+                },
+                "Status": {
+                    "checkbox": todoistTask.isCompleted
+                },
+                "URL": {
+                    "url": todoistTask.url
+                }
+            },
+            "children": [{
+                    "object": "block",
+                    "paragraph": {
+                        "rich_text": [{
+                                "text": {
+                                    "content": todoistTask.description
+                                }
+                            }]
+                    }
+                }]
+        });
     });
 }
-function retrieveNotionDatabse() {
+function searchNotion(ID) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield notionApi.databases.retrieve({ database_id: databaseId });
+        const searchResults = yield notionApi.databases.query({
+            database_id: databaseId,
+            filter: {
+                and: [{
+                        property: "ID",
+                        number: {
+                            equals: ID
+                        }
+                    }]
+            }
+        });
+        console.log(searchResults);
+        if (searchResults.results.length === 0) {
+            console.log("yup");
+        }
+        return (searchResults === null) ? false : true;
+    });
+}
+function todoistToNotion(lastCheckedDate) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const taskList = yield todoistApi.getTasks({
+            filter: "created: today"
+        });
+        console.log(taskList);
+        let latestElement = taskList[taskList.length - 1];
+        let latestElementDate = new Date(latestElement.createdAt);
+        if (latestElementDate > lastCheckedDate) {
+            newNotionTask(latestElement);
+        }
     });
 }
 dotenv.config();
@@ -28,5 +89,4 @@ const notionKey = String(process.env.NOTIONKEY);
 const databaseId = String(process.env.DATABASEID);
 const todoistApi = new todoist_api_typescript_1.TodoistApi(todoistKey);
 const notionApi = new client_1.Client({ auth: notionKey });
-const notionTaskDatabse = retrieveNotionDatabse();
-console.log(notionTaskDatabse);
+searchNotion(12);
