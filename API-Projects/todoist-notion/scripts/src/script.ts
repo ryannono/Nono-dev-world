@@ -11,14 +11,14 @@ const notionKey:string = String(process.env.NOTIONKEY);
 const databaseId:string = String(process.env.DATABASEID)
 
 
-// start api with auth key
+// start apis with auth keys
 const todoistApi: TodoistApi = new TodoistApi(todoistKey);
 const notionApi: Client = new Client({auth: notionKey});
 
 
 // newNotionTask creates a new page in the notion
 // database matching the values in the todoist task
-async function newNotionTask(todoistTask: Task){
+async function newNotionTask(todoistTask: Task): Promise<void> {
     
     // If a due date exists create a new page with a
     // due date if not create a page without one
@@ -118,7 +118,7 @@ async function newNotionTask(todoistTask: Task){
 
 // searchNotion queries notion for an ID and returns
 // true if an element was found with the ID and false if not
-async function IDSearchNotion(ID:number) {
+async function IDSearchNotion(ID:number): Promise<boolean> {
     
     const searchResults: QueryDatabaseResponse = await notionApi.databases.query({
         database_id: databaseId,
@@ -143,7 +143,7 @@ async function IDSearchNotion(ID:number) {
 
 // notionUpToDateCheck checks if notion has the latest
 // todoist tasks in its database. If it doesnt they are added.
-async function notionUpToDateCheck() {
+async function notionUpToDateCheck(lastCheckedIndex: number): Promise<number> {
     
     // get list of todoist tasks created today
     const taskList:Array<Task> = await todoistApi.getTasks({
@@ -161,7 +161,7 @@ async function notionUpToDateCheck() {
     // ones that aren't in notion yet
     if (upToDate === false) {
         
-        for (let i = 0; i < taskList.length; i++) {
+        for (let i = lastCheckedIndex+1; i < taskList.length; i++) {
             
             const todoistTask: Task = taskList[i];
             const ID:number = Number(todoistTask.id);
@@ -170,9 +170,13 @@ async function notionUpToDateCheck() {
             if (notionSearchResult === false) {
                 newNotionTask(todoistTask);
             }
+
+            if (i === taskList.length-1) {
+                return i;
+            }
         }
     }
-    
+    return taskList.length-1;
 
 }
 
@@ -186,7 +190,13 @@ async function notionUpToDateCheck() {
 // todoistToNotion(date).then( taskList => {
 //     console.log(taskList);
 // })
-notionUpToDateCheck();
+let latestIndex:number = 13;
+const indexPromise:Promise<number> = notionUpToDateCheck(latestIndex);
+
+indexPromise.then(value => latestIndex = value);
+// indexPromise.then(console.log);
+
+
 
 
 // retrieveNotionDatabse().then( databaseItems => {

@@ -119,7 +119,7 @@ function IDSearchNotion(ID) {
         return true;
     });
 }
-function notionUpToDateCheck() {
+function notionUpToDateCheck(lastCheckedIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         const taskList = yield todoistApi.getTasks({
             filter: "created: today"
@@ -128,15 +128,22 @@ function notionUpToDateCheck() {
         let latestElement = taskList[taskList.length - 1];
         let upToDate = yield IDSearchNotion(Number(latestElement.id));
         if (upToDate === false) {
-            for (let i = 0; i < taskList.length; i++) {
+            for (let i = lastCheckedIndex + 1; i < taskList.length; i++) {
                 const todoistTask = taskList[i];
                 const ID = Number(todoistTask.id);
                 const notionSearchResult = yield IDSearchNotion(ID);
                 if (notionSearchResult === false) {
                     newNotionTask(todoistTask);
                 }
+                if (i === taskList.length - 1) {
+                    return i;
+                }
             }
         }
+        return taskList.length - 1;
     });
 }
-notionUpToDateCheck();
+let latestIndex = 13;
+const indexPromise = notionUpToDateCheck(latestIndex);
+indexPromise.then(value => latestIndex = value);
+indexPromise.then(console.log);
