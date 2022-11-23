@@ -271,6 +271,12 @@ function getNotionDueProperty(pageObject) {
     let date = objectToMap(dateObject).get("start");
     return date;
 }
+function getNotionStatusProperty(pageObject) {
+    let propertiesObject = pageObject.properties;
+    let map = objectToMap(propertiesObject);
+    let checkboxContent = map.get("Status").checkbox;
+    return Boolean(checkboxContent);
+}
 function getNotionTodoistIDProperty(pageObject) {
     let propertiesObject = pageObject.properties;
     let map = objectToMap(propertiesObject);
@@ -391,7 +397,14 @@ function notionUpdatesCheck() {
                 const element = queryResponse.results[i];
                 let elementTodoistID = getNotionTodoistIDProperty(element);
                 let notionPageID = element.id;
+                let completion = getNotionStatusProperty(element);
+                if (completion === false && (yield todoistApi.getTask(elementTodoistID)).isCompleted === true) {
+                    todoistApi.reopenTask(elementTodoistID);
+                }
                 yield updateTodoistTask(elementTodoistID, element);
+                if (completion === true) {
+                    todoistApi.closeTask(elementTodoistID);
+                }
                 swapNotionSyncStatus(notionPageID);
             }
         }
@@ -425,6 +438,28 @@ function todoistUpdatesCheck() {
         }
     });
 }
+function completeNotionTasks() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const notionQueryResponse = yield notionApi.databases.query({
+            database_id: databaseId,
+            filter: {
+                "property": "Status",
+                "checkbox": {
+                    "equals": false
+                }
+            }
+        });
+        for (let i = 0; i < notionQueryResponse.results.length; i++) {
+            const element = notionQueryResponse.results[i];
+            let notionPageID = element.id;
+            let elementTodoistID = getNotionTodoistIDProperty(element);
+            const matchingTodoistTask = yield todoistApi.getTask(elementTodoistID);
+            if (matchingTodoistTask.isCompleted === true) {
+                updateNotionTask(notionPageID, matchingTodoistTask);
+            }
+        }
+    });
+}
 let latestNotionIndex = 0;
 let latestTodoistIndex = 0;
 let minute = 60 * 1000;
@@ -435,4 +470,4 @@ setInterval(() => {
     todoistUpdatesCheck();
     todoistUpToDateCheck(latestTodoistIndex)
         .then((value) => latestTodoistIndex = value);
-}, 1 * minute);
+}, 1000);

@@ -327,6 +327,15 @@ function getNotionDueProperty(pageObject: PageObjectResponse){
     return date;
 }
 
+// getNotionDueProperty return notions due
+// property for the passed page
+function getNotionStatusProperty(pageObject: PageObjectResponse): boolean{
+    let propertiesObject = pageObject.properties as object;
+    let map = objectToMap(propertiesObject);
+    let checkboxContent = map.get("Status").checkbox as object;
+    return Boolean(checkboxContent);
+}
+
 // getNotionTodoistIDProperty return notions TodoistID
 // property for the passed page
 function getNotionTodoistIDProperty(pageObject: PageObjectResponse){
@@ -486,7 +495,14 @@ async function notionUpdatesCheck() {
 
             let elementTodoistID = getNotionTodoistIDProperty(element);
             let notionPageID = element.id
+            let completion = getNotionStatusProperty(element);
+            if (completion === false && (await todoistApi.getTask(elementTodoistID)).isCompleted === true){
+                todoistApi.reopenTask(elementTodoistID);
+            }
             await updateTodoistTask(elementTodoistID,element);
+            if(completion === true){
+                todoistApi.closeTask(elementTodoistID);
+            }
             swapNotionSyncStatus(notionPageID);
         }
     }
@@ -527,17 +543,6 @@ async function todoistUpdatesCheck() {
     
 }
 
-
-// For todoist updating function check if a p3 flag was attached to any item
-// if a label was attached update all notion's fields to match
-// then remove the flag from the item. Do this at the same time as the other functions
-
-// For the notion task updating check that label area is empty if it isn't sync
-// updates to todoist and then clear the label property
-
-// periodically check status on incomplete notion tasks - 
-// if they are complete in todoist complete them
-// Also check completed tasks in notion and make sure they are complete in todoist
 let latestNotionIndex:number = 0;
 let latestTodoistIndex:number = 0;
 
@@ -550,5 +555,5 @@ setInterval(() => {
     todoistUpdatesCheck();
     todoistUpToDateCheck(latestTodoistIndex)
         .then((value) => latestTodoistIndex = value);
-}, 1 * minute);
+}, 1000);
 
