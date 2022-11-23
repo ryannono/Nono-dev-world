@@ -345,10 +345,12 @@ async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
 let latestNotionIndex:number = 0;
 let latestTodoistIndex:number = 0;
 
+let minute:number = 60 * 1000;
+
 setInterval(() => {
     notionUpToDateCheck(latestNotionIndex)
         .then((value) => latestNotionIndex = value)
     todoistUpToDateCheck(latestTodoistIndex)
         .then((value) => latestTodoistIndex = value)
-}, 2000)
+}, 2 * minute);
 

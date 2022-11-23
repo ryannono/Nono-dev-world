@@ -264,9 +264,10 @@ function todoistUpToDateCheck(lastCheckedNotionIndex) {
 }
 let latestNotionIndex = 0;
 let latestTodoistIndex = 0;
+let minute = 60 * 1000;
 setInterval(() => {
     notionUpToDateCheck(latestNotionIndex)
         .then((value) => latestNotionIndex = value);
     todoistUpToDateCheck(latestTodoistIndex)
         .then((value) => latestTodoistIndex = value);
-}, 2000);
+}, 2 * minute);
