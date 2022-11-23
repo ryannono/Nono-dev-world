@@ -124,6 +124,103 @@ async function newNotionTask(todoistTask: Task): Promise<void> {
     }
 }
 
+// newNotionTask creates a new page in the notion
+// database matching the values in the todoist task
+async function updateNotionTask(notionPageID:string, todoistTask: Task): Promise<void> {
+    
+    // If a due date exists create a new page with a
+    // due date if not create a page without one
+    let dueDate = todoistTask.due
+    if (dueDate != null) {
+        notionApi.pages.update({
+            page_id : notionPageID,
+            "properties": {
+
+                    "Task": {
+                        "title": [{
+                            "text": { 
+                                "content": todoistTask.content
+                            }
+                        }]
+                    },
+                    "Due":{
+                        "date" : {
+                            "start" : dueDate.date
+                        }
+                    },
+                    "TodoistID": {
+                        "rich_text": [{
+                            "type" : "text",
+                            "text": {
+                                "content" : todoistTask.id
+                            }
+                        }]
+                    },
+                    "Status":{
+                        "checkbox" : todoistTask.isCompleted
+                    },
+                    "URL": {
+                        "url": todoistTask.url
+                    },
+                    "Description": {
+                        "rich_text": [{
+                            "type" : "text",
+                            "text": {
+                                "content" : todoistTask.description
+                            }
+                        }]
+                    },
+                    "Sync status" : {
+                        select : {
+                            "name" : "Updated"
+                        }
+                    },
+                    
+            }
+
+        });
+    }
+    else{
+        notionApi.pages.update({
+            page_id : notionPageID,
+            "properties": {
+    
+                    "Task": {
+                        "title": [{
+                            "text": { 
+                                "content": todoistTask.content
+                            }
+                        }]
+                    },
+                    "TodoistID":{
+                        "number" : Number(todoistTask.id)
+                    },
+                    "Status":{
+                        "checkbox" : todoistTask.isCompleted
+                    },
+                    "URL": {
+                        "url": todoistTask.url
+                    },
+                    "Description": {
+                        "rich_text": [{
+                            "type" : "text",
+                            "text": {
+                                "content" : todoistTask.description
+                            }
+                        }]
+                    },
+                    "Sync status" : {
+                        select : {
+                            "name" : "Updated"
+                        }
+                    }
+                    
+            },
+    
+        });
+    }
+}
+
 // searchNotion queries notion for an ID and returns
 // true if an element was found with the ID and false if not
 async function IDSearchNotion(todoistID:number): Promise<boolean> {
@@ -405,6 +502,41 @@ async function notionUpdatesCheck() {
     }
 }
 
+async function todoistUpdatesCheck() {
+    
+    const queryResponse = await todoistApi.getTasks({
+        filter : "p3"
+    })
+
+    if (queryResponse.length != 0) {
+
+        for (let i = 0; i < queryResponse.length; i++) {
+            const element = queryResponse[i] as Task;
+            let taskID = element.id;
+
+            const notionQueryResponse: QueryDatabaseResponse = await notionApi.databases.query({
+                database_id: databaseId,
+                filter: {
+                        "property": "TodoistID",
+                        "number" : {
+                            "equals" : Number(taskID)
+                        }
+                }
+            });
+
+            let notionPage = notionQueryResponse.results[0] as PageObjectResponse;
+            let notionPageID = notionPage.id;
+
+            updateNotionTask(notionPageID,element);
+            todoistApi.updateTask(taskID,{
+                priority : 1
+            })
+            
+        }
+    }
+    
+}
+
 
 // For todoist updating function check if a p3 flag was attached to any item
 // if a label was attached update all notion's fields to match
@@ -429,5 +561,5 @@ let minute:number = 60 * 1000;
 //         .then((value) => latestTodoistIndex = value);
 // }, 1 * minute);
 
-notionUpdatesCheck();
+todoistUpdatesCheck();
 
