@@ -67,7 +67,12 @@ async function newNotionTask(todoistTask: Task): Promise<void> {
                                 "content" : todoistTask.description
                             }
                         }]
-                    }
+                    },
+                    "Sync status" : {
+                        select : {
+                            "name" : "Updated"
+                        }
+                    },
                     
             }
 
@@ -106,6 +111,11 @@ async function newNotionTask(todoistTask: Task): Promise<void> {
                                 "content" : todoistTask.description
                             }
                         }]
+                    },
+                    "Sync status" : {
+                        select : {
+                            "name" : "Updated"
+                        }
                     }
                     
             },
@@ -155,7 +165,6 @@ async function notionUpToDateCheck(lastCheckedTodoistIndex: number): Promise<num
     // get newest (last element in tasklist) task in
     // todoist and check if it is in notion
     let latestElement:Task = taskList[taskList.length-1];
-    console.log(latestElement);
     if (latestElement != undefined) {
 
         let upToDate:boolean = await IDSearchNotion(Number(latestElement.id));
@@ -269,6 +278,21 @@ async function newTodoistTask(notionPageObject: PageObjectResponse) {
     return newTask;
 }
 
+async function updateTodoistTask(taskID:string, notionPageObject: PageObjectResponse) {
+    
+    let notionTitle = getNotionTitleProperty(notionPageObject);
+    let notionDescription = getNotionDescriptionProperty(notionPageObject);
+    let notionDue = getNotionDueProperty(notionPageObject);
+
+    let newTask = await todoistApi.updateTask(taskID,{
+        content: notionTitle,
+        description: notionDescription,
+        dueDate: notionDue
+    })
+
+    return newTask;
+}
+
 // todoistUpToDateCheck check if all new tasks from notion are present in todoist
 // if not it adds them. The funtion also adds todoist's ID information on to the 
 // notion database once the new task is created.
@@ -341,16 +365,69 @@ async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
     return taskList.length-1;
 }
 
+async function swapNotionSyncStatus(notionPageID:string) {
+    notionApi.pages.update({
+        page_id : notionPageID,
+        properties : {
+            "Sync status" : {
+                select : {
+                    "name" : "Updated"
+                }
+            }
+        }
+    })
+}
 
+async function notionUpdatesCheck() {
+    
+    // search for tasks identified to need to be updated
+    const queryResponse: QueryDatabaseResponse = await notionApi.databases.query({
+        database_id: databaseId,
+        filter: {
+                "property": "Sync status",
+                "select": {
+                    "equals": "NeedsUpdate"
+                }
+        }
+    });
+
+    // if any are present update them and amend their update indicator
+    if (queryResponse.results.length != 0) {
+        
+        for (let i = 0; i < queryResponse.results.length; i++) {
+            const element = queryResponse.results[i] as PageObjectResponse;
+
+            let elementTodoistID = getNotionTodoistIDProperty(element);
+            let notionPageID = element.id
+            await updateTodoistTask(elementTodoistID,element);
+            swapNotionSyncStatus(notionPageID);
+        }
+    }
+}
+
+
+// For todoist updating function check if a p3 flag was attached to any item
+// if a label was attached update all notion's fields to match
+// then remove the flag from the item. Do this at the same time as the other functions
+
+// For the notion task updating check that label area is empty if it isn't sync
+// updates to todoist and then clear the label property
+
+// periodically check status on incomplete notion tasks - 
+// if they are complete in todoist complete them
+// Also check completed tasks in notion and make sure they are complete in todoist
 let latestNotionIndex:number = 0;
 let latestTodoistIndex:number = 0;
 
 let minute:number = 60 * 1000;
 
-setInterval(() => {
-    notionUpToDateCheck(latestNotionIndex)
-        .then((value) => latestNotionIndex = value)
-    todoistUpToDateCheck(latestTodoistIndex)
-        .then((value) => latestTodoistIndex = value)
-}, 2 * minute);
+// setInterval(() => {
+//     notionUpdatesCheck();
+//     notionUpToDateCheck(latestNotionIndex)
+//         .then((value) => latestNotionIndex = value);
+//     todoistUpToDateCheck(latestTodoistIndex)
+//         .then((value) => latestTodoistIndex = value);
+// }, 1 * minute);
+
+notionUpdatesCheck();
 
