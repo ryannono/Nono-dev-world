@@ -41,12 +41,7 @@ function newNotionTask(todoistTask) {
                         }
                     },
                     "TodoistID": {
-                        "rich_text": [{
-                                "type": "text",
-                                "text": {
-                                    "content": todoistTask.id
-                                }
-                            }]
+                        number: Number(todoistTask.id)
                     },
                     "Status": {
                         "checkbox": todoistTask.isCompleted
@@ -131,12 +126,7 @@ function updateNotionTask(notionPageID, todoistTask) {
                         }
                     },
                     "TodoistID": {
-                        "rich_text": [{
-                                "type": "text",
-                                "text": {
-                                    "content": todoistTask.id
-                                }
-                            }]
+                        number: Number(todoistTask.id)
                     },
                     "Status": {
                         "checkbox": todoistTask.isCompleted
@@ -438,4 +428,11 @@ function todoistUpdatesCheck() {
 let latestNotionIndex = 0;
 let latestTodoistIndex = 0;
 let minute = 60 * 1000;
-todoistUpdatesCheck();
+setInterval(() => {
+    notionUpdatesCheck();
+    notionUpToDateCheck(latestNotionIndex)
+        .then((value) => latestNotionIndex = value);
+    todoistUpdatesCheck();
+    todoistUpToDateCheck(latestTodoistIndex)
+        .then((value) => latestTodoistIndex = value);
+}, 1 * minute);
