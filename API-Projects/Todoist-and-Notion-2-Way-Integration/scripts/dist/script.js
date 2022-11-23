@@ -122,6 +122,9 @@ function IDSearchNotion(todoistID) {
 }
 function notionUpToDateCheck(lastCheckedTodoistIndex) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (lastCheckedTodoistIndex === -1) {
+            lastCheckedTodoistIndex = 0;
+        }
         const taskList = yield todoistApi.getTasks({
             filter: "created after: -24hours"
         });
@@ -213,6 +216,9 @@ function newTodoistTask(notionPageObject) {
 }
 function todoistUpToDateCheck(lastCheckedNotionIndex) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (lastCheckedNotionIndex === -1) {
+            lastCheckedNotionIndex = 0;
+        }
         let timeWindow = new Date;
         timeWindow.setHours(timeWindow.getHours() - 24);
         let isoTimeWindow = timeWindow.toISOString();
@@ -258,4 +264,9 @@ function todoistUpToDateCheck(lastCheckedNotionIndex) {
 }
 let latestNotionIndex = 0;
 let latestTodoistIndex = 0;
-todoistUpToDateCheck(latestNotionIndex);
+setInterval(() => {
+    notionUpToDateCheck(latestNotionIndex)
+        .then((value) => latestNotionIndex = value);
+    todoistUpToDateCheck(latestTodoistIndex)
+        .then((value) => latestTodoistIndex = value);
+}, 2000);

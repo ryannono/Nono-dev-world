@@ -143,6 +143,10 @@ async function IDSearchNotion(todoistID:number): Promise<boolean> {
 // todoist tasks in its database. If it doesnt they are added.
 async function notionUpToDateCheck(lastCheckedTodoistIndex: number): Promise<number> {
     
+    if (lastCheckedTodoistIndex === -1) {
+        lastCheckedTodoistIndex = 0;
+    }
+
     // get list of todoist tasks created today
     const taskList:Array<Task> = await todoistApi.getTasks({
         filter: "created after: -24hours"
@@ -269,7 +273,9 @@ async function newTodoistTask(notionPageObject: PageObjectResponse) {
 // if not it adds them. The funtion also adds todoist's ID information on to the 
 // notion database once the new task is created.
 async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
-
+    if (lastCheckedNotionIndex === -1) {
+        lastCheckedNotionIndex = 0;
+    }
     // get time 24 hours ago
     let timeWindow: Date = new Date;
     timeWindow.setHours(timeWindow.getHours() - 24);
@@ -338,14 +344,11 @@ async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
 
 let latestNotionIndex:number = 0;
 let latestTodoistIndex:number = 0;
-todoistUpToDateCheck(latestNotionIndex)
-// setInterval(() => {
-//     notionUpToDateCheck(latestNotionIndex)
-//         .then((value) => latestNotionIndex = value)
-// }, 2000)
 
-// setInterval(() => {
-//     todoistUpToDateCheck(latestTodoistIndex)
-//         .then((value) => latestTodoistIndex = value)
-// }, 2000)
+setInterval(() => {
+    notionUpToDateCheck(latestNotionIndex)
+        .then((value) => latestNotionIndex = value)
+    todoistUpToDateCheck(latestTodoistIndex)
+        .then((value) => latestTodoistIndex = value)
+}, 2000)
 
