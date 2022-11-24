@@ -1,10 +1,8 @@
 
 import dotenv = require("dotenv"); // key environment
-import { DueDate, Task, TodoistApi } from "@doist/todoist-api-typescript"; // todoist api
+import { Task, TodoistApi } from "@doist/todoist-api-typescript"; // todoist api
 import { Client } from "@notionhq/client"; // notion api
-import { getPageProperty, GetPagePropertyResponse, DatePropertyItemObjectResponse, NumberPropertyItemObjectResponse, PageObjectResponse, PartialPageObjectResponse, PropertyItemListResponse, PropertyItemObjectResponse, QueryDatabaseResponse, RichTextItemResponse, RichTextPropertyItemObjectResponse, TextRichTextItemResponse, TitlePropertyItemObjectResponse, UrlPropertyItemObjectResponse, CreatePageResponse, UpdatePageResponse } from "@notionhq/client/build/src/api-endpoints";
-import { stringify } from "querystring";
-
+import { PageObjectResponse, QueryDatabaseResponse, CreatePageResponse, UpdatePageResponse } from "@notionhq/client/build/src/api-endpoints";
 
 // ------------------- auth keys ------------------------------//
 
@@ -102,7 +100,7 @@ function getNotionTodoistURLProperty(pageObject: PageObjectResponse) : string{
 
 // getNotionTitleProperty return notions title
 // property for the passed page
-function getNotionTitleProperty(pageObject: PageObjectResponse){
+function getNotionTitleProperty(pageObject: PageObjectResponse) : string {
     let propertiesObject = pageObject.properties as object;
     let map = objectToMap(propertiesObject);
     let titleobject = map.get("Task").title as object;
@@ -132,9 +130,9 @@ async function IDSearchNotion(todoistID:number): Promise<PageObjectResponse> {
     return searchResults.results[0] as PageObjectResponse
 }
 
-// notionTasksPast24hours returns a list of the tasks
+// notionPagesPast24hours returns a list of the tasks
 // created in notion within the past 24 hours
-async function notionTasksPast24hours() : Promise<PageObjectResponse[]> {
+async function notionPagesPast24hours() : Promise<PageObjectResponse[]> {
     
     // get time 24 hours ago
     let timeWindow: Date = new Date;
@@ -155,9 +153,9 @@ async function notionTasksPast24hours() : Promise<PageObjectResponse[]> {
     return queryResponse.results as Array<PageObjectResponse>;
 }
 
-// notionNeedsUpdateTasks returns a list of the tasks
+// notionNeedsUpdatePages returns a list of the tasks
 // with the "needs update" sync status in notion
-async function notionNeedsUpdateTasks() : Promise<PageObjectResponse[]> {
+async function notionNeedsUpdatePages() : Promise<PageObjectResponse[]> {
     
     const queryResponse: QueryDatabaseResponse = await notionApi.databases.query({
         database_id: databaseId,
@@ -175,10 +173,10 @@ async function notionNeedsUpdateTasks() : Promise<PageObjectResponse[]> {
 
 // --------------- Task/Page creation & update functions --------------//
 
-// newNotionTask creates a new page in the notion
+// newNotionPage creates a new page in the notion
 // database matching the values in the todoist task
 // and returns the new page object
-async function newNotionTask(todoistTask: Task) : Promise<PageObjectResponse> {
+async function newNotionPage(todoistTask: Task) : Promise<PageObjectResponse> {
     
     // If a due date exists create a new page with a
     // due date if not create a page without one
@@ -242,10 +240,10 @@ async function newNotionTask(todoistTask: Task) : Promise<PageObjectResponse> {
     return newNotionPage as PageObjectResponse;
 }
 
-// updateNotionTask updates a page in the notion
+// updateNotionPage updates a page in the notion
 // database to match the passed todoist task
 // and returns the page object 
-async function updateNotionTask(notionPageID:string, todoistTask: Task) : Promise<PageObjectResponse> {
+async function updateNotionPage(notionPageID:string, todoistTask: Task) : Promise<PageObjectResponse> {
     
     // If a due date exists create a new page with a
     // due date if not create a page without one
@@ -407,7 +405,7 @@ async function checkTodoistCompletion(lastCheckedTodoistIndex:number, taskList:A
             
 
             if (todoistTask.isCompleted){
-                updateNotionTask(IDs.notionPageIDs[i],todoistTask);
+                updateNotionPage(IDs.notionPageIDs[i],todoistTask);
             }
         }
         lastCheckedTodoistIndex = taskList.length-1
@@ -443,7 +441,7 @@ async function notionUpToDateCheck(lastCheckedTodoistIndex: number) : Promise<nu
             // it's Todoist counterpart
             if (!notionPage) {
                 
-                let notionPageID:string = (await newNotionTask(todoistTask)).id;
+                let notionPageID:string = (await newNotionPage(todoistTask)).id;
                 
                 let index:number = myTodoistIndexOf(String(todoistID))
                 IDs.notionPageIDs[index] = notionPageID;
@@ -469,7 +467,7 @@ async function notionUpToDateCheck(lastCheckedTodoistIndex: number) : Promise<nu
 async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
     
     // get notion tasks created in the past 24 hours
-    let taskList = await notionTasksPast24hours() as Array<PageObjectResponse>;
+    let taskList = await notionPagesPast24hours() as Array<PageObjectResponse>;
 
     // if tasks were created in the past 24 hours
     if (taskList.length > 0) {
@@ -490,7 +488,7 @@ async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
                     
                 // update notion task to have todoist id and url
                 let notionPageId = notionPage.id;
-                updateNotionTask(notionPageId,todoistTask);
+                updateNotionPage(notionPageId,todoistTask);
 
                 // add newly created task id to the structure
                 let index:number = myNotionIndexOf(notionPageId);
@@ -531,7 +529,7 @@ async function swapNotionSyncStatus(notionPageID:string) : Promise<void> {
 async function notionManualUpdates() : Promise<void> {
     
     // search for tasks identified to need to be updated
-    const pageList = await notionNeedsUpdateTasks() as Array<PageObjectResponse>;
+    const pageList = await notionNeedsUpdatePages() as Array<PageObjectResponse>;
 
     // if any are present update them and amend their update indicator
     if (pageList.length != 0) {
@@ -543,7 +541,7 @@ async function notionManualUpdates() : Promise<void> {
             let notionTodoistID: string = getNotionTodoistIDProperty(notionPage);
             let notionPageID: string = notionPage.id;
 
-            if (notionTodoistID === "false") {
+            if (!notionTodoistID) {
                 todoistUpToDateCheck(0);
             }
             else{
@@ -583,7 +581,7 @@ async function todoistManualUpdates() : Promise<void> {
                 notionUpToDateCheck(0);
             }
             else{
-                updateNotionTask(notionPage.id,todoistTask);
+                updateNotionPage(notionPage.id,todoistTask);
             }
             
             // update task priority bak to level 1

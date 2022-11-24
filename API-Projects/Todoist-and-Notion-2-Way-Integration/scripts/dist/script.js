@@ -91,7 +91,7 @@ function IDSearchNotion(todoistID) {
         return searchResults.results[0];
     });
 }
-function notionTasksPast24hours() {
+function notionPagesPast24hours() {
     return __awaiter(this, void 0, void 0, function* () {
         let timeWindow = new Date;
         timeWindow.setHours(timeWindow.getHours() - 24);
@@ -108,7 +108,7 @@ function notionTasksPast24hours() {
         return queryResponse.results;
     });
 }
-function notionNeedsUpdateTasks() {
+function notionNeedsUpdatePages() {
     return __awaiter(this, void 0, void 0, function* () {
         const queryResponse = yield notionApi.databases.query({
             database_id: databaseId,
@@ -122,7 +122,7 @@ function notionNeedsUpdateTasks() {
         return queryResponse.results;
     });
 }
-function newNotionTask(todoistTask) {
+function newNotionPage(todoistTask) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const newNotionPage = yield notionApi.pages.create({
@@ -178,7 +178,7 @@ function newNotionTask(todoistTask) {
         return newNotionPage;
     });
 }
-function updateNotionTask(notionPageID, todoistTask) {
+function updateNotionPage(notionPageID, todoistTask) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const updatedNotionPage = yield notionApi.pages.update({
@@ -297,7 +297,7 @@ function checkTodoistCompletion(lastCheckedTodoistIndex, taskList) {
                 const todoistID = IDs.todoistTaskIDs[i];
                 let todoistTask = yield todoistApi.getTask(todoistID);
                 if (todoistTask.isCompleted) {
-                    updateNotionTask(IDs.notionPageIDs[i], todoistTask);
+                    updateNotionPage(IDs.notionPageIDs[i], todoistTask);
                 }
             }
             lastCheckedTodoistIndex = taskList.length - 1;
@@ -317,7 +317,7 @@ function notionUpToDateCheck(lastCheckedTodoistIndex) {
                 const todoistID = Number(todoistTask.id);
                 const notionPage = yield IDSearchNotion(todoistID);
                 if (!notionPage) {
-                    let notionPageID = (yield newNotionTask(todoistTask)).id;
+                    let notionPageID = (yield newNotionPage(todoistTask)).id;
                     let index = myTodoistIndexOf(String(todoistID));
                     IDs.notionPageIDs[index] = notionPageID;
                 }
@@ -331,7 +331,7 @@ function notionUpToDateCheck(lastCheckedTodoistIndex) {
 }
 function todoistUpToDateCheck(lastCheckedNotionIndex) {
     return __awaiter(this, void 0, void 0, function* () {
-        let taskList = yield notionTasksPast24hours();
+        let taskList = yield notionPagesPast24hours();
         if (taskList.length > 0) {
             for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
                 const notionPage = taskList[i];
@@ -339,7 +339,7 @@ function todoistUpToDateCheck(lastCheckedNotionIndex) {
                 if (!notionTodoistID) {
                     let todoistTask = yield newTodoistTask(notionPage);
                     let notionPageId = notionPage.id;
-                    updateNotionTask(notionPageId, todoistTask);
+                    updateNotionPage(notionPageId, todoistTask);
                     let index = myNotionIndexOf(notionPageId);
                     IDs.todoistTaskIDs[index] = todoistTask.id;
                 }
@@ -367,13 +367,13 @@ function swapNotionSyncStatus(notionPageID) {
 }
 function notionManualUpdates() {
     return __awaiter(this, void 0, void 0, function* () {
-        const pageList = yield notionNeedsUpdateTasks();
+        const pageList = yield notionNeedsUpdatePages();
         if (pageList.length != 0) {
             for (let i = 0; i < pageList.length; i++) {
                 const notionPage = pageList[i];
                 let notionTodoistID = getNotionTodoistIDProperty(notionPage);
                 let notionPageID = notionPage.id;
-                if (notionTodoistID === "false") {
+                if (!notionTodoistID) {
                     todoistUpToDateCheck(0);
                 }
                 else {
@@ -399,7 +399,7 @@ function todoistManualUpdates() {
                     notionUpToDateCheck(0);
                 }
                 else {
-                    updateNotionTask(notionPage.id, todoistTask);
+                    updateNotionPage(notionPage.id, todoistTask);
                 }
                 todoistApi.updateTask(todoistID, { priority: 1 });
             }
