@@ -9,7 +9,7 @@ import { PageObjectResponse, QueryDatabaseResponse, CreatePageResponse, UpdatePa
 dotenv.config();
 const todoistKey:string = String(process.env.TODOISTKEY);
 const notionKey:string = String(process.env.NOTIONKEY);
-const databaseId:string = String(process.env.DATABASEID)
+const databaseId:string = String(process.env.DATABASEID);
 
 
 // ----------------- API initialisations -----------------------//
@@ -38,6 +38,50 @@ function objectToMap(object: any): Map<any,any>{
     return map;
 }
 
+// requires
+function reorderIDs(ID:string, newIndex: number){
+
+    if (IDs.notionPageIDs.includes(ID)){
+
+        // get current position
+        let currentIndex = myNotionIndexOf(ID);
+
+        // get counterpart value
+        let tempTodoistID = IDs.todoistTaskIDs[currentIndex];
+
+        // delete ids at current positions
+        IDs.notionPageIDs.splice(currentIndex,1);
+        IDs.todoistTaskIDs.splice(currentIndex,1);
+
+        // add them back at correct position
+        IDs.notionPageIDs.splice(newIndex,0,ID);
+        IDs.todoistTaskIDs.splice(newIndex,0,tempTodoistID);
+
+        return true;
+    }
+    else if (IDs.todoistTaskIDs.includes(ID)){
+
+        // get current position
+        let currentIndex = myTodoistIndexOf(ID);
+
+        // get counterpart value
+        let tempNotionID = IDs.notionPageIDs[currentIndex];
+
+        // delete ids at current positions
+        IDs.todoistTaskIDs.splice(currentIndex,1);
+        IDs.notionPageIDs.splice(currentIndex,1);
+        
+
+        // add them back at correct position
+        IDs.todoistTaskIDs.splice(newIndex,0,ID);
+        IDs.notionPageIDs.splice(newIndex,0,tempNotionID);
+        
+        return true;
+    }
+
+    return false;
+}
+
 
 // ------------ Get Notion Property functions ----------------- //
 
@@ -51,7 +95,7 @@ function getNotionDescriptionProperty(pageObject: PageObjectResponse): string{
         return "";
     }
     let text:string = objectToMap(objectToMap(richTextObject).get("0")).get("plain_text");
-    return text
+    return text;
 }
 
 // getNotionDueProperty return notions due
@@ -95,7 +139,7 @@ function getNotionTodoistURLProperty(pageObject: PageObjectResponse) : string{
         return "";
     }
     let url:string = objectToMap(objectToMap(richTextObject).get("0")).get("plain_text");
-    return url
+    return url;
 }
 
 // getNotionTitleProperty return notions title
@@ -113,7 +157,7 @@ function getNotionTitleProperty(pageObject: PageObjectResponse) : string {
 
 // searchNotion queries the notion database for a todoist ID and returns
 // the matching page object
-async function IDSearchNotion(todoistID:number): Promise<PageObjectResponse> {
+async function IDSearchNotion(todoistID:number): Promise<PageObjectResponse | null> {
     
     const searchResults: QueryDatabaseResponse = await notionApi.databases.query({
         database_id: databaseId,
@@ -127,25 +171,22 @@ async function IDSearchNotion(todoistID:number): Promise<PageObjectResponse> {
         }
     });
 
-    return searchResults.results[0] as PageObjectResponse
+    if (searchResults.results.length === 0){
+        return null;
+    }
+
+    return searchResults.results[0] as PageObjectResponse;
 }
 
-// notionPagesPast24hours returns a list of the tasks
-// created in notion within the past 24 hours
-async function notionPagesPast24hours() : Promise<PageObjectResponse[]> {
+// notionActivePages returns a list of the active tasks in notion
+async function notionActivePages() : Promise<PageObjectResponse[]> {
     
-    // get time 24 hours ago
-    let timeWindow: Date = new Date;
-    timeWindow.setHours(timeWindow.getHours() - 24);
-    let isoTimeWindow: string = timeWindow.toISOString();
-
-    // query notion database with past 24 hours filter
     const queryResponse: QueryDatabaseResponse = await notionApi.databases.query({
         database_id: databaseId,
         filter: {
-                "timestamp": "created_time",
-                "created_time": {
-                        "after": isoTimeWindow
+                "property": "Status",
+                "checkbox": {
+                        "equals": false
                 }
         }
     });
@@ -180,7 +221,7 @@ async function newNotionPage(todoistTask: Task) : Promise<PageObjectResponse> {
     
     // If a due date exists create a new page with a
     // due date if not create a page without one
-    const newNotionPage: CreatePageResponse = await notionApi.pages.create({
+    const newNotionPage = await notionApi.pages.create({
 
         "parent": {
             "type": "database_id",
@@ -220,10 +261,10 @@ async function newNotionPage(todoistTask: Task) : Promise<PageObjectResponse> {
                 },
                 
         }
-    });
+    }) as PageObjectResponse;
     
     const pageID = newNotionPage.id;
-    if (todoistTask.due?.date != null && todoistTask.due.date != undefined) {
+    if (todoistTask.due) {
         notionApi.pages.update({
             page_id: pageID,
             "properties":{
@@ -237,7 +278,7 @@ async function newNotionPage(todoistTask: Task) : Promise<PageObjectResponse> {
         })
     }
     
-    return newNotionPage as PageObjectResponse;
+    return newNotionPage;
 }
 
 // updateNotionPage updates a page in the notion
@@ -247,7 +288,7 @@ async function updateNotionPage(notionPageID:string, todoistTask: Task) : Promis
     
     // If a due date exists create a new page with a
     // due date if not create a page without one
-    const updatedNotionPage: UpdatePageResponse = await notionApi.pages.update({
+    const updatedNotionPage = await notionApi.pages.update({
         page_id : notionPageID,
         "properties": {
 
@@ -286,7 +327,7 @@ async function updateNotionPage(notionPageID:string, todoistTask: Task) : Promis
     });
 
     const pageID:string = updatedNotionPage.id;
-    if (todoistTask.due?.date != null && todoistTask.due.date != undefined) {
+    if (todoistTask.due) {
         notionApi.pages.update({
             page_id: pageID,
             "properties":{
@@ -342,16 +383,16 @@ async function updateTodoistTask(taskID:string, notionPageObject: PageObjectResp
 
 // myTodoistIndexOf returns the index of the passed
 // todoist ID in the ID.todoistTaskIDs array
-function myTodoistIndexOf(ID:string) : number {
+function myTodoistIndexOf(todoistID:string) : number {
     
     let index:number;
 
-    if (IDs.todoistTaskIDs.includes(String(ID))) {
-        index = IDs.todoistTaskIDs.indexOf(String(ID));
+    if (IDs.todoistTaskIDs.includes(String(todoistID))) {
+        index = IDs.todoistTaskIDs.indexOf(String(todoistID));
     }
     else{
         index = IDs.todoistTaskIDs.length;
-        IDs.todoistTaskIDs[index] = String(ID);
+        IDs.todoistTaskIDs[index] = String(todoistID);
     }
 
     return index;
@@ -359,16 +400,16 @@ function myTodoistIndexOf(ID:string) : number {
 
 // myNotionIndexOf returns the index of the passed
 // notion page ID in the ID.notionPageIDs array
-function myNotionIndexOf(ID:string): number {
+function myNotionIndexOf(notionpageID:string): number {
     
     let index:number;
 
-    if (IDs.notionPageIDs.includes(String(ID))) {
-        index = IDs.notionPageIDs.indexOf(String(ID));
+    if (IDs.notionPageIDs.includes(String(notionpageID))) {
+        index = IDs.notionPageIDs.indexOf(String(notionpageID));
     }
     else{
         index = IDs.notionPageIDs.length;
-        IDs.notionPageIDs[index] = String(ID);
+        IDs.notionPageIDs[index] = String(notionpageID);
     }
 
     return index;
@@ -379,12 +420,54 @@ function myNotionIndexOf(ID:string): number {
 async function storeCurrentSyncedTasks(): Promise<void> {
     
     const todoistTaskList = await todoistApi.getTasks();
-    for (let i = 0; i < todoistTaskList.length; i++) {
+    let len:number = todoistTaskList.length;
+    for (let i = 0; i < len; i++) {
         const todoistTask:Task = todoistTaskList[i];
         let todoistID = todoistTask.id;
 
         IDs.todoistTaskIDs[i] = todoistID;
-        IDs.notionPageIDs[i] = (await IDSearchNotion(Number(todoistID))).id;
+        let notionPage: PageObjectResponse | null = await IDSearchNotion(Number(todoistID));
+
+        if (notionPage){
+            IDs.notionPageIDs[i] = notionPage.id;
+        }
+    }
+}
+
+async function bubbleSortIDs() {
+    
+    let swapCounter:number = -1;
+    let len: number = IDs.todoistTaskIDs.length;
+
+    while(swapCounter != 0){
+
+        swapCounter = 0;
+
+        for (let i = 0; i+1 < len; i++) {
+
+            const todoistID = IDs.todoistTaskIDs[i];
+            const nextTodoistID = IDs.todoistTaskIDs[i+1];
+            const notionPageID = IDs.notionPageIDs[i];
+            const nextNotionPageID = IDs.notionPageIDs[i+1];
+
+            const todoistTask: Task = await todoistApi.getTask(todoistID);
+            const nextTodoistTask: Task = await todoistApi.getTask(nextTodoistID);
+            
+            const createdTime = new Date(todoistTask.createdAt);
+            const nextCreatedTime = new Date(nextTodoistTask.createdAt);
+
+            if (createdTime > nextCreatedTime) {
+                console.log(createdTime,nextCreatedTime);
+
+                IDs.todoistTaskIDs[i] = nextTodoistID;
+                IDs.todoistTaskIDs[i+1] = todoistID;
+
+                IDs.notionPageIDs[i] = nextNotionPageID;
+                IDs.notionPageIDs[i+1] = notionPageID;
+
+                swapCounter++;
+            }
+        }
     }
 }
 
@@ -407,10 +490,40 @@ async function checkTodoistCompletion(lastCheckedTodoistIndex:number, taskList:A
             if (todoistTask.isCompleted){
                 updateNotionPage(IDs.notionPageIDs[i],todoistTask);
             }
+            
         }
         lastCheckedTodoistIndex = taskList.length-1
     }
+
     return lastCheckedTodoistIndex;
+}
+
+// checkTodoistCompletion check if any of the seen 
+// todoist ids have recently been completed in todoist
+// if they have then the status in notion is updated to match
+// the function then returns the last index it checked/updated
+async function checkTodoistIncompletion(taskList:Array<Task>) : Promise<void> {
+    
+    let len = taskList.length;
+    for (let i = 0; i < len; i++) {
+        
+        const todoistTask = taskList[i];
+        const todoistTaskID = todoistTask.id;
+        let notionPage: PageObjectResponse | null = await IDSearchNotion(Number(todoistTaskID));
+        
+        if (notionPage) {
+
+            let currentStatus = getNotionStatusProperty(notionPage);
+            let index:number = myTodoistIndexOf(todoistTaskID);
+
+            if (currentStatus === true) {
+                updateNotionPage(notionPage.id,todoistTask);
+            }
+            IDs.notionPageIDs[index] = notionPage.id;
+
+            
+        }
+    }
 }
 
 // notionUpToDateCheck checks if notion has the latest
@@ -420,43 +533,45 @@ async function notionUpToDateCheck(lastCheckedTodoistIndex: number) : Promise<nu
 
     console.log(lastCheckedTodoistIndex);
 
-    // get list of todoist *active tasks created today
-    let timeWindow: string = "created after: -24hours";
-    const taskList:Array<Task> = await todoistApi.getTasks({filter: timeWindow});
+    // get list of todoist *active tasks
+    const taskList:Array<Task> = await todoistApi.getTasks();
 
     // check if a task was completed in todoist
     lastCheckedTodoistIndex = await checkTodoistCompletion(lastCheckedTodoistIndex,taskList);
-    
-    // check there exists tasks created today
-    if (taskList.length > 0) {
+    let taskListLength = taskList.length;
 
-        for (let i:number = lastCheckedTodoistIndex; i < taskList.length; i++) {
+    // check there are active tasks left
+    if (taskListLength > 0) {
+
+        for (let i:number = lastCheckedTodoistIndex + 1; i < taskListLength; i++) {
             
             const todoistTask: Task = taskList[i];
             const todoistID:number = Number(todoistTask.id);
-            const notionPage: PageObjectResponse = await IDSearchNotion(todoistID);
+            const notionPage: PageObjectResponse | null = await IDSearchNotion(todoistID);
+            let index:number = myTodoistIndexOf(String(todoistID));
             
             // if element not in notion yet create the notion page
             // and add its ID to the structure at the same index as 
             // it's Todoist counterpart
             if (!notionPage) {
                 
-                let notionPageID:string = (await newNotionPage(todoistTask)).id;
+                let newNotionPageID:string = (await newNotionPage(todoistTask)).id;
+                IDs.notionPageIDs[index] = newNotionPageID;
+            }
+            else if (notionPage){
                 
-                let index:number = myTodoistIndexOf(String(todoistID))
-                IDs.notionPageIDs[index] = notionPageID;
+                checkTodoistIncompletion(taskList)
+                    .then(()=> bubbleSortIDs());
             }
 
-            if (i === taskList.length-1) {
+            if (i === taskListLength-1) {
                 return i;
             }
         }
     }
     // if there is no element in the
     // task list then the last checked is 0
-
-    return 0;
-    
+    return taskListLength-1;
 }
 
 // notionUpToDateCheck checks if notion has the latest
@@ -466,14 +581,15 @@ async function notionUpToDateCheck(lastCheckedTodoistIndex: number) : Promise<nu
 // the function returns the index of the last element it checked
 async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
     
-    // get notion tasks created in the past 24 hours
-    let taskList = await notionPagesPast24hours() as Array<PageObjectResponse>;
+    // get notion active pages 
+    let taskList = await notionActivePages() as Array<PageObjectResponse>;
+    let taskListLength = taskList.length;
 
-    // if tasks were created in the past 24 hours
-    if (taskList.length > 0) {
+    // if there are any active pages
+    if (taskListLength > 0) {
         
-        // iterate through all the unchecked tasks
-        for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
+        // iterate through all the unchecked pages
+        for (let i = lastCheckedNotionIndex + 1; i < taskListLength; i++) {
 
             // if notion task doesn't have an associated todoist ID
             // then it hasn't been synced to TodoIst yet so add it
@@ -497,14 +613,14 @@ async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
 
             // if we've reached the last element
             // return it's index
-            if (i === taskList.length-1) {
+            if (i === taskListLength-1) {
                 return i;
             }
         }
     }
-    // if no tasks were created in the past 24 hours
+    // if there are no active pages
     // return 0
-    return 0;
+    return taskListLength-1;
 }
 
 
@@ -538,18 +654,19 @@ async function notionManualUpdates() : Promise<void> {
 
             const notionPage = pageList[i] as PageObjectResponse;
 
-            let notionTodoistID: string = getNotionTodoistIDProperty(notionPage);
             let notionPageID: string = notionPage.id;
+            let index:number = myNotionIndexOf(notionPageID);
+            let todoistID: string = IDs.todoistTaskIDs[index];
 
-            if (!notionTodoistID) {
+            if (!todoistID) {
                 todoistUpToDateCheck(0);
             }
             else{
-                updateTodoistTask(notionTodoistID,notionPage);
+                updateTodoistTask(todoistID,notionPage);
             }
 
             if (getNotionStatusProperty(notionPage)){
-                todoistApi.closeTask(notionTodoistID);
+                todoistApi.closeTask(todoistID);
             }
 
             swapNotionSyncStatus(notionPageID);
@@ -593,19 +710,20 @@ async function todoistManualUpdates() : Promise<void> {
 
 // ----------------------------- Main ---------------------------------//
 
-let latestNotionIndex:number = 0;
-let latestTodoistIndex:number = 0;
+
 
 const IDs = {
     todoistTaskIDs : [] as Array<string>,
     notionPageIDs : [] as Array<string>
 }
 
+let minute:number = 60 * 1000;
+let latestNotionIndex: number = -1;
+let latestTodoistIndex: number = -1;
+
 storeCurrentSyncedTasks();
 
-let minute:number = 60 * 1000;
-
-// // min interval == 5 seconds
+// min interval == 5 seconds
 setInterval(() => {
     notionUpToDateCheck(latestNotionIndex)
         .then((value) => latestNotionIndex = value)
@@ -613,5 +731,5 @@ setInterval(() => {
     todoistUpToDateCheck(latestTodoistIndex)
        .then((value) => latestTodoistIndex = value)
        .then(() => todoistManualUpdates());
-}, 5000);
+}, 10000);
 
