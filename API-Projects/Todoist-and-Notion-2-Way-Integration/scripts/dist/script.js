@@ -18,176 +18,6 @@ const notionKey = String(process.env.NOTIONKEY);
 const databaseId = String(process.env.DATABASEID);
 const todoistApi = new todoist_api_typescript_1.TodoistApi(todoistKey);
 const notionApi = new client_1.Client({ auth: notionKey });
-function newNotionTask(todoistTask) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let dueDate = todoistTask.due;
-        if (dueDate != null) {
-            notionApi.pages.create({
-                "parent": {
-                    "type": "database_id",
-                    "database_id": databaseId
-                },
-                "properties": {
-                    "Task": {
-                        "title": [{
-                                "text": {
-                                    "content": todoistTask.content
-                                }
-                            }]
-                    },
-                    "Due": {
-                        "date": {
-                            "start": dueDate.date
-                        }
-                    },
-                    "TodoistID": {
-                        number: Number(todoistTask.id)
-                    },
-                    "Status": {
-                        "checkbox": todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                                "type": "text",
-                                "text": {
-                                    "content": todoistTask.description
-                                }
-                            }]
-                    },
-                    "Sync status": {
-                        select: {
-                            "name": "Updated"
-                        }
-                    },
-                }
-            });
-        }
-        else {
-            notionApi.pages.create({
-                "parent": {
-                    "type": "database_id",
-                    "database_id": databaseId
-                },
-                "properties": {
-                    "Task": {
-                        "title": [{
-                                "text": {
-                                    "content": todoistTask.content
-                                }
-                            }]
-                    },
-                    "TodoistID": {
-                        "number": Number(todoistTask.id)
-                    },
-                    "Status": {
-                        "checkbox": todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                                "type": "text",
-                                "text": {
-                                    "content": todoistTask.description
-                                }
-                            }]
-                    },
-                    "Sync status": {
-                        select: {
-                            "name": "Updated"
-                        }
-                    }
-                },
-            });
-        }
-    });
-}
-function updateNotionTask(notionPageID, todoistTask) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let dueDate = todoistTask.due;
-        if (dueDate != null) {
-            notionApi.pages.update({
-                page_id: notionPageID,
-                "properties": {
-                    "Task": {
-                        "title": [{
-                                "text": {
-                                    "content": todoistTask.content
-                                }
-                            }]
-                    },
-                    "Due": {
-                        "date": {
-                            "start": dueDate.date
-                        }
-                    },
-                    "TodoistID": {
-                        number: Number(todoistTask.id)
-                    },
-                    "Status": {
-                        "checkbox": todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                                "type": "text",
-                                "text": {
-                                    "content": todoistTask.description
-                                }
-                            }]
-                    },
-                    "Sync status": {
-                        select: {
-                            "name": "Updated"
-                        }
-                    },
-                }
-            });
-        }
-        else {
-            notionApi.pages.update({
-                page_id: notionPageID,
-                "properties": {
-                    "Task": {
-                        "title": [{
-                                "text": {
-                                    "content": todoistTask.content
-                                }
-                            }]
-                    },
-                    "TodoistID": {
-                        "number": Number(todoistTask.id)
-                    },
-                    "Status": {
-                        "checkbox": todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                                "type": "text",
-                                "text": {
-                                    "content": todoistTask.description
-                                }
-                            }]
-                    },
-                    "Sync status": {
-                        select: {
-                            "name": "Updated"
-                        }
-                    }
-                },
-            });
-        }
-    });
-}
 function IDSearchNotion(todoistID) {
     return __awaiter(this, void 0, void 0, function* () {
         const searchResults = yield notionApi.databases.query({
@@ -201,39 +31,7 @@ function IDSearchNotion(todoistID) {
                     }]
             }
         });
-        if (searchResults.results.length === 0) {
-            return false;
-        }
-        return true;
-    });
-}
-function notionUpToDateCheck(lastCheckedTodoistIndex) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (lastCheckedTodoistIndex === -1) {
-            lastCheckedTodoistIndex = 0;
-        }
-        const taskList = yield todoistApi.getTasks({
-            filter: "created after: -24hours"
-        });
-        let latestElement = taskList[taskList.length - 1];
-        if (latestElement != undefined) {
-            let upToDate = yield IDSearchNotion(Number(latestElement.id));
-            if (upToDate === false) {
-                for (let i = lastCheckedTodoistIndex; i < taskList.length; i++) {
-                    console.log(i);
-                    const todoistTask = taskList[i];
-                    const todoistID = Number(todoistTask.id);
-                    const notionSearchResult = yield IDSearchNotion(todoistID);
-                    if (notionSearchResult === false) {
-                        newNotionTask(todoistTask);
-                    }
-                    if (i === taskList.length - 1) {
-                        return i;
-                    }
-                }
-            }
-        }
-        return taskList.length - 1;
+        return searchResults.results[0];
     });
 }
 function objectToMap(object) {
@@ -243,13 +41,6 @@ function objectToMap(object) {
         map.set(keys[i], object[keys[i]]);
     }
     return map;
-}
-function getNotionTitleProperty(pageObject) {
-    let propertiesObject = pageObject.properties;
-    let map = objectToMap(propertiesObject);
-    let titleobject = map.get("Task").title;
-    let text = objectToMap(objectToMap(titleobject).get("0")).get("plain_text");
-    return text;
 }
 function getNotionDescriptionProperty(pageObject) {
     let propertiesObject = pageObject.properties;
@@ -275,7 +66,7 @@ function getNotionStatusProperty(pageObject) {
     let propertiesObject = pageObject.properties;
     let map = objectToMap(propertiesObject);
     let checkboxContent = map.get("Status").checkbox;
-    return Boolean(checkboxContent);
+    return checkboxContent;
 }
 function getNotionTodoistIDProperty(pageObject) {
     let propertiesObject = pageObject.properties;
@@ -292,6 +83,167 @@ function getNotionTodoistURLProperty(pageObject) {
     }
     let url = objectToMap(objectToMap(richTextObject).get("0")).get("plain_text");
     return url;
+}
+function getNotionTitleProperty(pageObject) {
+    let propertiesObject = pageObject.properties;
+    let map = objectToMap(propertiesObject);
+    let titleobject = map.get("Task").title;
+    let text = objectToMap(objectToMap(titleobject).get("0")).get("plain_text");
+    return text;
+}
+function notionTasksPast24hours() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let timeWindow = new Date;
+        timeWindow.setHours(timeWindow.getHours() - 24);
+        let isoTimeWindow = timeWindow.toISOString();
+        const queryResponse = yield notionApi.databases.query({
+            database_id: databaseId,
+            filter: {
+                "timestamp": "created_time",
+                "created_time": {
+                    "after": isoTimeWindow
+                }
+            }
+        });
+        return queryResponse.results;
+    });
+}
+function notionNeedsUpdateTasks() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryResponse = yield notionApi.databases.query({
+            database_id: databaseId,
+            filter: {
+                "property": "Sync status",
+                "select": {
+                    "equals": "NeedsUpdate"
+                }
+            }
+        });
+        return queryResponse.results;
+    });
+}
+function swapNotionSyncStatus(notionPageID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        notionApi.pages.update({
+            page_id: notionPageID,
+            properties: {
+                "Sync status": {
+                    select: {
+                        "name": "Updated"
+                    }
+                }
+            }
+        });
+    });
+}
+function newNotionTask(todoistTask) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const newNotionPage = yield notionApi.pages.create({
+            "parent": {
+                "type": "database_id",
+                "database_id": databaseId
+            },
+            "properties": {
+                "Task": {
+                    "title": [{
+                            "text": {
+                                "content": todoistTask.content
+                            }
+                        }]
+                },
+                "TodoistID": {
+                    number: Number(todoistTask.id)
+                },
+                "Status": {
+                    "checkbox": todoistTask.isCompleted
+                },
+                "URL": {
+                    "url": todoistTask.url
+                },
+                "Description": {
+                    "rich_text": [{
+                            "type": "text",
+                            "text": {
+                                "content": todoistTask.description
+                            }
+                        }]
+                },
+                "Sync status": {
+                    select: {
+                        "name": "Updated"
+                    }
+                },
+            }
+        });
+        const pageID = newNotionPage.id;
+        if (((_a = todoistTask.due) === null || _a === void 0 ? void 0 : _a.date) != null && todoistTask.due.date != undefined) {
+            notionApi.pages.update({
+                page_id: pageID,
+                "properties": {
+                    "Due": {
+                        "date": {
+                            "start": todoistTask.due.date
+                        }
+                    },
+                }
+            });
+        }
+        return newNotionPage;
+    });
+}
+function updateNotionTask(notionPageID, todoistTask) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const updatedNotionPage = yield notionApi.pages.update({
+            page_id: notionPageID,
+            "properties": {
+                "Task": {
+                    "title": [{
+                            "text": {
+                                "content": todoistTask.content
+                            }
+                        }]
+                },
+                "TodoistID": {
+                    number: Number(todoistTask.id)
+                },
+                "Status": {
+                    "checkbox": todoistTask.isCompleted
+                },
+                "URL": {
+                    "url": todoistTask.url
+                },
+                "Description": {
+                    "rich_text": [{
+                            "type": "text",
+                            "text": {
+                                "content": todoistTask.description
+                            }
+                        }]
+                },
+                "Sync status": {
+                    select: {
+                        "name": "Updated"
+                    }
+                },
+            }
+        });
+        const pageID = updatedNotionPage.id;
+        if (((_a = todoistTask.due) === null || _a === void 0 ? void 0 : _a.date) != null && todoistTask.due.date != undefined) {
+            notionApi.pages.update({
+                page_id: pageID,
+                "properties": {
+                    "Due": {
+                        "date": {
+                            "start": todoistTask.due.date
+                        }
+                    },
+                }
+            });
+        }
+        return updatedNotionPage;
+    });
 }
 function newTodoistTask(notionPageObject) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -319,155 +271,153 @@ function updateTodoistTask(taskID, notionPageObject) {
         return newTask;
     });
 }
-function todoistUpToDateCheck(lastCheckedNotionIndex) {
+function myTodoistIndexOf(ID) {
+    let index;
+    if (IDs.todoistTaskIDs.includes(String(ID))) {
+        index = IDs.todoistTaskIDs.indexOf(String(ID));
+    }
+    else {
+        index = IDs.todoistTaskIDs.length;
+        IDs.todoistTaskIDs[index] = String(ID);
+    }
+    return index;
+}
+function myNotionIndexOf(ID) {
+    let index;
+    if (IDs.notionPageIDs.includes(String(ID))) {
+        index = IDs.notionPageIDs.indexOf(String(ID));
+    }
+    else {
+        index = IDs.notionPageIDs.length;
+        IDs.notionPageIDs[index] = String(ID);
+    }
+    return index;
+}
+function checkTodoistCompletion(lastCheckedTodoistIndex, taskList) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (lastCheckedNotionIndex === -1) {
-            lastCheckedNotionIndex = 0;
-        }
-        let timeWindow = new Date;
-        timeWindow.setHours(timeWindow.getHours() - 24);
-        let isoTimeWindow = timeWindow.toISOString();
-        const queryResponse = yield notionApi.databases.query({
-            database_id: databaseId,
-            filter: {
-                "timestamp": "created_time",
-                "created_time": {
-                    "after": isoTimeWindow
+        if (lastCheckedTodoistIndex != 0 && taskList.length < lastCheckedTodoistIndex + 1) {
+            for (let i = 0; i < IDs.todoistTaskIDs.length; i++) {
+                const todoistID = IDs.todoistTaskIDs[i];
+                let todoistTask = yield todoistApi.getTask(todoistID);
+                if (todoistTask.isCompleted) {
+                    updateNotionTask(IDs.notionPageIDs[i], todoistTask);
                 }
             }
-        });
-        let taskList = queryResponse.results;
-        let latestElement = taskList[taskList.length - 1];
-        if (latestElement != undefined) {
-            for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
-                const element = taskList[i];
-                let todoistID = getNotionTodoistIDProperty(element);
-                if (todoistID.length === 0) {
-                    let newTask = yield newTodoistTask(element);
-                    let createdTodoistID = newTask.id;
-                    let createdTodoistURL = newTask.url;
-                    let currentNotionPageId = element.id;
-                    notionApi.pages.update({
-                        page_id: currentNotionPageId,
-                        properties: {
-                            "TodoistID": {
-                                "number": Number(createdTodoistID)
-                            },
-                            "URL": {
-                                "url": createdTodoistURL
-                            }
-                        }
-                    });
-                    if (i === taskList.length - 1) {
-                        return i;
-                    }
-                }
-            }
+            lastCheckedTodoistIndex = taskList.length - 1;
         }
-        return taskList.length - 1;
+        return lastCheckedTodoistIndex;
     });
 }
-function swapNotionSyncStatus(notionPageID) {
+function notionUpToDateCheck(lastCheckedTodoistIndex) {
     return __awaiter(this, void 0, void 0, function* () {
-        notionApi.pages.update({
-            page_id: notionPageID,
-            properties: {
-                "Sync status": {
-                    select: {
-                        "name": "Updated"
-                    }
+        console.log(lastCheckedTodoistIndex);
+        let timeWindow = "created after: -24hours";
+        const taskList = yield todoistApi.getTasks({ filter: timeWindow });
+        lastCheckedTodoistIndex = yield checkTodoistCompletion(lastCheckedTodoistIndex, taskList);
+        if (taskList.length > 0) {
+            for (let i = lastCheckedTodoistIndex; i < taskList.length; i++) {
+                const todoistTask = taskList[i];
+                const todoistID = Number(todoistTask.id);
+                const notionPage = yield IDSearchNotion(todoistID);
+                if (!notionPage) {
+                    let notionPageID = (yield newNotionTask(todoistTask)).id;
+                    let index = myTodoistIndexOf(String(todoistID));
+                    IDs.notionPageIDs[index] = notionPageID;
+                }
+                if (i === taskList.length - 1) {
+                    return i;
                 }
             }
-        });
+        }
+        return 0;
     });
 }
 function notionUpdatesCheck() {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryResponse = yield notionApi.databases.query({
-            database_id: databaseId,
-            filter: {
-                "property": "Sync status",
-                "select": {
-                    "equals": "NeedsUpdate"
+        const pageList = yield notionNeedsUpdateTasks();
+        if (pageList.length != 0) {
+            for (let i = 0; i < pageList.length; i++) {
+                const notionPage = pageList[i];
+                let notionTodoistID = getNotionTodoistIDProperty(notionPage);
+                let notionPageID = notionPage.id;
+                if (notionTodoistID === "false") {
+                    todoistUpToDateCheck(0);
                 }
-            }
-        });
-        if (queryResponse.results.length != 0) {
-            for (let i = 0; i < queryResponse.results.length; i++) {
-                const element = queryResponse.results[i];
-                let elementTodoistID = getNotionTodoistIDProperty(element);
-                let notionPageID = element.id;
-                let completion = getNotionStatusProperty(element);
-                if (completion === false && (yield todoistApi.getTask(elementTodoistID)).isCompleted === true) {
-                    todoistApi.reopenTask(elementTodoistID);
+                else {
+                    updateTodoistTask(notionTodoistID, notionPage);
                 }
-                yield updateTodoistTask(elementTodoistID, element);
-                if (completion === true) {
-                    todoistApi.closeTask(elementTodoistID);
+                if (getNotionStatusProperty(notionPage)) {
+                    todoistApi.closeTask(notionTodoistID);
                 }
                 swapNotionSyncStatus(notionPageID);
             }
         }
     });
 }
+function todoistUpToDateCheck(lastCheckedNotionIndex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let taskList = yield notionTasksPast24hours();
+        if (taskList.length > 0) {
+            for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
+                const notionPage = taskList[i];
+                let notionTodoistID = getNotionTodoistIDProperty(notionPage).length;
+                if (!notionTodoistID) {
+                    let todoistTask = yield newTodoistTask(notionPage);
+                    let notionPageId = notionPage.id;
+                    updateNotionTask(notionPageId, todoistTask);
+                    let index = myNotionIndexOf(notionPageId);
+                    IDs.todoistTaskIDs[index] = todoistTask.id;
+                }
+                if (i === taskList.length - 1) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    });
+}
 function todoistUpdatesCheck() {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryResponse = yield todoistApi.getTasks({
-            filter: "p3"
-        });
-        if (queryResponse.length != 0) {
-            for (let i = 0; i < queryResponse.length; i++) {
-                const element = queryResponse[i];
-                let taskID = element.id;
-                const notionQueryResponse = yield notionApi.databases.query({
-                    database_id: databaseId,
-                    filter: {
-                        "property": "TodoistID",
-                        "number": {
-                            "equals": Number(taskID)
-                        }
-                    }
-                });
-                let notionPage = notionQueryResponse.results[0];
-                let notionPageID = notionPage.id;
-                updateNotionTask(notionPageID, element);
-                todoistApi.updateTask(taskID, {
-                    priority: 1
-                });
+        const taskList = yield todoistApi.getTasks({ filter: "p3" });
+        if (taskList.length) {
+            for (let i = 0; i < taskList.length; i++) {
+                const todoistTask = taskList[i];
+                let todoistID = todoistTask.id;
+                const notionPage = yield IDSearchNotion(Number(todoistID));
+                if (!notionPage) {
+                    notionUpToDateCheck(0);
+                }
+                else {
+                    updateNotionTask(notionPage.id, todoistTask);
+                }
+                todoistApi.updateTask(todoistID, { priority: 1 });
             }
         }
     });
 }
-function completeNotionTasks() {
+function storeCurrentSyncedTasks() {
     return __awaiter(this, void 0, void 0, function* () {
-        const notionQueryResponse = yield notionApi.databases.query({
-            database_id: databaseId,
-            filter: {
-                "property": "Status",
-                "checkbox": {
-                    "equals": false
-                }
-            }
-        });
-        for (let i = 0; i < notionQueryResponse.results.length; i++) {
-            const element = notionQueryResponse.results[i];
-            let notionPageID = element.id;
-            let elementTodoistID = getNotionTodoistIDProperty(element);
-            const matchingTodoistTask = yield todoistApi.getTask(elementTodoistID);
-            if (matchingTodoistTask.isCompleted === true) {
-                updateNotionTask(notionPageID, matchingTodoistTask);
-            }
+        const todoistTaskList = yield todoistApi.getTasks();
+        for (let i = 0; i < todoistTaskList.length; i++) {
+            const todoistTask = todoistTaskList[i];
+            let todoistID = todoistTask.id;
+            IDs.todoistTaskIDs[i] = todoistID;
+            IDs.notionPageIDs[i] = (yield IDSearchNotion(Number(todoistID))).id;
         }
     });
 }
 let latestNotionIndex = 0;
 let latestTodoistIndex = 0;
-let minute = 60 * 1000;
+const IDs = {
+    todoistTaskIDs: [],
+    notionPageIDs: []
+};
+storeCurrentSyncedTasks();
 setInterval(() => {
-    notionUpdatesCheck();
     notionUpToDateCheck(latestNotionIndex)
-        .then((value) => latestNotionIndex = value);
-    todoistUpdatesCheck();
+        .then((value) => latestNotionIndex = value)
+        .then(() => notionUpdatesCheck());
     todoistUpToDateCheck(latestTodoistIndex)
-        .then((value) => latestTodoistIndex = value);
-}, 1000);
+        .then((value) => latestTodoistIndex = value)
+        .then(() => todoistUpdatesCheck());
+}, 5000);

@@ -2,7 +2,7 @@
 import dotenv = require("dotenv"); // key environment
 import { DueDate, Task, TodoistApi } from "@doist/todoist-api-typescript"; // todoist api
 import { Client } from "@notionhq/client"; // notion api
-import { getPageProperty, GetPagePropertyResponse, DatePropertyItemObjectResponse, NumberPropertyItemObjectResponse, PageObjectResponse, PartialPageObjectResponse, PropertyItemListResponse, PropertyItemObjectResponse, QueryDatabaseResponse, RichTextItemResponse, RichTextPropertyItemObjectResponse, TextRichTextItemResponse, TitlePropertyItemObjectResponse, UrlPropertyItemObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { getPageProperty, GetPagePropertyResponse, DatePropertyItemObjectResponse, NumberPropertyItemObjectResponse, PageObjectResponse, PartialPageObjectResponse, PropertyItemListResponse, PropertyItemObjectResponse, QueryDatabaseResponse, RichTextItemResponse, RichTextPropertyItemObjectResponse, TextRichTextItemResponse, TitlePropertyItemObjectResponse, UrlPropertyItemObjectResponse, CreatePageResponse, UpdatePageResponse } from "@notionhq/client/build/src/api-endpoints";
 import { stringify } from "querystring";
 
 // get keys from environment
@@ -17,203 +17,9 @@ const todoistApi: TodoistApi = new TodoistApi(todoistKey);
 const notionApi: Client = new Client({auth: notionKey});
 
 
-// newNotionTask creates a new page in the notion
-// database matching the values in the todoist task
-async function newNotionTask(todoistTask: Task): Promise<void> {
-    
-    // If a due date exists create a new page with a
-    // due date if not create a page without one
-    let dueDate = todoistTask.due
-    if (dueDate != null) {
-        notionApi.pages.create({
-
-            "parent": {
-                "type": "database_id",
-                "database_id": databaseId
-            },
-    
-            "properties": {
-
-                    "Task": {
-                        "title": [{
-                            "text": { 
-                                "content": todoistTask.content
-                            }
-                        }]
-                    },
-                    "Due":{
-                        "date" : {
-                            "start" : dueDate.date
-                        }
-                    },
-                    "TodoistID": {
-                        number : Number(todoistTask.id)
-                    },
-                    "Status":{
-                        "checkbox" : todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                            "type" : "text",
-                            "text": {
-                                "content" : todoistTask.description
-                            }
-                        }]
-                    },
-                    "Sync status" : {
-                        select : {
-                            "name" : "Updated"
-                        }
-                    },
-                    
-            }
-
-        });
-    }
-    else{
-        notionApi.pages.create({
-
-            "parent": {
-                "type": "database_id",
-                "database_id": databaseId
-            },
-    
-            "properties": {
-    
-                    "Task": {
-                        "title": [{
-                            "text": { 
-                                "content": todoistTask.content
-                            }
-                        }]
-                    },
-                    "TodoistID":{
-                        "number" : Number(todoistTask.id)
-                    },
-                    "Status":{
-                        "checkbox" : todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                            "type" : "text",
-                            "text": {
-                                "content" : todoistTask.description
-                            }
-                        }]
-                    },
-                    "Sync status" : {
-                        select : {
-                            "name" : "Updated"
-                        }
-                    }
-                    
-            },
-    
-        });
-    }
-}
-
-// newNotionTask creates a new page in the notion
-// database matching the values in the todoist task
-async function updateNotionTask(notionPageID:string, todoistTask: Task): Promise<void> {
-    
-    // If a due date exists create a new page with a
-    // due date if not create a page without one
-    let dueDate = todoistTask.due
-    if (dueDate != null) {
-        notionApi.pages.update({
-            page_id : notionPageID,
-            "properties": {
-
-                    "Task": {
-                        "title": [{
-                            "text": { 
-                                "content": todoistTask.content
-                            }
-                        }]
-                    },
-                    "Due":{
-                        "date" : {
-                            "start" : dueDate.date
-                        }
-                    },
-                    "TodoistID": {
-                        number : Number(todoistTask.id)
-                    },
-                    "Status":{
-                        "checkbox" : todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                            "type" : "text",
-                            "text": {
-                                "content" : todoistTask.description
-                            }
-                        }]
-                    },
-                    "Sync status" : {
-                        select : {
-                            "name" : "Updated"
-                        }
-                    },
-                    
-            }
-
-        });
-    }
-    else{
-        notionApi.pages.update({
-            page_id : notionPageID,
-            "properties": {
-    
-                    "Task": {
-                        "title": [{
-                            "text": { 
-                                "content": todoistTask.content
-                            }
-                        }]
-                    },
-                    "TodoistID":{
-                        "number" : Number(todoistTask.id)
-                    },
-                    "Status":{
-                        "checkbox" : todoistTask.isCompleted
-                    },
-                    "URL": {
-                        "url": todoistTask.url
-                    },
-                    "Description": {
-                        "rich_text": [{
-                            "type" : "text",
-                            "text": {
-                                "content" : todoistTask.description
-                            }
-                        }]
-                    },
-                    "Sync status" : {
-                        select : {
-                            "name" : "Updated"
-                        }
-                    }
-                    
-            },
-    
-        });
-    }
-}
-
 // searchNotion queries notion for an ID and returns
 // true if an element was found with the ID and false if not
-async function IDSearchNotion(todoistID:number): Promise<boolean> {
+async function IDSearchNotion(todoistID:number): Promise<PageObjectResponse> {
     
     const searchResults: QueryDatabaseResponse = await notionApi.databases.query({
         database_id: databaseId,
@@ -229,55 +35,7 @@ async function IDSearchNotion(todoistID:number): Promise<boolean> {
 
     //console.log(searchResults);
 
-    if (searchResults.results.length === 0) {
-        //console.log("yup");
-        return false
-    }
-    return true
-}
-
-// notionUpToDateCheck checks if notion has the latest
-// todoist tasks in its database. If it doesnt they are added.
-async function notionUpToDateCheck(lastCheckedTodoistIndex: number): Promise<number> {
-    
-    if (lastCheckedTodoistIndex === -1) {
-        lastCheckedTodoistIndex = 0;
-    }
-
-    // get list of todoist tasks created today
-    const taskList:Array<Task> = await todoistApi.getTasks({
-        filter: "created after: -24hours"
-    });
-
-    // get newest (last element in tasklist) task in
-    // todoist and check if it is in notion
-    let latestElement:Task = taskList[taskList.length-1];
-    if (latestElement != undefined) {
-
-        let upToDate:boolean = await IDSearchNotion(Number(latestElement.id));
-        // if task was not found then notion is not up to
-        // date so go through all the tasks and add all the
-        // ones that aren't in notion yet
-        if (upToDate === false) {
-            
-            for (let i = lastCheckedTodoistIndex; i < taskList.length; i++) {
-                console.log(i);
-                const todoistTask: Task = taskList[i];
-                const todoistID:number = Number(todoistTask.id);
-                const notionSearchResult:boolean = await IDSearchNotion(todoistID);
-                
-                if (notionSearchResult === false) {
-                    newNotionTask(todoistTask);
-                }
-
-                if (i === taskList.length-1) {
-                    return i;
-                }
-            }
-        }
-    }
-    
-    return taskList.length-1; // no element in list
+    return searchResults.results[0] as PageObjectResponse
 }
 
 // objectToMap takes in a object and returns it in a map format
@@ -289,16 +47,6 @@ function objectToMap(object: any): Map<any,any>{
         map.set(keys[i], object[keys[i]]);
     }
     return map;
-}
-
-// getNotionTitleProperty return notions title
-// property for the passed page
-function getNotionTitleProperty(pageObject: PageObjectResponse){
-    let propertiesObject = pageObject.properties as object;
-    let map = objectToMap(propertiesObject);
-    let titleobject = map.get("Task").title as object;
-    let text = objectToMap(objectToMap(titleobject).get("0")).get("plain_text");
-    return text;
 }
 
 // getNotionDescriptionProperty return notions description
@@ -327,13 +75,13 @@ function getNotionDueProperty(pageObject: PageObjectResponse){
     return date;
 }
 
-// getNotionDueProperty return notions due
+// getNotionDueProperty return notions status
 // property for the passed page
 function getNotionStatusProperty(pageObject: PageObjectResponse): boolean{
     let propertiesObject = pageObject.properties as object;
     let map = objectToMap(propertiesObject);
-    let checkboxContent = map.get("Status").checkbox as object;
-    return Boolean(checkboxContent);
+    let checkboxContent = map.get("Status").checkbox as boolean;
+    return checkboxContent;
 }
 
 // getNotionTodoistIDProperty return notions TodoistID
@@ -356,6 +104,194 @@ function getNotionTodoistURLProperty(pageObject: PageObjectResponse){
     }
     let url = objectToMap(objectToMap(richTextObject).get("0")).get("plain_text");
     return url
+}
+
+// getNotionTitleProperty return notions title
+// property for the passed page
+function getNotionTitleProperty(pageObject: PageObjectResponse){
+    let propertiesObject = pageObject.properties as object;
+    let map = objectToMap(propertiesObject);
+    let titleobject = map.get("Task").title as object;
+    let text = objectToMap(objectToMap(titleobject).get("0")).get("plain_text");
+    return text;
+}
+
+async function notionTasksPast24hours() {
+    
+    // get time 24 hours ago
+    let timeWindow: Date = new Date;
+    timeWindow.setHours(timeWindow.getHours() - 24);
+    let isoTimeWindow: string = timeWindow.toISOString();
+
+    // query notion database with past 24 hours filter
+    const queryResponse: QueryDatabaseResponse = await notionApi.databases.query({
+        database_id: databaseId,
+        filter: {
+                "timestamp": "created_time",
+                "created_time": {
+                        "after": isoTimeWindow
+                }
+        }
+    });
+
+    return queryResponse.results as Array<PageObjectResponse>;
+}
+
+async function notionNeedsUpdateTasks() {
+    
+    const queryResponse: QueryDatabaseResponse = await notionApi.databases.query({
+        database_id: databaseId,
+        filter: {
+                "property": "Sync status",
+                "select": {
+                    "equals": "NeedsUpdate"
+                }
+        }
+    });
+
+    return queryResponse.results as Array<PageObjectResponse>;
+}
+
+// swapNotionSyncStatus swap the sync status from the passed page 
+async function swapNotionSyncStatus(notionPageID:string) {
+    notionApi.pages.update({
+        page_id : notionPageID,
+        properties : {
+            "Sync status" : {
+                select : {
+                    "name" : "Updated"
+                }
+            }
+        }
+    })
+}
+
+// newNotionTask creates a new page in the notion
+// database matching the values in the todoist task
+async function newNotionTask(todoistTask: Task){
+    
+    // If a due date exists create a new page with a
+    // due date if not create a page without one
+    const newNotionPage: CreatePageResponse = await notionApi.pages.create({
+
+        "parent": {
+            "type": "database_id",
+            "database_id": databaseId
+        },
+
+        "properties": {
+
+                "Task": {
+                    "title": [{
+                        "text": { 
+                            "content": todoistTask.content
+                        }
+                    }]
+                },
+                "TodoistID": {
+                    number : Number(todoistTask.id)
+                },
+                "Status":{
+                    "checkbox" : todoistTask.isCompleted
+                },
+                "URL": {
+                    "url": todoistTask.url
+                },
+                "Description": {
+                    "rich_text": [{
+                        "type" : "text",
+                        "text": {
+                            "content" : todoistTask.description
+                        }
+                    }]
+                },
+                "Sync status" : {
+                    select : {
+                        "name" : "Updated"
+                    }
+                },
+                
+        }
+    });
+    
+    const pageID = newNotionPage.id;
+    if (todoistTask.due?.date != null && todoistTask.due.date != undefined) {
+        notionApi.pages.update({
+            page_id: pageID,
+            "properties":{
+
+                "Due":{
+                    "date" : {
+                        "start" : todoistTask.due.date
+                    }
+                },
+            }
+        })
+    }
+    
+    return newNotionPage as PageObjectResponse;
+}
+
+// newNotionTask creates a new page in the notion
+// database matching the values in the todoist task
+async function updateNotionTask(notionPageID:string, todoistTask: Task) {
+    
+    // If a due date exists create a new page with a
+    // due date if not create a page without one
+    const updatedNotionPage: UpdatePageResponse = await notionApi.pages.update({
+        page_id : notionPageID,
+        "properties": {
+
+                "Task": {
+                    "title": [{
+                        "text": { 
+                            "content": todoistTask.content
+                        }
+                    }]
+                },
+                "TodoistID": {
+                    number : Number(todoistTask.id)
+                },
+                "Status":{
+                    "checkbox" : todoistTask.isCompleted
+                },
+                "URL": {
+                    "url": todoistTask.url
+                },
+                "Description": {
+                    "rich_text": [{
+                        "type" : "text",
+                        "text": {
+                            "content" : todoistTask.description
+                        }
+                    }]
+                },
+                "Sync status" : {
+                    select : {
+                        "name" : "Updated"
+                    }
+                },
+                
+        }
+
+    });
+
+    const pageID:string = updatedNotionPage.id;
+    if (todoistTask.due?.date != null && todoistTask.due.date != undefined) {
+        notionApi.pages.update({
+            page_id: pageID,
+            "properties":{
+
+                "Due":{
+                    "date" : {
+                        "start" : todoistTask.due.date
+                    }
+                },
+            }
+        })
+    }
+
+    return updatedNotionPage as PageObjectResponse;
 }
 
 // newTodoistTask creates a new todoist task with all the notion values
@@ -389,171 +325,240 @@ async function updateTodoistTask(taskID:string, notionPageObject: PageObjectResp
     return newTask;
 }
 
-// todoistUpToDateCheck check if all new tasks from notion are present in todoist
-// if not it adds them. The funtion also adds todoist's ID information on to the 
-// notion database once the new task is created.
-async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
-    if (lastCheckedNotionIndex === -1) {
-        lastCheckedNotionIndex = 0;
+function myTodoistIndexOf(ID:string){
+    
+    let index:number;
+
+    if (IDs.todoistTaskIDs.includes(String(ID))) {
+        index = IDs.todoistTaskIDs.indexOf(String(ID));
     }
-    // get time 24 hours ago
-    let timeWindow: Date = new Date;
-    timeWindow.setHours(timeWindow.getHours() - 24);
-    let isoTimeWindow: string = timeWindow.toISOString();
-
-    // query notion database with past 24 hours filter
-    const queryResponse: QueryDatabaseResponse = await notionApi.databases.query({
-        database_id: databaseId,
-        filter: {
-                "timestamp": "created_time",
-                "created_time": {
-                        "after": isoTimeWindow
-                }
-        }
-    });
-
-    // declare info on notion task list
-    let taskList = queryResponse.results as Array<PageObjectResponse>;
-    let latestElement = taskList[taskList.length-1] as PageObjectResponse;
-
-    // when a latest element exists
-    if (latestElement != undefined) {
-        
-        for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
-            const element = taskList[i];
-
-            let todoistID = getNotionTodoistIDProperty(element);
-            
-            // if notion task doesn't have an associated todoist ID
-            // then it hasn't been synced to TodoIst yet
-            if (todoistID.length === 0) {
-
-                // create new Todoist task
-                let newTask: Task = await newTodoistTask(element)
-                    
-                // update notion task to have todoist id and url
-                let createdTodoistID = newTask.id;
-                let createdTodoistURL = newTask.url;
-                let currentNotionPageId = element.id;
-
-                notionApi.pages.update({
-                    page_id: currentNotionPageId,
-                    properties: {
-                        "TodoistID": {
-                            "number": Number(createdTodoistID)
-                        },
-                        "URL": {
-                            "url" : createdTodoistURL
-                        }
-                    }
-                })
-
-                if (i === taskList.length-1) {
-                    return i;
-                }
-
-            }
-
-
-        }
+    else{
+        index = IDs.todoistTaskIDs.length;
+        IDs.todoistTaskIDs[index] = String(ID);
     }
 
-    return taskList.length-1;
+    return index;
 }
 
-async function swapNotionSyncStatus(notionPageID:string) {
-    notionApi.pages.update({
-        page_id : notionPageID,
-        properties : {
-            "Sync status" : {
-                select : {
-                    "name" : "Updated"
-                }
+function myNotionIndexOf(ID:string){
+    
+    let index:number;
+
+    if (IDs.notionPageIDs.includes(String(ID))) {
+        index = IDs.notionPageIDs.indexOf(String(ID));
+    }
+    else{
+        index = IDs.notionPageIDs.length;
+        IDs.notionPageIDs[index] = String(ID);
+    }
+
+    return index;
+}
+
+async function checkTodoistCompletion(lastCheckedTodoistIndex:number, taskList:Array<Task>){
+    
+    if (lastCheckedTodoistIndex != 0 && taskList.length < lastCheckedTodoistIndex+1){
+
+        for (let i = 0; i < IDs.todoistTaskIDs.length; i++) {
+            const todoistID = IDs.todoistTaskIDs[i];
+            let todoistTask = await todoistApi.getTask(todoistID);
+            
+
+            if (todoistTask.isCompleted){
+                updateNotionTask(IDs.notionPageIDs[i],todoistTask);
             }
         }
-    })
+        lastCheckedTodoistIndex = taskList.length-1
+    }
+    return lastCheckedTodoistIndex;
+}
+
+// notionUpToDateCheck checks if notion has the latest
+// todoist tasks in its database. If it doesnt they are added.
+async function notionUpToDateCheck(lastCheckedTodoistIndex: number) {
+
+    console.log(lastCheckedTodoistIndex);
+
+    // get list of todoist *active tasks created today
+    let timeWindow: string = "created after: -24hours";
+    const taskList:Array<Task> = await todoistApi.getTasks({filter: timeWindow});
+
+    // check if a task was completed in todoist
+    lastCheckedTodoistIndex = await checkTodoistCompletion(lastCheckedTodoistIndex,taskList);
+    
+    // check there exists tasks created today
+    if (taskList.length > 0) {
+
+        for (let i:number = lastCheckedTodoistIndex; i < taskList.length; i++) {
+            
+            const todoistTask: Task = taskList[i];
+            const todoistID:number = Number(todoistTask.id);
+            const notionPage: PageObjectResponse = await IDSearchNotion(todoistID);
+            
+            // if element not in notion yet create the notion page
+            // and add its ID to the structure at the same index as 
+            // it's Todoist counterpart
+            if (!notionPage) {
+                
+                let notionPageID:string = (await newNotionTask(todoistTask)).id;
+                
+                let index:number = myTodoistIndexOf(String(todoistID))
+                IDs.notionPageIDs[index] = notionPageID;
+            }
+
+            if (i === taskList.length-1) {
+                return i;
+            }
+        }
+    }
+    // if there is no element in the
+    // task list then the last checked is 0
+
+    return 0;
+    
 }
 
 async function notionUpdatesCheck() {
     
     // search for tasks identified to need to be updated
-    const queryResponse: QueryDatabaseResponse = await notionApi.databases.query({
-        database_id: databaseId,
-        filter: {
-                "property": "Sync status",
-                "select": {
-                    "equals": "NeedsUpdate"
-                }
-        }
-    });
+    const pageList = await notionNeedsUpdateTasks() as Array<PageObjectResponse>;
 
     // if any are present update them and amend their update indicator
-    if (queryResponse.results.length != 0) {
+    if (pageList.length != 0) {
         
-        for (let i = 0; i < queryResponse.results.length; i++) {
-            const element = queryResponse.results[i] as PageObjectResponse;
+        for (let i = 0; i < pageList.length; i++) {
 
-            let elementTodoistID = getNotionTodoistIDProperty(element);
-            let notionPageID = element.id
-            let completion = getNotionStatusProperty(element);
-            if (completion === false && (await todoistApi.getTask(elementTodoistID)).isCompleted === true){
-                todoistApi.reopenTask(elementTodoistID);
+            const notionPage = pageList[i] as PageObjectResponse;
+
+            let notionTodoistID: string = getNotionTodoistIDProperty(notionPage);
+            let notionPageID: string = notionPage.id;
+
+            if (notionTodoistID === "false") {
+                todoistUpToDateCheck(0);
             }
-            await updateTodoistTask(elementTodoistID,element);
-            if(completion === true){
-                todoistApi.closeTask(elementTodoistID);
+            else{
+                updateTodoistTask(notionTodoistID,notionPage);
             }
+
+            if (getNotionStatusProperty(notionPage)){
+                todoistApi.closeTask(notionTodoistID);
+            }
+
             swapNotionSyncStatus(notionPageID);
         }
     }
 }
 
-async function todoistUpdatesCheck() {
+// todoistUpToDateCheck check if all new tasks from notion are present in todoist
+// if not it adds them. The funtion also adds todoist's ID information on to the 
+// notion database once the new task is created.
+async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
     
-    const queryResponse = await todoistApi.getTasks({
-        filter : "p3"
-    })
+    // get notion tasks created in the past 24 hours
+    let taskList = await notionTasksPast24hours() as Array<PageObjectResponse>;
 
-    if (queryResponse.length != 0) {
+    // if tasks were created in the past 24 hours
+    if (taskList.length > 0) {
+        
+        // iterate through all the unchecked tasks
+        for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
 
-        for (let i = 0; i < queryResponse.length; i++) {
-            const element = queryResponse[i] as Task;
-            let taskID = element.id;
+            // if notion task doesn't have an associated todoist ID
+            // then it hasn't been synced to TodoIst yet so add it
+            // with the appropriate values to todoist
+            const notionPage = taskList[i];
+            let notionTodoistID:number = getNotionTodoistIDProperty(notionPage).length;
 
-            const notionQueryResponse: QueryDatabaseResponse = await notionApi.databases.query({
-                database_id: databaseId,
-                filter: {
-                        "property": "TodoistID",
-                        "number" : {
-                            "equals" : Number(taskID)
-                        }
-                }
-            });
+            if (!notionTodoistID) {
 
-            let notionPage = notionQueryResponse.results[0] as PageObjectResponse;
-            let notionPageID = notionPage.id;
+                // create new Todoist task
+                let todoistTask: Task = await newTodoistTask(notionPage)
+                    
+                // update notion task to have todoist id and url
+                let notionPageId = notionPage.id;
+                updateNotionTask(notionPageId,todoistTask);
 
-            updateNotionTask(notionPageID,element);
-            todoistApi.updateTask(taskID,{
-                priority : 1
-            })
-            
+                // add newly created task id to the structure
+                let index:number = myNotionIndexOf(notionPageId);
+                IDs.todoistTaskIDs[index] = todoistTask.id;
+            }
+
+            // if we've reached the last element
+            // return it's index
+            if (i === taskList.length-1) {
+                return i;
+            }
         }
     }
+    // if no tasks were created in the past 24 hours
+    // return 0
+    return 0;
+}
+
+async function todoistUpdatesCheck() {
     
+    // get priority 3 task list from todoist
+    const taskList = await todoistApi.getTasks({filter : "p3"}) as Array<Task>;
+
+    // if the list has tasks
+    if (taskList.length) {
+
+        // iterate rhough them
+        for (let i = 0; i < taskList.length; i++) {
+
+            const todoistTask = taskList[i] as Task;
+            let todoistID:string = todoistTask.id;
+
+            // find matching notion page and update it
+            // if page doesn't exit make sure notion is up to date
+            const notionPage = await IDSearchNotion(Number(todoistID));
+
+            if (!notionPage) {
+                notionUpToDateCheck(0);
+            }
+            else{
+                updateNotionTask(notionPage.id,todoistTask);
+            }
+            
+            // update task priority bak to level 1
+            todoistApi.updateTask(todoistID,{priority : 1}) 
+        }
+    }
+}
+
+async function storeCurrentSyncedTasks() {
+    
+    const todoistTaskList = await todoistApi.getTasks();
+    for (let i = 0; i < todoistTaskList.length; i++) {
+        const todoistTask:Task = todoistTaskList[i];
+        let todoistID = todoistTask.id;
+
+        IDs.todoistTaskIDs[i] = todoistID;
+        IDs.notionPageIDs[i] = (await IDSearchNotion(Number(todoistID))).id;
+    }
+
+    // console.log(IDs.todoistTaskIDs);
+    // console.log(IDs.notionPageIDs);
 }
 
 let latestNotionIndex:number = 0;
 let latestTodoistIndex:number = 0;
 
-let minute:number = 60 * 1000;
+const IDs = {
+    todoistTaskIDs : [] as Array<string>,
+    notionPageIDs : [] as Array<string>
+}
 
+storeCurrentSyncedTasks();
+
+// let minute:number = 60 * 1000;
+// // min interval == 5 seconds
 setInterval(() => {
-    notionUpdatesCheck();
     notionUpToDateCheck(latestNotionIndex)
-        .then((value) => latestNotionIndex = value);
-    todoistUpdatesCheck();
+        .then((value) => latestNotionIndex = value)
+        .then(() => notionUpdatesCheck());
     todoistUpToDateCheck(latestTodoistIndex)
-        .then((value) => latestTodoistIndex = value);
-}, 1000);
+       .then((value) => latestTodoistIndex = value)
+       .then(() => todoistUpdatesCheck());
+}, 5000);
 
