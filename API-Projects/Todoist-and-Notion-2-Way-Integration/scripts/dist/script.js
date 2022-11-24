@@ -18,25 +18,9 @@ const notionKey = String(process.env.NOTIONKEY);
 const databaseId = String(process.env.DATABASEID);
 const todoistApi = new todoist_api_typescript_1.TodoistApi(todoistKey);
 const notionApi = new client_1.Client({ auth: notionKey });
-function IDSearchNotion(todoistID) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const searchResults = yield notionApi.databases.query({
-            database_id: databaseId,
-            filter: {
-                and: [{
-                        property: "TodoistID",
-                        number: {
-                            equals: todoistID
-                        }
-                    }]
-            }
-        });
-        return searchResults.results[0];
-    });
-}
 function objectToMap(object) {
-    const keys = Object.keys(object);
     const map = new Map();
+    const keys = Object.keys(object);
     for (let i = 0; i < keys.length; i++) {
         map.set(keys[i], object[keys[i]]);
     }
@@ -72,7 +56,7 @@ function getNotionTodoistIDProperty(pageObject) {
     let propertiesObject = pageObject.properties;
     let map = objectToMap(propertiesObject);
     let number = map.get("TodoistID").number;
-    return (String(number) === "null") ? "" : String(number);
+    return (number === null) ? "" : String(number);
 }
 function getNotionTodoistURLProperty(pageObject) {
     let propertiesObject = pageObject.properties;
@@ -90,6 +74,22 @@ function getNotionTitleProperty(pageObject) {
     let titleobject = map.get("Task").title;
     let text = objectToMap(objectToMap(titleobject).get("0")).get("plain_text");
     return text;
+}
+function IDSearchNotion(todoistID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const searchResults = yield notionApi.databases.query({
+            database_id: databaseId,
+            filter: {
+                and: [{
+                        property: "TodoistID",
+                        number: {
+                            equals: todoistID
+                        }
+                    }]
+            }
+        });
+        return searchResults.results[0];
+    });
 }
 function notionTasksPast24hours() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -120,20 +120,6 @@ function notionNeedsUpdateTasks() {
             }
         });
         return queryResponse.results;
-    });
-}
-function swapNotionSyncStatus(notionPageID) {
-    return __awaiter(this, void 0, void 0, function* () {
-        notionApi.pages.update({
-            page_id: notionPageID,
-            properties: {
-                "Sync status": {
-                    select: {
-                        "name": "Updated"
-                    }
-                }
-            }
-        });
     });
 }
 function newNotionTask(todoistTask) {
@@ -293,6 +279,17 @@ function myNotionIndexOf(ID) {
     }
     return index;
 }
+function storeCurrentSyncedTasks() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const todoistTaskList = yield todoistApi.getTasks();
+        for (let i = 0; i < todoistTaskList.length; i++) {
+            const todoistTask = todoistTaskList[i];
+            let todoistID = todoistTask.id;
+            IDs.todoistTaskIDs[i] = todoistID;
+            IDs.notionPageIDs[i] = (yield IDSearchNotion(Number(todoistID))).id;
+        }
+    });
+}
 function checkTodoistCompletion(lastCheckedTodoistIndex, taskList) {
     return __awaiter(this, void 0, void 0, function* () {
         if (lastCheckedTodoistIndex != 0 && taskList.length < lastCheckedTodoistIndex + 1) {
@@ -332,7 +329,43 @@ function notionUpToDateCheck(lastCheckedTodoistIndex) {
         return 0;
     });
 }
-function notionUpdatesCheck() {
+function todoistUpToDateCheck(lastCheckedNotionIndex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let taskList = yield notionTasksPast24hours();
+        if (taskList.length > 0) {
+            for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
+                const notionPage = taskList[i];
+                let notionTodoistID = getNotionTodoistIDProperty(notionPage);
+                if (!notionTodoistID) {
+                    let todoistTask = yield newTodoistTask(notionPage);
+                    let notionPageId = notionPage.id;
+                    updateNotionTask(notionPageId, todoistTask);
+                    let index = myNotionIndexOf(notionPageId);
+                    IDs.todoistTaskIDs[index] = todoistTask.id;
+                }
+                if (i === taskList.length - 1) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    });
+}
+function swapNotionSyncStatus(notionPageID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        notionApi.pages.update({
+            page_id: notionPageID,
+            properties: {
+                "Sync status": {
+                    select: {
+                        "name": "Updated"
+                    }
+                }
+            }
+        });
+    });
+}
+function notionManualUpdates() {
     return __awaiter(this, void 0, void 0, function* () {
         const pageList = yield notionNeedsUpdateTasks();
         if (pageList.length != 0) {
@@ -354,29 +387,7 @@ function notionUpdatesCheck() {
         }
     });
 }
-function todoistUpToDateCheck(lastCheckedNotionIndex) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let taskList = yield notionTasksPast24hours();
-        if (taskList.length > 0) {
-            for (let i = lastCheckedNotionIndex; i < taskList.length; i++) {
-                const notionPage = taskList[i];
-                let notionTodoistID = getNotionTodoistIDProperty(notionPage).length;
-                if (!notionTodoistID) {
-                    let todoistTask = yield newTodoistTask(notionPage);
-                    let notionPageId = notionPage.id;
-                    updateNotionTask(notionPageId, todoistTask);
-                    let index = myNotionIndexOf(notionPageId);
-                    IDs.todoistTaskIDs[index] = todoistTask.id;
-                }
-                if (i === taskList.length - 1) {
-                    return i;
-                }
-            }
-        }
-        return 0;
-    });
-}
-function todoistUpdatesCheck() {
+function todoistManualUpdates() {
     return __awaiter(this, void 0, void 0, function* () {
         const taskList = yield todoistApi.getTasks({ filter: "p3" });
         if (taskList.length) {
@@ -395,17 +406,6 @@ function todoistUpdatesCheck() {
         }
     });
 }
-function storeCurrentSyncedTasks() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const todoistTaskList = yield todoistApi.getTasks();
-        for (let i = 0; i < todoistTaskList.length; i++) {
-            const todoistTask = todoistTaskList[i];
-            let todoistID = todoistTask.id;
-            IDs.todoistTaskIDs[i] = todoistID;
-            IDs.notionPageIDs[i] = (yield IDSearchNotion(Number(todoistID))).id;
-        }
-    });
-}
 let latestNotionIndex = 0;
 let latestTodoistIndex = 0;
 const IDs = {
@@ -413,11 +413,12 @@ const IDs = {
     notionPageIDs: []
 };
 storeCurrentSyncedTasks();
+let minute = 60 * 1000;
 setInterval(() => {
     notionUpToDateCheck(latestNotionIndex)
         .then((value) => latestNotionIndex = value)
-        .then(() => notionUpdatesCheck());
+        .then(() => notionManualUpdates());
     todoistUpToDateCheck(latestTodoistIndex)
         .then((value) => latestTodoistIndex = value)
-        .then(() => todoistUpdatesCheck());
+        .then(() => todoistManualUpdates());
 }, 5000);
