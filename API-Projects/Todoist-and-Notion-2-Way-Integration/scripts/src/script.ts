@@ -2,7 +2,7 @@
 import dotenv = require("dotenv"); // key environment
 import { Task, TodoistApi } from "@doist/todoist-api-typescript"; // todoist api
 import { Client } from "@notionhq/client"; // notion api
-import { PageObjectResponse, QueryDatabaseResponse, CreatePageResponse, UpdatePageResponse } from "@notionhq/client/build/src/api-endpoints";
+import { PageObjectResponse, QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
 // ------------------- auth keys ------------------------------//
 
@@ -36,50 +36,6 @@ function objectToMap(object: any): Map<any,any>{
     }
 
     return map;
-}
-
-// requires
-function reorderIDs(ID:string, newIndex: number){
-
-    if (IDs.notionPageIDs.includes(ID)){
-
-        // get current position
-        let currentIndex = myNotionIndexOf(ID);
-
-        // get counterpart value
-        let tempTodoistID = IDs.todoistTaskIDs[currentIndex];
-
-        // delete ids at current positions
-        IDs.notionPageIDs.splice(currentIndex,1);
-        IDs.todoistTaskIDs.splice(currentIndex,1);
-
-        // add them back at correct position
-        IDs.notionPageIDs.splice(newIndex,0,ID);
-        IDs.todoistTaskIDs.splice(newIndex,0,tempTodoistID);
-
-        return true;
-    }
-    else if (IDs.todoistTaskIDs.includes(ID)){
-
-        // get current position
-        let currentIndex = myTodoistIndexOf(ID);
-
-        // get counterpart value
-        let tempNotionID = IDs.notionPageIDs[currentIndex];
-
-        // delete ids at current positions
-        IDs.todoistTaskIDs.splice(currentIndex,1);
-        IDs.notionPageIDs.splice(currentIndex,1);
-        
-
-        // add them back at correct position
-        IDs.todoistTaskIDs.splice(newIndex,0,ID);
-        IDs.notionPageIDs.splice(newIndex,0,tempNotionID);
-        
-        return true;
-    }
-
-    return false;
 }
 
 
@@ -126,7 +82,7 @@ function getNotionTodoistIDProperty(pageObject: PageObjectResponse) : string {
     let propertiesObject = pageObject.properties as object;
     let map = objectToMap(propertiesObject);
     let number = map.get("TodoistID").number as object;
-    return (number === null) ? "" : String(number);
+    return (!number) ? "" : String(number);
 }
 
 // getNotionTodoistURLProperty return notions URL
@@ -434,7 +390,9 @@ async function storeCurrentSyncedTasks(): Promise<void> {
     }
 }
 
-async function bubbleSortIDs() {
+// bubbleSortIDs ensures the IDS strored int eh structure are in
+// the same order they were create
+async function bubbleSortIDs() : Promise<void> {
     
     let swapCounter:number = -1;
     let len: number = IDs.todoistTaskIDs.length;
@@ -499,7 +457,7 @@ async function checkTodoistCompletion(lastCheckedTodoistIndex:number, taskList:A
 }
 
 // checkTodoistCompletion check if any of the seen 
-// todoist ids have recently been completed in todoist
+// todoist ids have recently been "un"-completed in todoist
 // if they have then the status in notion is updated to match
 // the function then returns the last index it checked/updated
 async function checkTodoistIncompletion(taskList:Array<Task>) : Promise<void> {
@@ -522,6 +480,67 @@ async function checkTodoistIncompletion(taskList:Array<Task>) : Promise<void> {
             IDs.notionPageIDs[index] = notionPage.id;
 
             
+        }
+    }
+}
+
+// checkNotionCompletion checks if any of the seen 
+// todoist ids have recently been completed in notion
+// if they have then the status in todoist is updated to match
+// the function then returns the last index it checked/updated
+async function checkNotionCompletion(lastCheckedNotiontIndex:number, taskList:Array<PageObjectResponse>) : Promise<number> {
+    
+    if (lastCheckedNotiontIndex != 0 && taskList.length < lastCheckedNotiontIndex+1){
+
+        for (let i = 0; i < IDs.notionPageIDs.length; i++) {
+            const notionPageID = IDs.notionPageIDs[i];
+            let notionPage = await notionApi.pages.retrieve({page_id:notionPageID}) as PageObjectResponse;
+            
+            if (getNotionStatusProperty(notionPage)){
+                
+                let todoistId: string = getNotionTodoistIDProperty(notionPage);
+                console.log(todoistId);
+                todoistApi.closeTask(todoistId);
+            }
+            
+        }
+        lastCheckedNotiontIndex = taskList.length-1
+    }
+
+    return lastCheckedNotiontIndex;
+}
+
+// checkNotionIncompletion check if any of the seen 
+// todoist ids have recently been "un"-completed in notion
+// if they have then the status in todoist is updated to match
+// the function then returns the last index it checked/updated
+async function checkNotionIncompletion(taskList:Array<PageObjectResponse>) : Promise<void> {
+    
+    
+
+    let activeTodoistTaks: Array<Task> = await todoistApi.getTasks();
+    let activeTodoistTaskIds: Array<string> = [];
+
+    for (let i = 0; i < activeTodoistTaks.length; i++) {
+        const todoistIds: string = activeTodoistTaks[i].id;
+        activeTodoistTaskIds[i] = todoistIds;
+    }
+
+    let len = taskList.length;
+    for (let i = 0; i < len; i++) {
+        
+        const notionPage: PageObjectResponse = taskList[i];
+        const notionPageID: string = notionPage.id;
+        let todoistID: string = getNotionTodoistIDProperty(notionPage);
+        let isActive: boolean = activeTodoistTaskIds.includes(todoistID);
+
+        if (!isActive && todoistID) {
+
+            let index:number = myNotionIndexOf(notionPageID);
+
+            todoistApi.reopenTask(todoistID);
+            
+            IDs.todoistTaskIDs[index] = todoistID;
         }
     }
 }
@@ -561,7 +580,7 @@ async function notionUpToDateCheck(lastCheckedTodoistIndex: number) : Promise<nu
             else if (notionPage){
                 
                 checkTodoistIncompletion(taskList)
-                    .then(()=> bubbleSortIDs());
+                    .then(bubbleSortIDs);
             }
 
             if (i === taskListLength-1) {
@@ -583,6 +602,7 @@ async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
     
     // get notion active pages 
     let taskList = await notionActivePages() as Array<PageObjectResponse>;
+    lastCheckedNotionIndex = await checkNotionCompletion(lastCheckedNotionIndex,taskList);
     let taskListLength = taskList.length;
 
     // if there are any active pages
@@ -609,6 +629,11 @@ async function todoistUpToDateCheck(lastCheckedNotionIndex: number){
                 // add newly created task id to the structure
                 let index:number = myNotionIndexOf(notionPageId);
                 IDs.todoistTaskIDs[index] = todoistTask.id;
+            }
+            else if (notionTodoistID){
+
+                checkNotionIncompletion(taskList)
+                    .then(bubbleSortIDs);
             }
 
             // if we've reached the last element
@@ -708,8 +733,28 @@ async function todoistManualUpdates() : Promise<void> {
 }
 
 
-// ----------------------------- Main ---------------------------------//
+// ---------------------- Automation/Sync interval -------------------------//
 
+// intervalStart Starts am interval at which notion and todoist
+// will be checked and synced
+function intervalStart(){
+
+    let minute:number = 60 * 1000;
+    let latestNotionIndex: number = -1;
+    let latestTodoistIndex: number = -1;
+
+    // min interval == 5 seconds
+    setInterval(() => {
+        notionUpToDateCheck(latestNotionIndex)
+            .then((value) => latestNotionIndex = value)
+            .then(() => notionManualUpdates());
+        todoistUpToDateCheck(latestTodoistIndex)
+            .then((value) => latestTodoistIndex = value)
+            .then(() => todoistManualUpdates());
+    }, 5 * minute);
+}
+
+// ----------------------------- Main ---------------------------------//
 
 
 const IDs = {
@@ -717,19 +762,8 @@ const IDs = {
     notionPageIDs : [] as Array<string>
 }
 
-let minute:number = 60 * 1000;
-let latestNotionIndex: number = -1;
-let latestTodoistIndex: number = -1;
+storeCurrentSyncedTasks()
+    .then(intervalStart);
 
-storeCurrentSyncedTasks();
 
-// min interval == 5 seconds
-setInterval(() => {
-    notionUpToDateCheck(latestNotionIndex)
-        .then((value) => latestNotionIndex = value)
-        .then(() => notionManualUpdates());
-    todoistUpToDateCheck(latestTodoistIndex)
-       .then((value) => latestTodoistIndex = value)
-       .then(() => todoistManualUpdates());
-}, 10000);
 
