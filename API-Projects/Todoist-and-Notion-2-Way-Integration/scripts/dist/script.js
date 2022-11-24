@@ -308,7 +308,6 @@ function bubbleSortIDs() {
                 const createdTime = new Date(todoistTask.createdAt);
                 const nextCreatedTime = new Date(nextTodoistTask.createdAt);
                 if (createdTime > nextCreatedTime) {
-                    console.log(createdTime, nextCreatedTime);
                     IDs.todoistTaskIDs[i] = nextTodoistID;
                     IDs.todoistTaskIDs[i + 1] = todoistID;
                     IDs.notionPageIDs[i] = nextNotionPageID;
@@ -360,7 +359,6 @@ function checkNotionCompletion(lastCheckedNotiontIndex, taskList) {
                 let notionPage = yield notionApi.pages.retrieve({ page_id: notionPageID });
                 if (getNotionStatusProperty(notionPage)) {
                     let todoistId = getNotionTodoistIDProperty(notionPage);
-                    console.log(todoistId);
                     todoistApi.closeTask(todoistId);
                 }
             }
