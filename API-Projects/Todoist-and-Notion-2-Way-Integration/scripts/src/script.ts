@@ -415,7 +415,6 @@ async function bubbleSortIDs() : Promise<void> {
             const nextCreatedTime = new Date(nextTodoistTask.createdAt);
 
             if (createdTime > nextCreatedTime) {
-                console.log(createdTime,nextCreatedTime);
 
                 IDs.todoistTaskIDs[i] = nextTodoistID;
                 IDs.todoistTaskIDs[i+1] = todoistID;
@@ -499,7 +498,6 @@ async function checkNotionCompletion(lastCheckedNotiontIndex:number, taskList:Ar
             if (getNotionStatusProperty(notionPage)){
                 
                 let todoistId: string = getNotionTodoistIDProperty(notionPage);
-                console.log(todoistId);
                 todoistApi.closeTask(todoistId);
             }
             
@@ -737,21 +735,19 @@ async function todoistManualUpdates() : Promise<void> {
 
 // intervalStart Starts am interval at which notion and todoist
 // will be checked and synced
-function intervalStart(){
+async function intervalStart(){
 
     let minute:number = 60 * 1000;
     let latestNotionIndex: number = -1;
     let latestTodoistIndex: number = -1;
 
     // min interval == 5 seconds
-    setInterval(() => {
-        notionUpToDateCheck(latestNotionIndex)
-            .then((value) => latestNotionIndex = value)
-            .then(() => notionManualUpdates());
-        todoistUpToDateCheck(latestTodoistIndex)
-            .then((value) => latestTodoistIndex = value)
-            .then(() => todoistManualUpdates());
-    }, 5 * minute);
+    setInterval( async () => {
+        latestNotionIndex = await notionUpToDateCheck(latestNotionIndex);
+        latestTodoistIndex = await todoistUpToDateCheck(latestTodoistIndex);
+        notionManualUpdates();
+        todoistManualUpdates();
+    }, 10000);
 }
 
 // ----------------------------- Main ---------------------------------//

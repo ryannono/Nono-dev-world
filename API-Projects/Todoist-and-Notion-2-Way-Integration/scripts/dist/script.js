@@ -504,17 +504,17 @@ function todoistManualUpdates() {
     });
 }
 function intervalStart() {
-    let minute = 60 * 1000;
-    let latestNotionIndex = -1;
-    let latestTodoistIndex = -1;
-    setInterval(() => {
-        notionUpToDateCheck(latestNotionIndex)
-            .then((value) => latestNotionIndex = value)
-            .then(() => notionManualUpdates());
-        todoistUpToDateCheck(latestTodoistIndex)
-            .then((value) => latestTodoistIndex = value)
-            .then(() => todoistManualUpdates());
-    }, 5 * minute);
+    return __awaiter(this, void 0, void 0, function* () {
+        let minute = 60 * 1000;
+        let latestNotionIndex = -1;
+        let latestTodoistIndex = -1;
+        setInterval(() => __awaiter(this, void 0, void 0, function* () {
+            latestNotionIndex = yield notionUpToDateCheck(latestNotionIndex);
+            latestTodoistIndex = yield todoistUpToDateCheck(latestTodoistIndex);
+            notionManualUpdates();
+            todoistManualUpdates();
+        }), 10000);
+    });
 }
 const IDs = {
     todoistTaskIDs: [],
