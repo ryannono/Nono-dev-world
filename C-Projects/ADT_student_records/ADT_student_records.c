@@ -175,7 +175,9 @@ int main(){
 
     // find student works
     // when id is in list
-    assert(strcmp(find_student(8572952, lst), "Jane") == 0);
+    char * student_name = find_student(8572952, lst);
+    assert(strcmp(student_name, "Jane") == 0);
+    free(student_name);
 
 
 
@@ -187,7 +189,9 @@ int main(){
     // when the id is not yet in the list
     assert(find_student(110105137,lst) == NULL); // student not in list
     assert(insert_student(110105137,"Dave",lst) == true); // student inserted
-    assert(strcmp(find_student(110105137,lst), "Dave") == 0); // student now in list
+    student_name = find_student(110105137,lst);
+    assert(strcmp(student_name, "Dave") == 0); // student now in list
+    free(student_name);
 
 
 
@@ -198,16 +202,20 @@ int main(){
     // check remove student removes
     // student if the id is in the list
     // and positioned at the front
-    assert(strcmp(find_student(110105137,lst), "Dave") == 0); // student in list
+    student_name = find_student(110105137,lst);
+    assert(strcmp(student_name, "Dave") == 0); // student in list
     assert(remove_student(110105137,lst) == true); // student removed
     assert(find_student(110105137,lst) == NULL); // student no longer in list
+    free(student_name);
 
     // check remove student removes
     // student if the id is in the list
     // anywhere other than the front
-    assert(strcmp(find_student(00010001,lst), "Don") == 0); // student in list
+    student_name = find_student(00010001,lst);
+    assert(strcmp(student_name, "Don") == 0); // student in list
     assert(remove_student(00010001,lst) == true); // student removed
     assert(find_student(00010001,lst) == NULL); // student no longer in list
+    free(student_name);
 
     
     free_list(lst);
