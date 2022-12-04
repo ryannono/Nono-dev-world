@@ -10,10 +10,6 @@ async function getBrowser() : Promise<Browser> {
     return await puppeteer.launch();
 }
 
-async function getInputValue(page: Page, selector: string) {
-    return await page.$eval(selector, el => (el as HTMLInputElement).value);
-}
-
 async function clickElement(page: Page, selector: string) {
     await page.evaluate((selector) => {
       (document.querySelector<HTMLLinkElement>(selector))?.click();
