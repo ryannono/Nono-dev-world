@@ -47,11 +47,6 @@ function getBrowser() {
         return yield puppeteer_1.default.launch();
     });
 }
-function getInputValue(page, selector) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield page.$eval(selector, el => el.value);
-    });
-}
 function clickElement(page, selector) {
     return __awaiter(this, void 0, void 0, function* () {
         yield page.evaluate((selector) => {
