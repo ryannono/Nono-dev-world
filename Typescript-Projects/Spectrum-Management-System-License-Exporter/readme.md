@@ -1,7 +1,5 @@
 
-# 🇨🇦 Spectrum Management System (SMS) License Application Exporter
-
-![Project Intro Graphic](readme_ressources/Frame%203410.png)
+![🇨🇦 Spectrum Management System (SMS) License Application Exporter](readme_ressources/Frame%203410.png)
 
 ### What is the spectrum management system?
 
