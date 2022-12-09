@@ -1,6 +1,7 @@
 
 #include "leetcode_zigzag_problem.h"
 
+
 int main(){
 
     char * str = "PAYPALISHIRING";
@@ -22,26 +23,27 @@ int main(){
 // Zigzag list ADT funtion prototypes below//////////////////////////////
 // see '.h' file for implementation
 
-// init_list initializes a list structure
+/* Initializing the list structure. */
 void init_list(struct zigzag_list * list_ptr);
 
-// append_list appends the zigzag list
+/* Appending the list with the passed character, row and column. */
 struct zigzag_list * append_list(struct zigzag_list * list_ptr, char str, int row, int col);
 
-// bubble sorts list rows
+/* Sorting the list by rows in ascending order. */
 void bubble_sort_row(struct zigzag_list *list_ptr, int start_index,int end_index);
 
-// bubble sorts list cols
+/* Sorting the list by columns in ascending order. */
 void bubble_sort_col(struct zigzag_list *list_ptr, int start_index,int end_index);
 
-// sorts rows whilst keeping the columns in relative order (zigzag order)
+/* Sorting the rows whilst keeping the columns in relative order (zigzag order). */
 void combo_sort(struct zigzag_list *list_ptr);
 
-// creates zigzag list
+/* Creating a zigzag list from the passed string and number of rows. */
 struct zigzag_list * create_list(char str[], int numRows);
 
-// swap_list_item swaps the 2 list items at the indexes that were passed
+/* Swapping the 2 list items at the indexes that were passed. */
 void swap_list_item(struct zigzag_list *list_ptr, int index_a, int index_b);
 
-// print_listprints the passed list
+/* A function that prints the passed list. */
 void print_list(struct zigzag_list *list_ptr);
+

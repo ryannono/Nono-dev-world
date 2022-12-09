@@ -190,3 +190,21 @@ void print_list(struct zigzag_list *list_ptr){
         printf("\t\t- %c\n", list_ptr->letters[i]);
     }
 }
+
+int main(){
+
+    char * str = "PAYPALISHIRING";
+    int numRows = 3;
+
+    if (numRows == 1){
+        printf("\nThe answer is: %s\n\n", str);
+    }
+    else{
+        struct zigzag_list * list_ptr = create_list(str,numRows);
+        printf("\nThe answer is: %s\n\n", list_ptr->letters);
+        list_ptr = NULL;
+        free(list_ptr);
+    }
+
+    return 0;
+}

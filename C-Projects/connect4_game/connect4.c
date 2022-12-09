@@ -24,8 +24,11 @@ void opening_statement(){
 
 }
 
-// print_board prints the board that is passed
-// O(n*m)
+/**
+ * This function prints the board with a bounding box
+ * 
+ * @param board the board to print
+ */
 void print_board(char board[6][7]){
     
     // O(1)
@@ -80,9 +83,14 @@ void print_board(char board[6][7]){
     }
 }
 
-// check_win(board) returns true if the given player has 4 connected
-// pieces on the board
-// O(n*m)
+/**
+ * We check for a win by checking for a horizontal, vertical, or diagonal win
+ * 
+ * @param board a 2D array of chars, representing the board.
+ * @param player the player who is currently playing
+ * 
+ * @return A boolean value.
+ */
 bool check_win(char board[6][7] , char player){
 
 
@@ -137,9 +145,10 @@ bool check_win(char board[6][7] , char player){
     return false;
 }
 
-// test_check_win Incorporates a few tests to assure
-// check_win is functionning properly
-// O(n*m)
+/**
+ * This function tests the check_win function by creating a board with a horizontal, vertical, and two
+ * diagonal wins, and then testing the check_win function on each of them
+ */
 void test_check_win(){
     
     char boardH_F[6][7] = {
@@ -223,18 +232,28 @@ void test_check_win(){
 
 }
 
-// valid_column returns true if the input was between 1 and 7
-// O(1)
+/**
+ * `valid_column` returns true if the column is between 1 and 7, inclusive, and false otherwise.
+ * 
+ * @param column The column number of the chess board.
+ * 
+ * @return A boolean value.
+ */
 bool valid_column(int column){
     return (column > 0 && column < 8) ? true : false;
 }
 
-// make_move(board , column , player) updates the board following a move
-// by the given player in the given column; returns false if the move
-// was illegal because the column was full
-// requires: 0 <= column < 7
-// player is either 'X' or 'O'
-// O(n)
+
+/**
+ * This function takes in a board, a column, and a player, and places the player in the first open spot
+ * in the column, if there is one.
+ * 
+ * @param board the game board
+ * @param column the column to place the piece in
+ * @param player the player who is making the move
+ * 
+ * @return A boolean value
+ */
 bool make_move(char board[6][7] , int column , char player){
 
     // start at bottom of column
@@ -326,15 +345,22 @@ int player_number(const char current_player){
         }
 }
 
-// max_moves returns true if the maximum amount of moves have been played
-// and the board is full
-// O(1)
+/**
+ * `max_moves` returns true if the maximum amount of moves have been played and the board is full
+ * 
+ * @param current_count the current amount of moves played
+ * 
+ * @return a boolean value.
+ */
 bool max_moves(int current_count){
     return (current_count == 42) ? true : false;
 }
 
-// player_swap swaps players a for player b
-// O(1)
+/**
+ * This function swaps the current player from X to O or O to X
+ * 
+ * @param current_player This is the current player's symbol.
+ */
 void player_swap(char * current_player){
 
     if (*current_player == 'X'){
@@ -346,10 +372,12 @@ void player_swap(char * current_player){
     
 }
 
-// game_restart asks the users if they want to play again and
-// returns true if user wishes to restart (enters 'y' or 'Y') 
-// and false if not (enter 'n' or 'N')
-// O(n)
+/**
+ * This function asks the user if they want to play again, and returns true if they do, and false if
+ * they don't
+ * 
+ * @return A boolean value.
+ */
 bool game_restart(){
     
     char restart = 0;
@@ -370,9 +398,11 @@ bool game_restart(){
     return (restart == 'Y' || restart == 'y') ? true : false;
 }
 
-// board_initialiser resets every position of the board 
-// that is passed's values to '-' 
-// O(n*m)
+/**
+ * It initialises the board to be a 6x7 array of '-' characters
+ * 
+ * @param board This is the board that we are going to be using.
+ */
 void board_initialiser(char board[6][7]){
 
     for (int r = 0; r < 6; r++){
@@ -398,8 +428,15 @@ int main(){
     bool restart_indicator = true;
     int game_count = 0;
 
-    // Keep restarting game as long as the
-    // players decide they want to play again
+    /* The main game loop. It is responsible for the following:
+            - Initialising the game board
+            - Printing the game board
+            - Taking in user input
+            - Checking if the input is valid
+            - Checking if the input resulted in a win
+            - Checking if the input resulted in a draw
+            - Asking if the user wishes to play again
+            - Exiting the game if the user wishes to quit */
     while (restart_indicator == true){
         
         //clear console
@@ -424,7 +461,12 @@ int main(){
         int input_attempt_count = 0;
         int move_count = 0;
 
-        // while no winner and no draw has been identified
+       /* This while Loop: takes in a column as input, checks if the input is
+       valid, and if it is valid it makes the move. If the move is valid it checks if the move
+       resulted in a win, if it did not it checks if the max amount of moves were played, if they
+       were not it swaps the players and continues the game. If the move did result in a win it
+       prints the winning player's number and asks if the users wish to play again. If the move is
+       not valid it lets the user know with a message and restarts the loop */
         while (win_indicator == false && draw_indicator == false){
             
             // translate the 'current_player' symbol to 
@@ -511,6 +553,7 @@ int main(){
         }
     }
 
+    /* Printing the message "The game was exited" */
     printf("\n---------------------------------------------------------------\n");
     printf("\nThe game was exited\n\n");
 

@@ -20,8 +20,10 @@ struct word_list {
     int max_list_len;
 };
 
-// init_word initialises the word the pointer passed points to
-// O(1)
+/** 
+ * Initialising the word_count structure that the pointer passed points to. 
+ * O(1)
+ */
 void init_word(struct word_count *word_ptr) {
     word_ptr->max_len = 1;
     word_ptr->len = 0;
@@ -29,8 +31,10 @@ void init_word(struct word_count *word_ptr) {
     word_ptr->word= (char *)malloc(1*sizeof(char));
 }
 
-// init_list initialises the list the pointer passed points to
-// O(1)
+/** 
+ * Initialising the list the pointer passed points to.
+ * O(1)
+ */
 void init_list(struct word_list *list_ptr) {
     list_ptr->len = 0;
     list_ptr->max_list_len = 1;
@@ -39,9 +43,9 @@ void init_list(struct word_list *list_ptr) {
     list_ptr->words = (char **)malloc(1 * sizeof(char*));
 }
 
-// decapitalize takes a string and returns a pointer to a string
-// with the contents decapitalised
-// O(n)
+/** Taking a string and returning a pointer to a string with the contents decapitalised.
+ * O(n)
+ */ 
 char * decapitalize(char * str){
     
     for (int i = 0; str[i] ; i++){
@@ -88,8 +92,7 @@ struct word_count * identify_word(char str[], int length, int start_point){
     return word_ptr;
 }
 
-// count_occurences counts how many times a passed 
-// substring (the substring being a word) is found in the passed string.
+// count_occurences Counting how many times a substring(word) is found in a string.
 // O(n^2)
 int count_occurences(char * sub_str, char str[], int length){
 
@@ -307,7 +310,7 @@ void qsort_list(struct word_list *list_ptr, ...){
     }
 }
 
-// print_list prints the passed list
+// print_list Printing the list in a formatted way.
 // O(n)
 void print_list(struct word_list *list_ptr){
     
