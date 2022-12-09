@@ -15,8 +15,11 @@ struct slist {
     struct snode * front;
 };
 
-// create_list() returns an empty newly -created list of students
-// note: caller must free using free_list
+/**
+ * It creates a new list of students.
+ * note: caller must free using free_list
+ * @return A pointer to a struct slist
+ */
 struct slist * create_list(){
 
     struct slist * new_list_ptr = malloc(sizeof(struct slist));
@@ -25,8 +28,16 @@ struct slist * create_list(){
     return new_list_ptr;
 }
 
-// create_node dynamically creates a new node with the given params 
-// requires node is freed
+/**
+ * `create_node` dynamically creates a new node with the given params
+ * requires node is freed
+ * 
+ * @param name the name of the student
+ * @param id the id of the node
+ * @param next the next node in the list
+ * 
+ * @return A pointer to a struct snode
+ */
 struct snode * create_node(char * name, int id, struct snode * next){
 
     int len = strlen(name) + 1;
@@ -40,9 +51,18 @@ struct snode * create_node(char * name, int id, struct snode * next){
     return new_node;
 }
 
-// insert_student(id, name , lst) attempts to add a student with given id and
-// name into the given list lst; if a student with that id is already in the
-// list then return false , otherwise lst is modified and true is returned
+/**
+ * It iterates through the list until it finds a node with the same id as the one we want to insert, if
+ * it finds one it returns false, otherwise it creates a new node and sets it to be the front of the
+ * list
+ * 
+ * @param id the id of the student to be inserted
+ * @param name the name of the student to be added
+ * @param lst a pointer to a list
+ * 
+ * @return if a student with that id is already in the list then return false , 
+ * otherwise lst is modified and true
+ */
 bool insert_student(int id, char name[], struct slist * lst){
 
     // create pointer to front
@@ -67,9 +87,14 @@ bool insert_student(int id, char name[], struct slist * lst){
     return true;
 }
 
-// remove_student(id, lst) attempts to remove a student with given id from the
-// given list and free the memory allocated to that student; true is returned
-// if successful and false otherwise
+/**
+ * Iterate through the list until the node with the given id is found, then delete it
+ * 
+ * @param id the id of the student to remove
+ * @param lst a pointer to a list
+ * 
+ * @return true is returned if successful and false otherwise
+ */
 bool remove_student(int id, struct slist * lst){
 
     // if the list is empty there's nothing to delete
@@ -106,9 +131,15 @@ bool remove_student(int id, struct slist * lst){
     return false;
 }
 
-// find_student(id, lst) returns the name of the student with given id in the
-// given list lst in a dynamically -allocated string (that the caller must
-// free) or NULL if no student has that id
+/**
+ * The function iterates through the list, and if the id of the current node matches the id we're
+ * looking for, it returns the name associated with that node
+ * 
+ * @param id the id of the student we're looking for
+ * @param lst a pointer to the list
+ * 
+ * @return A pointer to the name of the student with the given id.
+ */
 char * find_student(int id, struct slist * lst){
 
     // nothing to find if no node in the list
@@ -136,8 +167,11 @@ char * find_student(int id, struct slist * lst){
     return NULL;
 }
 
-// free_list (lst) deallocates all memory associated with the given list lst
-// including the memory used by the student records in the list
+/**
+ * It frees the memory allocated to the list.
+ * 
+ * @param lst a pointer to the list structure
+ */
 void free_list(struct slist * lst){
 
     // free space allocated to the name of each node
@@ -161,32 +195,30 @@ void free_list(struct slist * lst){
 
 int main(){
 
+    /* It creates a new list of students and adds 5 students to it. */
     struct slist * lst = create_list();
-
     insert_student(8572952,"Jane",lst);
     insert_student(00010001,"Don",lst);
     insert_student(12121212,"Chris",lst);
     insert_student(12282727,"Chris",lst);
     insert_student(110005137,"Ryan",lst);
 
-    // find student returns null
-    // when id is not in list
+    /* Checking that the function find_student returns NULL when the id is not in the list. */
     assert(find_student(121012912, lst) == NULL);
 
-    // find student works
-    // when id is in list
+    /* Checking that the function find_student returns the name of the student with the given id. */
     char * student_name = find_student(8572952, lst);
     assert(strcmp(student_name, "Jane") == 0);
     free(student_name);
 
 
 
-    // check insert student returns
-    // false if id already in list
+    /* Checking that the function insert_student returns false if the id is already in the list. */
     assert(insert_student(110005137,"Dave",lst) == false);
 
-    // check insert student adds student
-    // when the id is not yet in the list
+
+    /* Checking that the student is not in the list, then inserting the student, then checking that the
+    student is in the list. */
     assert(find_student(110105137,lst) == NULL); // student not in list
     assert(insert_student(110105137,"Dave",lst) == true); // student inserted
     student_name = find_student(110105137,lst);
@@ -195,22 +227,18 @@ int main(){
 
 
 
-    // check remove student returns
-    // null if id not in list
+    /* It's checking that the function remove_student returns false if the id is not in the list. */
     assert(remove_student(11111111,lst) == false);
 
-    // check remove student removes
-    // student if the id is in the list
-    // and positioned at the front
+ 
+    // check remove student removes student if the id is in the list and positioned at the front
     student_name = find_student(110105137,lst);
     assert(strcmp(student_name, "Dave") == 0); // student in list
     assert(remove_student(110105137,lst) == true); // student removed
     assert(find_student(110105137,lst) == NULL); // student no longer in list
     free(student_name);
 
-    // check remove student removes
-    // student if the id is in the list
-    // anywhere other than the front
+    // check remove student removes student if the id is in the list anywhere other than the front
     student_name = find_student(00010001,lst);
     assert(strcmp(student_name, "Don") == 0); // student in list
     assert(remove_student(00010001,lst) == true); // student removed
@@ -218,6 +246,7 @@ int main(){
     free(student_name);
 
     
+    /* It's freeing the memory allocated to the list. */
     free_list(lst);
 
     return 0;
