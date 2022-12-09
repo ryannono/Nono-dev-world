@@ -1,6 +1,6 @@
 
 
- // Definition for singly-linked list.
+/* A ListNode has a value and a pointer to the next ListNode. */
  class ListNode {
 
     val: number
@@ -13,6 +13,14 @@
 }
  
 
+ /**
+  * We iterate through both lists, comparing the values of the current nodes. We append the lesser
+  * value to the destination list, and move on to the next node in the list from which we took the
+  * value
+  * @param {ListNode | null} list1 - ListNode | null
+  * @param {ListNode | null} list2 - ListNode | null
+  * @returns A new linked list with the elements of list1 and list2 sorted.
+  */
  function merge(list1: ListNode | null, list2: ListNode | null) : ListNode{
     
     // create head node and iterating (moving) node
@@ -48,6 +56,11 @@
 }
 
 
+/**
+ * We merge all non null lists into one list
+ * @param lists - an array of linked lists
+ * @returns A ListNode
+ */
 function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
     
     let destHead: ListNode | null = null;
