@@ -64,6 +64,19 @@ class languageStack {
     isEmpty() {
         return !this.dataLength ? true : false;
     }
+    /**
+     * It clears the array by setting the dataLength property to 0
+     */
+    clear() {
+        this.dataLength = 0;
+    }
+    /**
+     * It sets the data array to an empty array and sets the dataLength to 0
+     */
+    destroy() {
+        this.data = [];
+        this.dataLength = 0;
+    }
 }
 //-------- Type guards & helper functions ------ //
 /**
@@ -92,8 +105,7 @@ function isZero(input) {
  * @param {string} input - string - the input string to be verified
  * @returns A boolean value.
  */
-function verifyLanguage(input) {
-    const stack = new languageStack();
+function verifyLanguage(stack, input) {
     for (let i = 0, length = input.length; i < length; i++) {
         const currentCharacter = input[i];
         if (!isAllowedRecInput(currentCharacter) ||
@@ -120,10 +132,13 @@ const testRecInputs = new Map([
 ]);
 /* Iterating over the testRecInputs Map and calling the verifyLanguage function on each
 value in the Map. */
+const langStack = new languageStack();
 testRecInputs.forEach((testString, testNumber) => {
     console.log(`testing test input #${testNumber}`);
-    console.log(verifyLanguage(testString)
+    console.log(verifyLanguage(langStack, testString)
         ? '\nYes - Verification PASSED\n\n'
         : '\nNo - Verification FAILED\n\n');
+    langStack.clear();
 });
+langStack.destroy();
 //# sourceMappingURL=context-free-language-rec.js.map

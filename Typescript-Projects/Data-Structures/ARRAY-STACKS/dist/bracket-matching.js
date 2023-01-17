@@ -66,6 +66,19 @@ class Stack {
     isEmpty() {
         return !this.dataLength ? true : false;
     }
+    /**
+     * It clears the array by setting the dataLength property to 0
+     */
+    clear() {
+        this.dataLength = 0;
+    }
+    /**
+     * It sets the data array to an empty array and sets the dataLength to 0
+     */
+    destroy() {
+        this.data = [];
+        this.dataLength = 0;
+    }
 }
 //-------- Type guards & helper functions ------ //
 /**
@@ -112,20 +125,21 @@ function isSameType(openBracket, closeBracket) {
 }
 // -------------- Bracket checker -------------- //
 /**
- * If the input is not allowed, or if the input is a closing bracket that doesn't match the last
- * opening bracket, or if the input is the last character and there are still opening brackets left,
- * then the input is bad. Otherwise, the input is good
+ * If the input is not allowed, or if the current character is a closing bracket and the last character
+ * in the stack is not the same type, or if the current character is the last in the input and is
+ * an opening bracket, or if the current character is last, and a closing bracket but the stack is empty,
+ * then the input is bad
  * @param {string} input - string - the string to be verified
  * @returns A boolean value.
  */
-function verifyBrackets(input) {
-    const stack = new Stack();
+function verifyBrackets(stack, input) {
     for (let i = 0, length = input.length; i < length; i++) {
         const currentCharacter = input[i];
         if (!isAllowedInput(currentCharacter) ||
             (isCloseBracket(currentCharacter) &&
                 !isSameType(stack.pop().removedItem, currentCharacter)) ||
-            (i === length - 1 && stack.dataLength)) {
+            (i === length - 1 &&
+                (isOpenBracket(currentCharacter) || stack.dataLength))) {
             console.log('Bad input');
             return false;
         }
@@ -141,13 +155,19 @@ const testInputs = new Map([
     [2, '{3*(2+[3-[4/[6/9]]]})'],
     [3, '((3*(9-(4*(6-5))))'],
     [4, '{2-{3*{6/[[[(((9-0)))]]]}}/7}'],
+    [5, '['],
+    [6, ']'],
+    [7, '[]'],
 ]);
 /* It's iterating through the testInputs Map and running the verifyBrackets function on each
 value. */
+const stack = new Stack();
 testInputs.forEach((testString, testNumber) => {
     console.log(`testing test input #${testNumber}`);
-    console.log(verifyBrackets(testString)
+    console.log(verifyBrackets(stack, testString)
         ? '\nVerification PASSED\n\n'
         : '\nVerification FAILED\n\n');
+    stack.clear();
 });
+stack.destroy();
 //# sourceMappingURL=bracket-matching.js.map
