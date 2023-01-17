@@ -15,25 +15,22 @@ class LinkedList {
         this.length = (_a = passedList === null || passedList === void 0 ? void 0 : passedList.length) !== null && _a !== void 0 ? _a : 0;
     }
     /**
-     * We create a new node, and then we set the current back node's next property to the new node, and
-     * then we set the new node's previous property to the current back node, and then we set the back
-     * property to the new node, and then we increment the length property
+     * If there is no back node, set the front to the new node, otherwise set the back node's next to the
+     * new node and the new node's previous to the back node, then set the back to the new node
      * @param {Node} newNode - The node that we want to add to the end of the list.
-     * @returns The linked list
+     * @returns The new node is being returned.
      */
     push(newNode) {
         const currentback = this.back;
         if (!currentback) {
             this.front = newNode;
-            this.back = newNode;
-            this.length = 1;
         }
         else {
             currentback.next = newNode;
             newNode.previous = currentback;
-            this.back = newNode;
-            this.length++;
         }
+        this.back = newNode;
+        this.length++;
         return this;
     }
     /**
@@ -153,5 +150,5 @@ function longestSubstring(fullString) {
 }
 /* It's calling the longestSubstring function and passing in the string 'cbbbbdbibbnbjbobn' as an
 argument. */
-console.log('final: ' + longestSubstring('cbbbbdbibbnbjbobn'));
+console.log('final: ' + longestSubstring('cbbibbdbibbnbjbobn'));
 //# sourceMappingURL=longest-pal-sub.js.map
