@@ -41,31 +41,28 @@ function isOperation(character: string) {
 }
 
 /**
- * It takes a string, trims it, then iterates through it, adding each character to an array until it
- * hits a non-digit character, then it converts the array to a string, and converts that string to a
- * BigInt, and returns that BigInt
+ * It takes a string, removes all non-numeric characters from the beginning, then converts the
+ * remaining characters to a number, and returns that number
  * @param {string} string - the string to parse
- * @returns the integer value of the string.
+ * @returns the integer value of a string.
  */
 function getInt(string: string) {
   string = string.trim();
 
-  const arr: string[] = [];
+  let cleanString = '';
   for (const character of string) {
-    if (!arr.length && !isDigit(character) && !isOperation(character)) {
+    if (!cleanString.length && !isDigit(character) && !isOperation(character)) {
       break;
     }
-    if (arr.length && !isDigit(character)) break;
-    arr.push(character);
+    if (cleanString.length && !isDigit(character)) break;
+    cleanString += character;
   }
 
-  string = arr.join('');
-
   let int;
-  if (isOperation(string[0])) {
-    int = BigInt(string.substring(1));
-    if (string[0] === '-') int = -int;
-  } else int = BigInt(string);
+  if (isOperation(cleanString[0])) {
+    int = BigInt(cleanString.substring(1));
+    if (cleanString[0] === '-') int = -int;
+  } else int = BigInt(cleanString);
 
   const min = (-2) ** 31;
   const max = 2 ** 31 - 1;
@@ -76,4 +73,4 @@ function getInt(string: string) {
 }
 
 /* It's calling the getInt function and passing in the string '21474836460' as an argument. */
-console.log(getInt('+-   p21474836460'));
+console.log(getInt('21474836460'));
