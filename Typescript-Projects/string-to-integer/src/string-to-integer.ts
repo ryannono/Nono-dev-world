@@ -19,12 +19,6 @@ Return the integer as the final result. */
  * @param {string} character - The character to be checked.
  * @returns true or false
  */
-/**
- * If the character is not equal to 0 and the character is not a number, return false, otherwise return
- * true.
- * @param {string} character - The character to be checked.
- * @returns true or false
- */
 function isDigit(character: string) {
   if (character !== '0' && !Number(character)) return false;
   return true;
