@@ -1,4 +1,5 @@
 /* eslint-disable node/no-unsupported-features/es-builtins */
+
 /* PROMPT: Read in and ignore any leading whitespace.
 Check if the next character (if not already at the end of the string)
 is '-' or '+'. Read this character in if it is either. This determines
@@ -12,6 +13,12 @@ then clamp the integer so that it remains in the range. Specifically, integers l
 -231 should be clamped to -231, and integers greater than 231 - 1 should be clamped to 231 - 1.
 Return the integer as the final result. */
 
+/**
+ * If the character is not equal to 0 and the character is not a number, return false, otherwise return
+ * true.
+ * @param {string} character - The character to be checked.
+ * @returns true or false
+ */
 /**
  * If the character is not equal to 0 and the character is not a number, return false, otherwise return
  * true.
@@ -36,9 +43,9 @@ function isOperation(character: string) {
 /**
  * It takes a string, trims it, then iterates through it, adding each character to an array until it
  * hits a non-digit character, then it converts the array to a string, and converts that string to a
- * BigInt
- * @param {string} string - the string to be parsed
- * @returns the integer value of a string.
+ * BigInt, and returns that BigInt
+ * @param {string} string - the string to parse
+ * @returns the integer value of the string.
  */
 function getInt(string: string) {
   string = string.trim();
@@ -63,13 +70,10 @@ function getInt(string: string) {
   const min = (-2) ** 31;
   const max = 2 ** 31 - 1;
 
-  console.log(max);
-
-  if (!int) return 0;
   if (int < min) return min;
   if (int > max) return max;
   return int;
 }
 
 /* It's calling the getInt function and passing in the string '21474836460' as an argument. */
-console.log(getInt('21474836460'));
+console.log(getInt('+-   p21474836460'));

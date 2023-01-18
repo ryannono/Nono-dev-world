@@ -18,6 +18,12 @@ Return the integer as the final result. */
  * @param {string} character - The character to be checked.
  * @returns true or false
  */
+/**
+ * If the character is not equal to 0 and the character is not a number, return false, otherwise return
+ * true.
+ * @param {string} character - The character to be checked.
+ * @returns true or false
+ */
 function isDigit(character) {
     if (character !== '0' && !Number(character))
         return false;
@@ -36,9 +42,9 @@ function isOperation(character) {
 /**
  * It takes a string, trims it, then iterates through it, adding each character to an array until it
  * hits a non-digit character, then it converts the array to a string, and converts that string to a
- * BigInt
- * @param {string} string - the string to be parsed
- * @returns the integer value of a string.
+ * BigInt, and returns that BigInt
+ * @param {string} string - the string to parse
+ * @returns the integer value of the string.
  */
 function getInt(string) {
     string = string.trim();
@@ -62,9 +68,6 @@ function getInt(string) {
         int = BigInt(string);
     const min = (-2) ** 31;
     const max = 2 ** 31 - 1;
-    console.log(max);
-    if (!int)
-        return 0;
     if (int < min)
         return min;
     if (int > max)
@@ -72,5 +75,5 @@ function getInt(string) {
     return int;
 }
 /* It's calling the getInt function and passing in the string '21474836460' as an argument. */
-console.log(getInt('21474836460'));
+console.log(getInt('+-   p21474836460'));
 //# sourceMappingURL=string-to-integer.js.map
