@@ -120,8 +120,7 @@ function createString(list) {
  * @returns The longest palindromic substring in the given string.
  */
 function longestSubstring(fullString) {
-    const stringlength = fullString.length;
-    const list = new LinkedList();
+    const stringlength = fullString.length, list = new LinkedList();
     let longestPalSub = '', i = 0;
     while (i < stringlength) {
         while (i <= stringlength) {
