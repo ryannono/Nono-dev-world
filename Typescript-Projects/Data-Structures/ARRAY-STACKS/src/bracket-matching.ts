@@ -140,15 +140,15 @@ function verifyBrackets(input: string) {
   const stack = new Stack<openBracket>();
 
   for (
-    let i = 0, length = input.length, lastIndex = length - 1;
-    i < length;
-    i++
+    let index = 0, length = input.length, lastIndex = length - 1;
+    index < length;
+    index++
   ) {
-    const currentCharacter = input[i];
+    const currentCharacter = input[index];
 
     if (
       !isAllowedCharacter(currentCharacter) ||
-      isUnbalanced(i, lastIndex, currentCharacter, stack.size()) ||
+      isUnbalanced(index, lastIndex, currentCharacter, stack.size()) ||
       isWrongCloseType(currentCharacter, stack.top())
     ) {
       console.log('Bad input');
@@ -166,6 +166,7 @@ function verifyBrackets(input: string) {
 
 // ----------------- Main ----------------- //
 
+/* It's creating a Map object with the test inputs. */
 const testInputs = new Map([
   [1, '(9*[3*{[(3+3)/5]*7}])'],
   [2, '{3*(2+[3-[4/[6/9]]]})'],
@@ -177,8 +178,7 @@ const testInputs = new Map([
   [8, '[][[]['],
 ]);
 
-/* It's iterating through the testInputs Map and running the verifyBrackets function on each
-value. */
+/* It's iterating over the test inputs and printing the results of the verification. */
 testInputs.forEach((testString, testNumber) => {
   console.log(`testing test input #${testNumber}`);
   console.log(
