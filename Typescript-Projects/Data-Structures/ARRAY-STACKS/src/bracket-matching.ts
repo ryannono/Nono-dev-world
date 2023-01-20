@@ -112,19 +112,20 @@ function isUnbalanced(
 }
 
 /**
- * If the current character is a closing bracket and the top of the stack is an opening bracket, and
- * the two brackets are not of the same type, then return true
+ * If the current character is a closing bracket and the top of the stack is not the same type of
+ * bracket, then return true
  * @param {allowedCharacter} currentCharacter - allowedCharacter
  * @param {openBracket | null} stackTop - openBracket | null
- * @returns A boolean
+ * @returns A boolean value
  */
 function isWrongCloseType(
   currentCharacter: allowedCharacter,
   stackTop: openBracket | null
 ): boolean {
-  return (isCloseBracket(currentCharacter) &&
-    stackTop &&
-    !isSameType(stackTop, currentCharacter)) as boolean;
+  return (
+    isCloseBracket(currentCharacter) &&
+    (!stackTop || !isSameType(stackTop, currentCharacter))
+  );
 }
 
 // -------------- Bracket checker -------------- //
