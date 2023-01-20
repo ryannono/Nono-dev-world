@@ -2,18 +2,24 @@
 
 import {Stack} from './Stack';
 
+// ------------------- Types ------------------- //
+
+const allowedCharacters = ['0', '1'] as const;
+
 //----------------- Type guard ----------------- //
 
 /**
- * "If the character is '0' or '1', then it is a allowed."
+ * "If the character is in the allowedCharacters array, then it's an allowed character."
  *
- * The function isAllowedCharacter is a predicate function. It returns true or false
- * @param {string} character - string - This is the parameter that we're going to pass into the
- * function.
- * @returns A function that takes a string and returns a boolean.
+ * The above function is a type guard. It's a function that takes a value and returns a boolean. If the
+ * boolean is true, then the value is of a certain type
+ * @param {unknown} character - unknown
+ * @returns A function that takes a character and returns a boolean.
  */
-function isAllowedCharacter(character: string): character is '0' | '1' {
-  return character === '0' || character === '1';
+function isAllowedCharacter<T extends (typeof allowedCharacters)[number]>(
+  character: unknown
+): character is T {
+  return allowedCharacters.includes(character as T);
 }
 
 // ------------- Language checker ------------- //

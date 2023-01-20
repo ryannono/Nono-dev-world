@@ -37,6 +37,7 @@ export class Stack<dataType> {
    * @returns The last element in the array.
    */
   top() {
+    if (this.isEmpty()) return null;
     return this.data[this.dataLength - 1];
   }
 
