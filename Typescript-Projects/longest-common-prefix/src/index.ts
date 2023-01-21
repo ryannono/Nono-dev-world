@@ -1,3 +1,5 @@
+// ----------- Helper function ----------- //
+
 /**
  * If the number of strings that start with the longest prefix plus one is equal to the number of
  * strings in the array, and the length of the longest prefix is less than the length of the first
@@ -19,6 +21,8 @@ function goodFilterResult(
   );
 }
 
+// ----------- Prefix finder ------------- //
+
 /**
  * We start with an empty string, and then we add one character at a time to the string, and check if
  * all the strings in the array start with that string. If they do, we keep adding characters. If they
@@ -38,6 +42,7 @@ function longestCommonPrefix(strs: string[]): string {
 }
 
 // ----------------- Main ----------------- //
+
 type testInput = [string[], string];
 
 /* It's creating a Map object with the test inputs. */
