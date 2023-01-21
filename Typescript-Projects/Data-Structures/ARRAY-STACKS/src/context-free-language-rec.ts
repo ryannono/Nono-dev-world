@@ -25,12 +25,13 @@ function isAllowedCharacter<T extends (typeof allowedCharacters)[number]>(
 // ------------- Language checker ------------- //
 
 /**
- * It's creating a new stack that only accepts the type '0', iterating over the input string and
- * checking to see if the current character is a 0 or a 1, pushing a 0 onto the stack if it's a 0,
- * popping a 0 off of the stack if it's a 1, destroying the stack and returning true if the stack is
- * empty, and destroying the stack and returning false if the stack is not empty
+ * It's iterating over the input string and checking each character. If the current character is a 0,
+ * then it's pushing it onto the stack. If the current character is a 1, then it's popping the stack.
+ * If the current character is not an allowed character, or if the current character is a 0 and it's
+ * the last character in the string, or if the current character is a 1 and the stack is empty, then
+ * the input is bad
  * @param {string} input - string
- * @returns It's returning a boolean.
+ * @returns A boolean value.
  */
 function verifyLanguage(input: string) {
   const stack = new Stack<'0'>();
@@ -45,16 +46,15 @@ function verifyLanguage(input: string) {
     if (
       !isAllowedCharacter(currentCharacter) ||
       (i === lastIndex && currentCharacter === '0') ||
-      (currentCharacter === '1' && !stack.pop())
+      (currentCharacter === '1' && stack.isEmpty())
     ) {
       console.log('Bad input');
       stack.destroy();
       return false;
     }
 
-    if (currentCharacter === '0') {
-      stack.push(currentCharacter);
-    }
+    if (currentCharacter === '0') stack.push(currentCharacter);
+    else stack.pop();
   }
 
   stack.destroy();
