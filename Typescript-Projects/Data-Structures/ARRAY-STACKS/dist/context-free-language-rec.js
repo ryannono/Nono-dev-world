@@ -2,7 +2,7 @@
 // ------------------- Stack ------------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 const Stack_1 = require("./Stack");
-// ------------------- Types ------------------- //
+// ------------------- Tuple ------------------- //
 const allowedCharacters = ['0', '1'];
 //----------------- Type guard ----------------- //
 /**

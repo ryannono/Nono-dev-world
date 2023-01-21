@@ -2,7 +2,7 @@
 
 import {Stack} from './Stack';
 
-// ------------------- Types ------------------- //
+// ------------------- Tuple ------------------- //
 
 const allowedCharacters = ['0', '1'] as const;
 
