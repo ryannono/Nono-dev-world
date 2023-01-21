@@ -22,15 +22,17 @@ type allowedCharacter = (typeof allowedCharacters)[number];
 //------------ generic/base function ----------- //
 
 /**
- * "If the character is in the tuple, then the character is of type T."
+ * "If the character is in the tuple, return true, otherwise return false."
  *
- * The function is generic, meaning that it can be used with any type
- * @param {unknown} character - unknown
- * @param tuple - The tuple to check against.
- * @returns A function that takes a character and a tuple and returns a boolean.
+ * The function is generic, meaning that it can be used with any type. The generic type is called T,
+ * and it extends the allowedCharacter type. This means that the generic type T can be any type that is
+ * allowed by the allowedCharacter type
+ * @param {string} character - string
+ * @param tuple - readonly T[]
+ * @returns A function that takes a string and a tuple of allowed characters and returns a boolean.
  */
 function overlap<T extends allowedCharacter>(
-  character: unknown,
+  character: string,
   tuple: readonly T[]
 ): character is T {
   return tuple.includes(character as T);
