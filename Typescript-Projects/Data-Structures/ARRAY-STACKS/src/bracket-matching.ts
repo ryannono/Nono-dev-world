@@ -29,7 +29,10 @@ type allowedCharacter = (typeof allowedCharacters)[number];
  * @param tuple - The tuple to check against.
  * @returns A function that takes a character and a tuple and returns a boolean.
  */
-function overlap<T>(character: unknown, tuple: readonly T[]): character is T {
+function overlap<T extends allowedCharacter>(
+  character: unknown,
+  tuple: readonly T[]
+): character is T {
   return tuple.includes(character as T);
 }
 
