@@ -6,13 +6,11 @@ import {Stack} from './Stack';
 
 const openBrackets = ['(', '[', '{'] as const;
 const closeBrackets = [')', ']', '}'] as const;
-const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
-const operations = ['+', '-', '*', '/'] as const;
 const allowedCharacters = [
   ...openBrackets,
   ...closeBrackets,
-  ...digits,
-  ...operations,
+  ...['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+  ...['+', '-', '*', '/'],
 ] as const;
 
 // -------------------- Types ------------------- //

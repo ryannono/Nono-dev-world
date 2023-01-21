@@ -11,6 +11,13 @@ export class Stack<dataType> {
   }
 
   /**
+   * The print() function is a method of the class, and it has access to the data property of the class
+   */
+  print() {
+    console.log(this.data);
+  }
+
+  /**
    * It adds an item to the end of the array and returns the new length of the array
    * @param {dataType} item - The item to be added to the end of the array.
    * @returns The length of the array.

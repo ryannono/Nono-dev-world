@@ -12,6 +12,7 @@
   "scripts": {
     "start-bracket": "node ./dist/bracket-matching.js",
     "start-rec": "node ./dist/context-free-language-rec.js",
+    "start-reg": "node ./dist/regular-expression-matching.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "gts lint",
     "clean": "gts clean",
