@@ -29,7 +29,6 @@ class NodeStore {
    * @returns The first node in the list.
    */
   shiftNodesToFront(numberOfNodes: number): ListNode | null {
-    if (this.length === 1) return this.data[0];
     if (numberOfNodes > this.length) numberOfNodes %= this.length;
 
     while (numberOfNodes) {
@@ -45,12 +44,12 @@ class NodeStore {
 
 /**
  * We create a NodeStore object, which is a wrapper around the linked list, and then we shift the nodes
- * to the front of the list by the number of rotations
+ * to the front of the list by the number of times specified by the k parameter
  * @param {ListNode | null} head - the head of the linked list
  * @param {number} k - the number of times to rotate the list
  * @returns A new linked list with the nodes shifted to the front.
  */
 function rotateRight(head: ListNode | null, k: number): ListNode | null {
-  if (!head) return head;
+  if (!head || !head.next || !k) return head;
   return new NodeStore(head).shiftNodesToFront(k);
 }
