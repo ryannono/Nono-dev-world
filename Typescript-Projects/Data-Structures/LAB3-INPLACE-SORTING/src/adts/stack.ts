@@ -60,11 +60,3 @@ export class llStack<T> {
     this.data = new LinkedList<T>();
   }
 }
-
-const x = new llStack();
-
-x.push(23);
-console.log(x);
-
-x.push(32);
-console.log(x);
