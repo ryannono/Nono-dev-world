@@ -10,8 +10,6 @@
   "license": "Apache-2.0",
   "keywords": [],
   "scripts": {
-    "test-brac": "node ./build/bracket-matching.js",
-    "test-rec": "node ./build/context-free-language-rec.js",
     "test-stack": "node ./build/adts/stack.js",
     "test-list": "node ./build/adts/linkedList.js",
     "test-merge": "node ./build/merge.js",

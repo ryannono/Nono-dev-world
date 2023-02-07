@@ -16,7 +16,7 @@ import {testArrays} from '../testArrays';
  * @returns The sorted array.
  * @ComplexityBestCase O(1) - array of length 1
  * @ComplexityAvgCase O(n**2) - need to go back and verify each element on each advancment
- * @ComplexityWordtCase O(n**2) - need to go back and verify each element on each advancment
+ * @ComplexityWorstCase O(n**2) - need to go back and verify each element on each advancment
  */
 function insertionSort(array: number[]) {
   if (array.length < 2) return array;
@@ -31,6 +31,10 @@ function insertionSort(array: number[]) {
 
     let swapCount = 0;
     if (currElement < prevElement) {
+      /* Iterating backwards through the sorted portion
+      of the array and swapping the current element with
+      the previous element until the current element is
+      greater than or equal to the previous element. */
       for (
         let sortedIndex = positionIndex - 1;
         sortedIndex >= 0;

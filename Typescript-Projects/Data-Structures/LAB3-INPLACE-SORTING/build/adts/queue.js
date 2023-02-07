@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.queueToArray = exports.arrayToQueue = exports.llQueue = void 0;
 const linkedList_1 = require("./linkedList");
-// ------------------- Stack ------------------- //
+// ------------------- Queue ------------------- //
 class llQueue {
     constructor(data) {
         this.data = data !== null && data !== void 0 ? data : new linkedList_1.LinkedList();
@@ -53,6 +53,7 @@ class llQueue {
     }
 }
 exports.llQueue = llQueue;
+// ------------- Utility functions ------------- //
 /**
  * Take an array and return a queue.
  * @param {T[]} array - The array to be converted to a queue.
@@ -65,8 +66,8 @@ function arrayToQueue(array) {
 }
 exports.arrayToQueue = arrayToQueue;
 /**
- * It takes a queue and returns an array of the same elements.
- * @param queue - The queue to convert to an array.
+ * Convert a queue to an array.
+ * @param queue - The queue to convert to an array
  * @returns An array of the values in the queue.
  */
 function queueToArray(queue) {

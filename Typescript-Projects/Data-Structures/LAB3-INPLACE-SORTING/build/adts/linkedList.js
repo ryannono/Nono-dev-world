@@ -8,6 +8,8 @@ class Node {
         this.next = next !== null && next !== void 0 ? next : null;
     }
 }
+/* "We're creating a linked list class that has a head property, a length property, and methods to add
+and remove nodes from the list."*/
 class LinkedList {
     constructor(headOrItem) {
         var _a;

@@ -41,8 +41,8 @@ export declare class llQueue<T> {
  */
 export declare function arrayToQueue<T>(array: T[]): llQueue<T>;
 /**
- * It takes a queue and returns an array of the same elements.
- * @param queue - The queue to convert to an array.
+ * Convert a queue to an array.
+ * @param queue - The queue to convert to an array
  * @returns An array of the values in the queue.
  */
 export declare function queueToArray<T>(queue: llQueue<T>): T[];
