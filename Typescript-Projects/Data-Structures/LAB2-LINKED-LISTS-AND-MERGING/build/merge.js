@@ -75,10 +75,15 @@ const testLangInputs = new Map([
 value. */
 testLangInputs.forEach((Array2D, testNumber) => {
     console.log(`testing test input #${testNumber}`);
-    const mergeQueue = merge(Array2D[0], Array2D[1]);
-    for (let i = 0, length = Array2D[0].length + Array2D[1].length; i < length; i++) {
-        console.log(mergeQueue.dequeue());
-    }
-    console.log('\n');
+    console.log((0, queue_1.queueToArray)(merge(Array2D[0], Array2D[1])), '\n');
+    // const mergeQueue = merge(Array2D[0], Array2D[1]);
+    // for (
+    //   let i = 0, length = Array2D[0].length + Array2D[1].length;
+    //   i < length;
+    //   i++
+    // ) {
+    //   console.log(mergeQueue.dequeue());
+    // }
+    // console.log('\n');
 });
 //# sourceMappingURL=merge.js.map
