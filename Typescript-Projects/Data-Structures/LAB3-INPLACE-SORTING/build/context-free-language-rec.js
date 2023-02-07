@@ -1,7 +1,7 @@
 "use strict";
 // ------------------- Stack ------------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
-const Stack_1 = require("./Stack");
+const stack_1 = require("./adts/stack");
 // ------------------- Tuple ------------------- //
 const allowedCharacters = ['0', '1'];
 //----------------- Type guard ----------------- //
@@ -28,14 +28,13 @@ function isAllowedCharacter(character) {
  * @returns A boolean value.
  */
 function verifyLanguage(input) {
-    const stack = new Stack_1.Stack();
+    const stack = new stack_1.llStack();
     for (let i = 0, length = input.length, lastIndex = length - 1; i < length; i++) {
         const currentCharacter = input[i];
         if (!isAllowedCharacter(currentCharacter) ||
             (i === lastIndex && currentCharacter === '0') ||
             (currentCharacter === '1' && stack.isEmpty())) {
             console.log('Bad input');
-            stack.destroy();
             return false;
         }
         if (currentCharacter === '0')
@@ -43,7 +42,6 @@ function verifyLanguage(input) {
         else
             stack.pop();
     }
-    stack.destroy();
     return true;
 }
 // ----------------- Main ----------------- //

@@ -7,8 +7,6 @@ class ListNode {
   }
 }
 
-/* It stores the nodes of a linked list in an array, and then shifts the nodes to the front of the list
-by popping the last node and unshifting it to the front of the array */
 class NodeStore {
   private data: ListNode[] = [];
   private length = 0;
@@ -22,20 +20,15 @@ class NodeStore {
   }
 
   /**
-   * We're going to take the last node in the list, and make it the first node in the list, and then
-   * we're going to take the second to last node in the list, and make it the second node in the list,
-   * and so on, until we've moved the number of nodes that we want to move to the front of the list
-   * @param {number} numberOfNodes - number - the number of nodes to shift to the front of the list
+   * We're taking the last `numberOfNodes` nodes and moving them to the front of the list
+   * @param {number} numberOfNodes - number
    * @returns The first node in the list.
    */
   shiftNodesToFront(numberOfNodes: number): ListNode | null {
     if (numberOfNodes > this.length) numberOfNodes %= this.length;
 
-    while (numberOfNodes) {
-      this.data[this.length - 1].next = this.data[0];
-      this.data.unshift(this.data.pop()!);
-      numberOfNodes--;
-    }
+    this.data[this.length - 1].next = this.data[0];
+    this.data.unshift(...this.data.splice(-numberOfNodes));
     this.data[this.length - 1].next = null;
 
     return this.data[0] ?? null;

@@ -1,5 +1,5 @@
 {
-  "name": "bracket-matching",
+  "name": "",
   "version": "0.0.0",
   "description": "",
   "main": "build/src/index.js",
@@ -10,10 +10,11 @@
   "license": "Apache-2.0",
   "keywords": [],
   "scripts": {
-    "start-bracket": "node ./dist/bracket-matching.js",
-    "start-rec": "node ./dist/context-free-language-rec.js",
-    "start-reg": "node ./dist/regular-expression-matching.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-brac": "node ./build/bracket-matching.js",
+    "test-rec": "node ./build/context-free-language-rec.js",
+    "test-stack": "node ./build/stack.js",
+    "test-list": "node ./build/linkedList.js",
+    "test-merge": "node ./build/merge.js",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
