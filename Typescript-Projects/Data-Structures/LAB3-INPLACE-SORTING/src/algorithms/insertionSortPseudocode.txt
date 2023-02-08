@@ -6,7 +6,7 @@ Algorithm insertionSort (array)
     return array
 
   for (
-    let positionIndex <- 1, length <- array.length;
+    positionIndex <- 1, length <- array.length;
     positionIndex < length;
     positionIndex++
   )
@@ -16,7 +16,7 @@ Algorithm insertionSort (array)
 
     if (currElement < prevElement)
       for (
-        let sortedIndex <- positionIndex - 1;
+        sortedIndex <- positionIndex - 1;
         sortedIndex >= 0;
         sortedIndex--
       )
@@ -24,7 +24,7 @@ Algorithm insertionSort (array)
         sortedElement <- array[sortedIndex]
 
         if (currElement > sortedElement) break
-        swap(array, sortedIndex, currElementIndex)
+        swap array[sortedIndex] and array[currElementIndex]
         swapCount++
   
   return array
