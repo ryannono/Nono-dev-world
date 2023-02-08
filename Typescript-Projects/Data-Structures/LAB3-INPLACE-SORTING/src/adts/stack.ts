@@ -4,7 +4,13 @@ import {LinkedList} from './linkedList';
 
 // ------------------- Stack ------------------- //
 
-/* It's a class that creates a stack data structure */
+/**
+ * "The llStack class is a wrapper around a linked list that implements the stack data structure."
+ *
+ * The llStack class has a private data property that is a linked list. The constructor takes an
+ * optional linked list parameter. If the parameter is not provided, the data property is initialized
+ * to a new linked list
+ */
 export class llStack<T> {
   private data: LinkedList<T>;
 

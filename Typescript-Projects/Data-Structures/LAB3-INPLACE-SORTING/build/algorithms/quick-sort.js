@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.quickSort = void 0;
 const swap_1 = require("../functions/swap");
-// ---------------- tests ---------------- //
+// ---------------- tests --------------- //
 const testArrays_1 = require("../testArrays");
 // -------------- quickSort ------------- //
 /**

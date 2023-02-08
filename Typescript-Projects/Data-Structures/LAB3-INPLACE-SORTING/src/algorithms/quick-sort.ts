@@ -2,7 +2,7 @@
 
 import {swap} from '../functions/swap';
 
-// ---------------- tests ---------------- //
+// ---------------- tests --------------- //
 
 import {testArrays} from '../testArrays';
 

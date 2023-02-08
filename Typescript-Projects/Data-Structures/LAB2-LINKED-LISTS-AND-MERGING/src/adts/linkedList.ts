@@ -15,6 +15,13 @@ export class LinkedList<T> {
   private head: Node<T> | null = null;
   private length = 0;
 
+  /**
+   * If the constructor is called with a Node, set the head to that node and count the length of the
+   * list. If the constructor is called with a value, create a new Node with that value and set the head
+   * to that node
+   * @param {Node<T> | T} [headOrItem] - Node<T> | T
+   * @returns A new instance of the LinkedList class.
+   */
   constructor(headOrItem?: Node<T> | T) {
     if (!headOrItem) return;
     if (this.isNode(headOrItem)) {
@@ -49,9 +56,7 @@ export class LinkedList<T> {
    */
   private getSecondLastNode(head: Node<T>) {
     let currentNode = head;
-    while (currentNode.next?.next) {
-      currentNode = currentNode.next;
-    }
+    while (currentNode.next?.next) currentNode = currentNode.next;
     return currentNode;
   }
 

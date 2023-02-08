@@ -4,6 +4,12 @@ import {LinkedList} from './linkedList';
 
 // ------------------- Queue ------------------- //
 
+/**
+ * "The llQueue class is a queue that uses a linked list as its underlying data structure."
+ *
+ * The llQueue class has a constructor that takes an optional parameter. The parameter is a linked
+ * list. If the parameter is not provided, the constructor creates a new linked list
+ */
 export class llQueue<T> {
   private data: LinkedList<T>;
 

@@ -1,4 +1,4 @@
-/* A Node is a class that has an item and a next property */
+/** A Node is a class that has an item and a next property */
 class Node<T> {
   item: T | null;
   next: Node<T> | null;
@@ -9,12 +9,21 @@ class Node<T> {
   }
 }
 
-/* "We're creating a linked list class that has a head property, a length property, and methods to add
-and remove nodes from the list."*/
+/**
+ * "We're creating a linked list class that has a head property, a length property, and methods to add
+ * and remove nodes from the list."
+ */
 export class LinkedList<T> {
   private head: Node<T> | null = null;
   private length = 0;
 
+  /**
+   * If the constructor is called with a Node, set the head to that node and count the length of the
+   * list. If the constructor is called with a value, create a new Node with that value and set the head
+   * to that node
+   * @param {Node<T> | T} [headOrItem] - Node<T> | T
+   * @returns A new instance of the LinkedList class.
+   */
   constructor(headOrItem?: Node<T> | T) {
     if (!headOrItem) return;
     if (this.isNode(headOrItem)) {

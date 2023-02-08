@@ -55,9 +55,4 @@ class llStack {
     }
 }
 exports.llStack = llStack;
-const x = new llStack();
-x.push(23);
-console.log(x);
-x.push(32);
-console.log(x);
 //# sourceMappingURL=stack.js.map
