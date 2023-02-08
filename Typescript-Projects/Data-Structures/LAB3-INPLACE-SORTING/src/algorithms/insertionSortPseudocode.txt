@@ -1,6 +1,6 @@
 Algorithm insertionSort (array)
-  input array (array to sort)
-  output array (sorted array)
+  input: array to sort
+  output: sorted array
 
   if (array.length < 2)
     return array
