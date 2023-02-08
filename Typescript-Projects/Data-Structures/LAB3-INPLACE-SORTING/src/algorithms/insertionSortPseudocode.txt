@@ -1,0 +1,30 @@
+Algorithm insertionSort (array)
+  input array (array to sort)
+  output array (sorted array)
+
+  if (array.length < 2)
+    return array
+
+  for (
+    let positionIndex <- 1, length <- array.length;
+    positionIndex < length;
+    positionIndex++
+  )
+    currElement <- array[positionIndex]
+    prevElement <- array[positionIndex - 1]
+    swapCount <- 0
+
+    if (currElement < prevElement)
+      for (
+        let sortedIndex <- positionIndex - 1;
+        sortedIndex >= 0;
+        sortedIndex--
+      )
+        currElementIndex <- positionIndex - swapCount
+        sortedElement <- array[sortedIndex]
+
+        if (currElement > sortedElement) break
+        swap(array, sortedIndex, currElementIndex)
+        swapCount++
+  
+  return array
