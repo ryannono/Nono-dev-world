@@ -15,7 +15,7 @@ import {testArrays} from '../testArrays';
  * @param leftIndex - the leftmost index of the array
  * @param rightIndex - the index of the last element in the array
  * @returns The sorted array.
- * @ComplexityBestCase O(1) - array of length 1
+ * @ComplexityBestCase O(1) - array of length 1 otherwise O(nlog(n))
  * @ComplexityAvgCase O(nlog(n)) - pivot will be relatively balanced to the array therefore the elements
  * therefore the sorting speed is (how many elements are present)*(how many times each subarray can be split in ~2)
  * or O(nlog(n))

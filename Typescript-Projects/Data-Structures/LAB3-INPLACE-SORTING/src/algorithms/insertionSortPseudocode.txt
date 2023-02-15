@@ -14,7 +14,7 @@ Algorithm insertionSort (array)
     prevElement <- array[positionIndex - 1]
     swapCount <- 0
 
-    if (currElement < prevElement)
+    if (prevElement > currElement)
       for (
         sortedIndex <- positionIndex - 1;
         sortedIndex >= 0;

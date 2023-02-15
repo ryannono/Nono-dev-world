@@ -17,7 +17,7 @@ import {merge} from '../functions/merge';
  * back into the original queue
  * @param queue - the queue to be sorted
  * @returns A sorted queue
- * @ComplexityBestCase O(1) - queue of size 1
+ * @ComplexityBestCase O(1) - queue of size 1 otherwise O(nlog(n))
  * @ComplexityAvgCase O(nlog(n)) - spliting to a single element depends on how many times the
  * initial queue is divisible by 2 so log2(n). We have to do the spliting for every element so
  * the splitting will be nlog(n). The merging is O(n). nlog(n) > n so the function is O(nlogn(n))
