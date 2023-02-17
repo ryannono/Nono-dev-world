@@ -125,6 +125,12 @@ export declare class MinHeap<T> {
      * @param startNode - The node to start sifting up from.
      */
     private siftUp;
+    /**
+     * "While there is a child node, if the child node is less than the current node, swap the child node
+     * with the current node and set the current node to the child node."
+     *
+     * @param startNode - The node to start sifting down from.
+     */
     private siftDown;
     /**
      * If the tree is empty, insert the item at the root. Otherwise, if the last level is full, insert the

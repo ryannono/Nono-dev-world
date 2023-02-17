@@ -233,6 +233,12 @@ class MinHeap {
             currNode = parentNode;
         }
     }
+    /**
+     * "While there is a child node, if the child node is less than the current node, swap the child node
+     * with the current node and set the current node to the child node."
+     *
+     * @param startNode - The node to start sifting down from.
+     */
     siftDown(startNode) {
         let currNode = startNode;
         let minChild;
