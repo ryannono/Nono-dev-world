@@ -357,17 +357,3 @@ export class MinHeap<T> {
     return lastNode.item;
   }
 }
-
-// const tree = new MinHeap<number>();
-// tree.insert(1);
-// tree.insert(5);
-// tree.insert(9);
-// tree.removeMin();
-// tree.insert(10);
-// tree.insert(6);
-// tree.insert(12);
-// tree.removeMin();
-// tree.insert(1);
-// tree.insert(0);
-
-// tree.printElements();
