@@ -303,6 +303,7 @@ export class MinHeap<T> {
    * tree and then update the parent node's left and right children to reflect the new node's position
    * @param {T} itemToInsert - The item to insert into the heap.
    * @returns The size of the heap.
+   * @complexity O(log(n))
    */
   insert(itemToInsert: T) {
     if (this.isEmpty()) return this.insertAt(0, null, itemToInsert);
@@ -334,6 +335,7 @@ export class MinHeap<T> {
    * It's swapping the root node with the last node in the tree, and then setting the left or right child
    * of the parent of the last node to false
    * @returns The item that was removed.
+   * @complexity O(log(n))
    */
   removeMin() {
     if (this.isEmpty()) return this.size;

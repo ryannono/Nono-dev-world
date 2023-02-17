@@ -1,14 +1,14 @@
 "use strict";
 // -------------- MinHeap -------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.heapSort = void 0;
 const minHeap_1 = require("../adts/minHeap");
-// ---------------- tests -------------- //
-const testArrays_1 = require("../testArrays");
 // ------------- Heap sort ------------- //
 /**
  * We create a new MinHeap, insert each element of the array into the heap, and return the heap.
  * @param {number[]} array - The array to be sorted.
  * @returns A min heap
+ * @complexity - O(nlog(n))
  */
 function heapify(array) {
     const heap = new minHeap_1.MinHeap();
@@ -20,6 +20,7 @@ function heapify(array) {
  * storing the removed elements in the array."
  * @param {number[]} array - The array to sort.
  * @returns The sorted array.
+ * @complexity - O(nlog(n))
  */
 function heapSort(array) {
     const heap = heapify(array);
@@ -28,10 +29,5 @@ function heapSort(array) {
     }
     return array;
 }
-// ------------------ main ----------------- //
-/* Iterating over the testArrays array and logging the test number and the sorted array. */
-testArrays_1.testArrays.forEach((array, testNumber) => {
-    console.log(`testing test input #${testNumber}`);
-    console.log(heapSort(array), '\n');
-});
+exports.heapSort = heapSort;
 //# sourceMappingURL=heapSort.js.map
