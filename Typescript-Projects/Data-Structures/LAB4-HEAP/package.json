@@ -17,6 +17,7 @@
     "test-quick": "node ./build/algorithms/quick-sort.js",
     "test-mergeSort": "node ./build/algorithms/merge-sort.js",
     "test-heap": "node ./build/adts/minHeap.js",
+    "test-heapSort": "node ./build/algorithms/heapSort.js",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",

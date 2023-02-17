@@ -141,10 +141,10 @@ export declare class MinHeap<T> {
      */
     insert(itemToInsert: T): number;
     /**
-     * It's swapping the root node with the last node in the tree, setting the left or right child of the
-     * parent of the last node to false, removing the last node, and then sifting down the root node
-     * @returns The size of the heap.
+     * It's swapping the root node with the last node in the tree, and then setting the left or right child
+     * of the parent of the last node to false
+     * @returns The item that was removed.
      */
-    removeMin(): number;
+    removeMin(): number | T | null;
 }
 export {};

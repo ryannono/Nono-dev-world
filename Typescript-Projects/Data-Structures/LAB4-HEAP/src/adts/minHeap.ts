@@ -331,9 +331,9 @@ export class MinHeap<T> {
   }
 
   /**
-   * It's swapping the root node with the last node in the tree, setting the left or right child of the
-   * parent of the last node to false, removing the last node, and then sifting down the root node
-   * @returns The size of the heap.
+   * It's swapping the root node with the last node in the tree, and then setting the left or right child
+   * of the parent of the last node to false
+   * @returns The item that was removed.
    */
   removeMin() {
     if (this.isEmpty()) return this.size;
@@ -352,20 +352,20 @@ export class MinHeap<T> {
 
     this.removeLast();
     this.siftDown(root);
-    return this.size;
+    return lastNode.item;
   }
 }
 
-const tree = new MinHeap<number>();
-tree.insert(1);
-tree.insert(5);
-tree.insert(9);
-tree.removeMin();
-tree.insert(10);
-tree.insert(6);
-tree.insert(12);
-tree.removeMin();
-tree.insert(1);
-tree.insert(0);
+// const tree = new MinHeap<number>();
+// tree.insert(1);
+// tree.insert(5);
+// tree.insert(9);
+// tree.removeMin();
+// tree.insert(10);
+// tree.insert(6);
+// tree.insert(12);
+// tree.removeMin();
+// tree.insert(1);
+// tree.insert(0);
 
-tree.printElements();
+// tree.printElements();
