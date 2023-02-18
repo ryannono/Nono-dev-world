@@ -2,11 +2,32 @@
 
 import {swap} from '../functions/swap';
 
-// ---------------- tests --------------- //
-
-import {testArrays} from '../testArrays';
-
 // -------------- quickSort ------------- //
+
+/**
+ * It moves all the elements smaller than the pivot to the left of the pivot, and returns the index of
+ * the pivot
+ * @param {number[]} array - The array to be sorted.
+ * @param {number} leftIndex - The index of the first element in the array.
+ * @param {number} rightIndex - The index of the pivot.
+ * @returns The index of the pivot.
+ * @complexity O(n) - iterate over all items in n range
+ */
+function partition(array: number[], leftIndex: number, rightIndex: number) {
+  /* Setting the index of the highest index holding an element smaller than the pivot. */
+  let smallerThanPivotIndex = leftIndex - 1;
+
+  /* Moving all the elements smaller than the pivot to the left of the pivot. */
+  for (let i = leftIndex, pivot = array[rightIndex]; i < rightIndex; i++) {
+    if (array[i] < pivot) swap(array, i, ++smallerThanPivotIndex);
+  }
+
+  /* Moving the pivot to the index after all the elements smaller than it. */
+  swap(array, rightIndex, smallerThanPivotIndex + 1);
+
+  /* Returning the index of the pivot. */
+  return smallerThanPivotIndex + 1;
+}
 
 /**
  * We start with a pivot, and then we move all the elements that are greater than the pivot to the
@@ -27,27 +48,12 @@ export function quickSort(
   leftIndex = 0,
   rightIndex = array.length - 1
 ) {
-  if (leftIndex >= rightIndex || array.length === 1) return array;
+  if (leftIndex >= rightIndex) return array;
 
-  let pivotIndex = rightIndex;
-  const pivot = array[pivotIndex];
-
-  for (let i = pivotIndex - 1; leftIndex <= i + 1; i--) {
-    if (array[i] > pivot) {
-      swap(array, pivotIndex, i);
-      pivotIndex = i;
-    }
-  }
+  const pivotIndex = partition(array, leftIndex, rightIndex);
 
   quickSort(array, leftIndex, pivotIndex - 1);
-  quickSort(array, pivotIndex, array.length - 1);
+  quickSort(array, pivotIndex + 1, rightIndex);
 
   return array;
 }
-
-// ------------------ main ----------------- //
-
-testArrays.forEach((array, testNumber) => {
-  console.log(`testing test input #${testNumber}`);
-  console.log(quickSort(array), '\n');
-});

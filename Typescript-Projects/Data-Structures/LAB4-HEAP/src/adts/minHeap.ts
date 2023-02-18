@@ -33,11 +33,11 @@ class HeapNode<T> {
     // parent infor
     this.positionOnParent = positionOnParent;
     if (itemIndex === 0) this.parentIndex = null;
-    else this.parentIndex = Math.floor((itemIndex + 1) / 2 - 1);
+    else this.parentIndex = Math.floor((itemIndex - 1) / 2);
 
     // descendants info
-    this.left = {index: (itemIndex + 1) * 2 - 1, occupied: false};
-    this.right = {index: (itemIndex + 1) * 2, occupied: false};
+    this.left = {index: itemIndex * 2 + 1, occupied: false};
+    this.right = {index: itemIndex * 2 + 2, occupied: false};
   }
 }
 
@@ -52,9 +52,17 @@ export class MinHeap<T> {
   private size = 0;
   private height = 0;
 
-  constructor(item?: T) {
-    if (!item) return;
-    this.insertAt(0, null, item);
+  /**
+   * If the constructor is called with an array, call the buildHeap function, otherwise call the insert
+   * function
+   * @param {T | T[]} [itemOrArray] - This is the item or array of items that you want to insert into the
+   * heap.
+   * @returns A new instance of the Heap class.
+   */
+  constructor(itemOrArray?: T | T[]) {
+    if (!itemOrArray) return;
+    else if (Array.isArray(itemOrArray)) this.buildHeap(itemOrArray);
+    else this.insert(itemOrArray);
   }
 
   // ------- Generic/Accessor methods ------- //
@@ -293,6 +301,15 @@ export class MinHeap<T> {
       this.swapItems(currNode, minChild);
       currNode = minChild;
     }
+  }
+
+  /**
+   * It takes an array of elements and inserts each element into the heap
+   * @param {T[]} array - The array to be converted into a heap.
+   * @complexity - O(nlog(n))
+   */
+  private buildHeap(array: T[]) {
+    array.forEach(element => this.insert(element));
   }
 
   // ---------- Modifier methods ---------- //

@@ -25,7 +25,14 @@ export declare class MinHeap<T> {
     private data;
     private size;
     private height;
-    constructor(item?: T);
+    /**
+     * If the constructor is called with an array, call the buildHeap function, otherwise call the insert
+     * function
+     * @param {T | T[]} [itemOrArray] - This is the item or array of items that you want to insert into the
+     * heap.
+     * @returns A new instance of the Heap class.
+     */
+    constructor(itemOrArray?: T | T[]);
     /**
      * The getSize function returns the size of the current object.
      * @returns The size of the stack.
@@ -132,6 +139,12 @@ export declare class MinHeap<T> {
      * @param startNode - The node to start sifting down from.
      */
     private siftDown;
+    /**
+     * It takes an array of elements and inserts each element into the heap
+     * @param {T[]} array - The array to be converted into a heap.
+     * @complexity - O(nlog(n))
+     */
+    private buildHeap;
     /**
      * If the tree is empty, insert the item at the root. Otherwise, if the last level is full, insert the
      * item at the first available spot on the next level. Otherwise, insert the item at the end of the

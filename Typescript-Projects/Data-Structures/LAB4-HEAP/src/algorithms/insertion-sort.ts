@@ -2,10 +2,6 @@
 
 import {swap} from '../functions/swap';
 
-// ---------------- tests ---------------- //
-
-import {testArrays} from '../testArrays';
-
 // ------------ insertionSort ------------ //
 
 /**
@@ -18,7 +14,7 @@ import {testArrays} from '../testArrays';
  * @ComplexityAvgCase O(n**2) - need to go back and verify each element on each advancment
  * @ComplexityWorstCase O(n**2) - need to go back and verify each element on each advancment
  */
-function insertionSort(array: number[]) {
+export function insertionSort(array: number[]) {
   if (array.length < 2) return array;
 
   for (
@@ -52,11 +48,3 @@ function insertionSort(array: number[]) {
 
   return array;
 }
-
-// ------------------ main ----------------- //
-
-/* Iterating over the testArrays array and logging the test number and the sorted array. */
-testArrays.forEach((array, testNumber) => {
-  console.log(`testing test input #${testNumber}`);
-  console.log(insertionSort(array), '\n');
-});

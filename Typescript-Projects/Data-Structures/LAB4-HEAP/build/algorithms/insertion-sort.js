@@ -1,9 +1,8 @@
 "use strict";
 // ---------------- swap ---------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.insertionSort = void 0;
 const swap_1 = require("../functions/swap");
-// ---------------- tests ---------------- //
-const testArrays_1 = require("../testArrays");
 // ------------ insertionSort ------------ //
 /**
  * For each element in the array, starting from the second element, if the element is less than the
@@ -39,10 +38,5 @@ function insertionSort(array) {
     }
     return array;
 }
-// ------------------ main ----------------- //
-/* Iterating over the testArrays array and logging the test number and the sorted array. */
-testArrays_1.testArrays.forEach((array, testNumber) => {
-    console.log(`testing test input #${testNumber}`);
-    console.log(insertionSort(array), '\n');
-});
+exports.insertionSort = insertionSort;
 //# sourceMappingURL=insertion-sort.js.map

@@ -18,10 +18,10 @@ class HeapNode {
         if (itemIndex === 0)
             this.parentIndex = null;
         else
-            this.parentIndex = Math.floor((itemIndex + 1) / 2 - 1);
+            this.parentIndex = Math.floor((itemIndex - 1) / 2);
         // descendants info
-        this.left = { index: (itemIndex + 1) * 2 - 1, occupied: false };
-        this.right = { index: (itemIndex + 1) * 2, occupied: false };
+        this.left = { index: itemIndex * 2 + 1, occupied: false };
+        this.right = { index: itemIndex * 2 + 2, occupied: false };
     }
 }
 // ------------- Min Heap ------------- //
@@ -30,13 +30,23 @@ class HeapNode {
  * smallest item in the tree."
  */
 class MinHeap {
-    constructor(item) {
+    /**
+     * If the constructor is called with an array, call the buildHeap function, otherwise call the insert
+     * function
+     * @param {T | T[]} [itemOrArray] - This is the item or array of items that you want to insert into the
+     * heap.
+     * @returns A new instance of the Heap class.
+     */
+    constructor(itemOrArray) {
         this.data = [];
         this.size = 0;
         this.height = 0;
-        if (!item)
+        if (!itemOrArray)
             return;
-        this.insertAt(0, null, item);
+        else if (Array.isArray(itemOrArray))
+            this.buildHeap(itemOrArray);
+        else
+            this.insert(itemOrArray);
     }
     // ------- Generic/Accessor methods ------- //
     /**
@@ -249,6 +259,14 @@ class MinHeap {
             currNode = minChild;
         }
     }
+    /**
+     * It takes an array of elements and inserts each element into the heap
+     * @param {T[]} array - The array to be converted into a heap.
+     * @complexity - O(nlog(n))
+     */
+    buildHeap(array) {
+        array.forEach(element => this.insert(element));
+    }
     // ---------- Modifier methods ---------- //
     /**
      * If the tree is empty, insert the item at the root. Otherwise, if the last level is full, insert the
@@ -309,16 +327,4 @@ class MinHeap {
     }
 }
 exports.MinHeap = MinHeap;
-// const tree = new MinHeap<number>();
-// tree.insert(1);
-// tree.insert(5);
-// tree.insert(9);
-// tree.removeMin();
-// tree.insert(10);
-// tree.insert(6);
-// tree.insert(12);
-// tree.removeMin();
-// tree.insert(1);
-// tree.insert(0);
-// tree.printElements();
 //# sourceMappingURL=minHeap.js.map
