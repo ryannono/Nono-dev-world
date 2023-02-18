@@ -59,5 +59,8 @@ async function getTestResult(algorithm) {
     return filePath;
 }
 // --------------- main --------------- //
-getTestResult('mergeSort');
+getTestResult('insertionSort')
+    .then(() => getTestResult('heapSort'))
+    .then(() => getTestResult('mergeSort'))
+    .then(() => getTestResult('quickSort'));
 //# sourceMappingURL=testingFile.js.map
