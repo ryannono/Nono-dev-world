@@ -59,5 +59,5 @@ async function getTestResult(algorithm) {
     return filePath;
 }
 // --------------- main --------------- //
-getTestResult('heapSort');
+getTestResult('mergeSort');
 //# sourceMappingURL=testingFile.js.map

@@ -19,5 +19,5 @@ export const testArrays = new Map([
 /* Iterating over the testArrays array and logging the test number and the sorted array. */
 testArrays.forEach((array, testNumber) => {
   console.log(`testing test input #${testNumber}`);
-  console.log(heapSort(array), '\n');
+  console.log(mergeSort(array), '\n');
 });

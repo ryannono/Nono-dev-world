@@ -24,17 +24,23 @@ function merge(
   const array3: number[] = [];
   let start1 = leftIndex1;
   let start2 = leftIndex2;
+  let fullLength = rightIndex2 + 1 - leftIndex1;
 
-  /* It's comparing the first element of each array and pushing the smaller one into the new array. */
-  while (start1 <= rightIndex1 && start2 <= rightIndex2) {
-    array3.push(
-      array[start1] <= array[start2] ? array[start1++] : array[start2++]
-    );
+  // while there are items to merge into the new array
+  // if array2 is empty or the start item of array1 is
+  // smaller than array2's push array1's start item
+  // otherwise (array1 is empty or array2s item is smaller
+  // than array 1's) push array2s item
+  while (fullLength--) {
+    if (
+      start1 <= rightIndex1 &&
+      (start2 > rightIndex2 || array[start2] >= array[start1])
+    ) {
+      array3.push(array[start1++]);
+    } else {
+      array3.push(array[start2++]);
+    }
   }
-
-  /* It's pushing the remaining elements of the array into the new array. */
-  while (start1 <= rightIndex1) array3.push(array[start1++]);
-  while (start2 <= rightIndex2) array3.push(array[start2++]);
 
   /* It's copying the elements of the new array into the original array. */
   for (let i = leftIndex1, length = rightIndex2 + 1; i < length; i++) {
