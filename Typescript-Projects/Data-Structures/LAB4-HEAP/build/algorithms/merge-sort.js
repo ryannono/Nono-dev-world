@@ -18,7 +18,6 @@ function merge(array, leftIndex1, rightIndex1, leftIndex2, rightIndex2) {
     const array3 = [];
     let start1 = leftIndex1;
     let start2 = leftIndex2;
-    let i = leftIndex1;
     /* It's comparing the first element of each array and pushing the smaller one into the new array. */
     while (start1 <= rightIndex1 && start2 <= rightIndex2) {
         array3.push(array[start1] <= array[start2] ? array[start1++] : array[start2++]);
