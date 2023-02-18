@@ -1,11 +1,11 @@
-// ---------------- heapSort ---------------- //
+// --------------- imports ----------------- //
 
 import {heapSort} from './algorithms/heapSort';
 import {mergeSort} from './algorithms/merge-sort';
 import {quickSort} from './algorithms/quick-sort';
 import {arrayToQueue, queueToArray} from './adts/queue';
 
-// ---------------- heapSort ---------------- //
+// ------------- trial arrays -------------- //
 
 /** Creating a map with 3 keys and 3 arrays as values. */
 export const testArrays = new Map([
@@ -14,7 +14,7 @@ export const testArrays = new Map([
   [3, [1, 3, 5, 7, 9, 10, 8, 6, 4, 2]],
 ]);
 
-// ------------------ main ----------------- //
+// ----------------- main ------------------ //
 
 /* Iterating over the testArrays array and logging the test number and the sorted array. */
 testArrays.forEach((array, testNumber) => {

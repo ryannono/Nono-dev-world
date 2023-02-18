@@ -1,4 +1,5 @@
-// ---------------- heapSort ---------------- //
+// ---------------- imports ---------------- //
+
 import {writeFileSync} from 'fs';
 import {heapSort} from '../heapSort';
 import {insertionSort} from '../insertion-sort';
@@ -10,6 +11,8 @@ import * as CPURuntimeTestArrays from './CPURuntimeTestArrays.json';
 // ------------------ type ------------------ //
 
 type sortAlg = 'heapSort' | 'insertionSort' | 'mergeSort' | 'quickSort';
+
+// ------------- test functions ------------- //
 
 function chooseSortAlg(algorithm: sortAlg) {
   switch (algorithm) {

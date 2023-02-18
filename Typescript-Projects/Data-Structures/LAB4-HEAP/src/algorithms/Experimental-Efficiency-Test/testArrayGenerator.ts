@@ -1,7 +1,7 @@
 import {writeFileSync} from 'fs';
 import {getRandomInt} from '../../functions/getRandomInt';
 
-// --------------- generators --------------- //
+// ----------- generator ------------ //
 
 /**
  * It creates an array of a given size, and fills it with random numbers

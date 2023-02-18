@@ -1,5 +1,5 @@
 "use strict";
-// -------------- MinHeap -------------- //
+// -------------- imports -------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.heapSortOOP = exports.heapSort = void 0;
 const minHeap_1 = require("../adts/minHeap");

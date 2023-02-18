@@ -1,4 +1,5 @@
 "use strict";
+// ----------------- List Node ----------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LinkedList = void 0;
 /** A Node is a class that has an item and a next property */
@@ -8,6 +9,7 @@ class Node {
         this.next = next !== null && next !== void 0 ? next : null;
     }
 }
+// ---------------- Linked list ---------------- //
 /**
  * "We're creating a linked list class that has a head property, a length property, and methods to add
  * and remove nodes from the list."

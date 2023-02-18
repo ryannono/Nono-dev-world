@@ -2,7 +2,7 @@
 
 import {llQueue} from '../adts/queue';
 
-// --------------- Sort Array ---------------- //
+// ------------- MergeSort Array ------------- //
 
 /**
  * It's merging two sorted arrays into one sorted array

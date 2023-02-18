@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mergeSortQueue = exports.mergeSort = void 0;
 const queue_1 = require("../adts/queue");
-// --------------- Sort Array ---------------- //
+// ------------- MergeSort Array ------------- //
 /**
  * It's merging two sorted arrays into one sorted array
  * @param {number[]} array - The original array.

@@ -1,4 +1,4 @@
-// -------------- MinHeap -------------- //
+// -------------- imports -------------- //
 
 import {MinHeap} from '../adts/minHeap';
 import {swap} from '../functions/swap';

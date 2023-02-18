@@ -1,6 +1,6 @@
 "use strict";
+// ---------------- imports ---------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
-// ---------------- heapSort ---------------- //
 const fs_1 = require("fs");
 const heapSort_1 = require("../heapSort");
 const insertion_sort_1 = require("../insertion-sort");
@@ -8,6 +8,7 @@ const merge_sort_1 = require("../merge-sort");
 const quick_sort_1 = require("../quick-sort");
 const convert_array_to_csv_1 = require("convert-array-to-csv");
 const CPURuntimeTestArrays = require("./CPURuntimeTestArrays.json");
+// ------------- test functions ------------- //
 function chooseSortAlg(algorithm) {
     switch (algorithm) {
         case 'insertionSort':

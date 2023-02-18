@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const getRandomInt_1 = require("../../functions/getRandomInt");
-// --------------- generators --------------- //
+// ----------- generator ------------ //
 /**
  * It creates an array of a given size, and fills it with random numbers
  * @param {number} size - The size of the array to be generated.
