@@ -130,8 +130,6 @@ export function heapSort(array: number[]) {
  */
 export function heapSortOOP(array: number[]) {
   const heap = new MinHeap(array);
-  for (let i = 0; !heap.isEmpty(); i++) {
-    array[i] = heap.removeMin()!;
-  }
-  return array;
+  heap.sort();
+  return heap.items();
 }

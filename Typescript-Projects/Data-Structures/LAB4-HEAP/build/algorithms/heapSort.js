@@ -120,10 +120,8 @@ exports.heapSort = heapSort;
  */
 function heapSortOOP(array) {
     const heap = new minHeap_1.MinHeap(array);
-    for (let i = 0; !heap.isEmpty(); i++) {
-        array[i] = heap.removeMin();
-    }
-    return array;
+    heap.sort();
+    return heap.items();
 }
 exports.heapSortOOP = heapSortOOP;
 //# sourceMappingURL=heapSort.js.map

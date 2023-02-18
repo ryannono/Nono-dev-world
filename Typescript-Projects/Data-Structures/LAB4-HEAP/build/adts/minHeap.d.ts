@@ -160,6 +160,7 @@ export declare class MinHeap<T> {
      * @returns The item that was removed.
      * @complexity O(log(n))
      */
-    removeMin(): number | T | null;
+    removeMin(flag?: 'node'): T | HeapNode<T> | null;
+    sort(): void;
 }
 export {};

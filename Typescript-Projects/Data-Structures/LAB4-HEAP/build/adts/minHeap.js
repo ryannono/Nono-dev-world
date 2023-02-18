@@ -307,9 +307,9 @@ class MinHeap {
      * @returns The item that was removed.
      * @complexity O(log(n))
      */
-    removeMin() {
+    removeMin(flag) {
         if (this.isEmpty())
-            return this.size;
+            return null;
         /* It's swapping the root node with the last node in the tree. */
         const lastNode = this.data[this.size - 1];
         const root = this.data[0];
@@ -323,7 +323,14 @@ class MinHeap {
         }
         this.removeLast();
         this.siftDown(root);
-        return lastNode.item;
+        return flag === 'node' ? lastNode : lastNode.item;
+    }
+    sort() {
+        const array = [];
+        for (let i = 0, length = this.size; i < length; i++) {
+            array.push(this.removeMin('node'));
+        }
+        this.data = array;
     }
 }
 exports.MinHeap = MinHeap;
