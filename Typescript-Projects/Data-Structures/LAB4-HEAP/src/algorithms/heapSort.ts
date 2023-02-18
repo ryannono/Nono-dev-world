@@ -27,11 +27,11 @@ function getMinChildIndex(array: number[], itemIndex: number) {
   const leftItem = array[leftChildIndex];
   const rightItem = array[rightChildIndex];
 
-  if (leftItem && rightItem) {
+  if (typeof leftItem === 'number' && typeof rightItem === 'number') {
     return leftItem <= rightItem ? leftChildIndex : rightChildIndex;
-  } else if (leftItem) {
+  } else if (typeof leftItem === 'number') {
     return leftChildIndex;
-  } else if (rightItem) {
+  } else if (typeof rightItem === 'number') {
     return rightChildIndex;
   } else {
     return null;

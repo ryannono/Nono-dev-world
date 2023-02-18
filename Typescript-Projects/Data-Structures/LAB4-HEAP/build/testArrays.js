@@ -2,7 +2,7 @@
 // ---------------- heapSort ---------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.testArrays = void 0;
-const merge_sort_1 = require("./algorithms/merge-sort");
+const heapSort_1 = require("./algorithms/heapSort");
 // ---------------- heapSort ---------------- //
 /** Creating a map with 3 keys and 3 arrays as values. */
 exports.testArrays = new Map([
@@ -14,6 +14,6 @@ exports.testArrays = new Map([
 /* Iterating over the testArrays array and logging the test number and the sorted array. */
 exports.testArrays.forEach((array, testNumber) => {
     console.log(`testing test input #${testNumber}`);
-    console.log((0, merge_sort_1.mergeSort)(array), '\n');
+    console.log((0, heapSort_1.heapSort)(array), '\n');
 });
 //# sourceMappingURL=testArrays.js.map

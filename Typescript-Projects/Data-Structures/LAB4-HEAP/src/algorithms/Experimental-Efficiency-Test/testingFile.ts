@@ -79,4 +79,4 @@ async function getTestResult(algorithm: sortAlg): Promise<string> {
 
 // --------------- main --------------- //
 
-getTestResult('mergeSort');
+getTestResult('heapSort');
