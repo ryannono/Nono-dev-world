@@ -9,6 +9,11 @@ const quick_sort_1 = require("../quick-sort");
 const convert_array_to_csv_1 = require("convert-array-to-csv");
 const CPURuntimeTestArrays = require("./CPURuntimeTestArrays.json");
 // ------------- test functions ------------- //
+/**
+ * It takes a string as an argument and returns a function
+ * @param {sortAlg} algorithm - The sorting algorithm to use.
+ * @returns A function
+ */
 function chooseSortAlg(algorithm) {
     switch (algorithm) {
         case 'insertionSort':
@@ -21,6 +26,12 @@ function chooseSortAlg(algorithm) {
             return quick_sort_1.quickSort;
     }
 }
+/**
+ * It takes in a sorting algorithm, runs it on a collection of test arrays, and returns a table of the
+ * results
+ * @param {sortAlg} algorithm - sortAlg - This is the sorting algorithm that you want to test.
+ * @returns An object with two properties: tableHeader and tableResults.
+ */
 function getTable(algorithm) {
     const tableHeader = ['Input Size', 'CPU Time (milliseconds)'];
     const tableResults = [];
@@ -41,8 +52,14 @@ function getTable(algorithm) {
         tableResults,
     };
 }
+/**
+ * It takes in a sorting algorithm, generates a table object from test results, converts the table
+ * object to a csv string, and returns the csv string
+ * @param {sortAlg} algorithm - sortAlg - the sorting algorithm to test
+ * @returns A string of the csv file
+ */
 async function generateCSVString(algorithm) {
-    // generate a table object from all license pages
+    // generate a table object from test results
     const table = getTable(algorithm);
     const header = table.tableHeader;
     const body = table.tableResults;
@@ -53,6 +70,11 @@ async function generateCSVString(algorithm) {
     });
     return csvString;
 }
+/**
+ * It generates a CSV file containing the CPU runtime of the algorithm for each input size
+ * @param {sortAlg} algorithm - The sorting algorithm to test.
+ * @returns A promise that resolves to a string.
+ */
 async function getTestResult(algorithm) {
     const csvString = await generateCSVString(algorithm);
     const filePath = `src/algorithms/Experimental-Efficiency-Test/CPURuntimeLogs/${algorithm}-CPURuntimeLog.csv`;

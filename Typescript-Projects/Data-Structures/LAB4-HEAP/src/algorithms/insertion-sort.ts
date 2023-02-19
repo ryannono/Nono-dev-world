@@ -5,44 +5,27 @@ import {swap} from '../functions/swap';
 // ------------ insertionSort ------------ //
 
 /**
- * For each element in the array, starting from the second element, if the element is less than the
- * previous element, swap it with the previous element until it is greater than or equal to the
- * previous element.
- * @param {number[]} array - number[] - the array to sort
+ * We start at the second element in the array and compare it to the element before it. If the element
+ * before it is greater than the current element, we swap them. We then move on to the next element and
+ * repeat the process
+ * @param {number[]} array - The array to be sorted
  * @returns The sorted array.
  * @ComplexityBestCase O(1) - array of length 1 or O(n) for a sorted array
  * @ComplexityAvgCase O(n**2) - need to go back and verify each element on each advancment
  * @ComplexityWorstCase O(n**2) - need to go back and verify each element on each advancment
  */
 export function insertionSort(array: number[]) {
-  if (array.length < 2) return array;
-
   for (
-    let positionIndex = 1, length = array.length;
-    positionIndex < length;
-    positionIndex++
+    let unsortedStart = 1, length = array.length;
+    unsortedStart < length;
+    unsortedStart++
   ) {
-    const currElement = array[positionIndex];
-    const prevElement = array[positionIndex - 1];
+    let currElementIndex = unsortedStart;
+    let sortedIndex = unsortedStart - 1;
 
-    let swapCount = 0;
-    if (prevElement > currElement) {
-      /* Iterating backwards through the sorted portion
-      of the array and swapping the current element with
-      the previous element until the current element is
-      greater than or equal to the previous element. */
-      for (
-        let sortedIndex = positionIndex - 1;
-        sortedIndex >= 0;
-        sortedIndex--
-      ) {
-        const currElementIndex = positionIndex - swapCount;
-        const sortedElement = array[sortedIndex];
-
-        if (currElement > sortedElement) break;
-        swap(array, sortedIndex, currElementIndex);
-        swapCount++;
-      }
+    while (sortedIndex >= 0 && array[sortedIndex] > array[currElementIndex]) {
+      swap(array, sortedIndex, currElementIndex);
+      currElementIndex = sortedIndex--;
     }
   }
 

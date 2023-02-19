@@ -255,13 +255,16 @@ export class MinHeap<T> {
    * @param node2 - The node to compare against.
    * @returns The node with the smallest item.
    */
-  private minItemNode(node1: HeapNode<T> | null, node2: HeapNode<T> | null) {
-    if (node1 && node2) {
-      return node1.item! > node2.item! ? node2 : node1;
-    } else if (node1) {
-      return node1;
-    } else if (node2) {
-      return node2;
+  private minChildNode(node: HeapNode<T>) {
+    const left = this.left(node);
+    const right = this.right(node);
+
+    if (left && right) {
+      return left.item! > right.item! ? right : left;
+    } else if (left) {
+      return left;
+    } else if (right) {
+      return right;
     } else {
       return null;
     }
@@ -277,8 +280,10 @@ export class MinHeap<T> {
     let currNode = startNode;
     let parentNode: HeapNode<T> | null;
 
-    while ((parentNode = this.parent(currNode))) {
-      if (currNode.item! > parentNode.item!) break;
+    while (
+      (parentNode = this.parent(currNode)) &&
+      currNode.item! < parentNode.item!
+    ) {
       this.swapItems(currNode, parentNode);
       currNode = parentNode;
     }
@@ -295,9 +300,9 @@ export class MinHeap<T> {
     let minChild: HeapNode<T> | null;
 
     while (
-      (minChild = this.minItemNode(this.left(currNode), this.right(currNode)))
+      (minChild = this.minChildNode(currNode)) &&
+      minChild.item! < currNode.item!
     ) {
-      if (minChild.item! > currNode.item!) break;
       this.swapItems(currNode, minChild);
       currNode = minChild;
     }
@@ -332,6 +337,7 @@ export class MinHeap<T> {
     } else {
       const insertionIndex = this.size;
       this.insertAt(insertionIndex, null, itemToInsert);
+
       const newNode = this.data[insertionIndex];
       const parentNode = this.parent(newNode)!;
 
@@ -374,6 +380,10 @@ export class MinHeap<T> {
     return flag === 'node' ? lastNode : lastNode.item;
   }
 
+  /**
+   * We're going to remove the minimum value from the heap until the heap is empty, and then we're going
+   * to set the heap's data to the array of removed values
+   */
   sort() {
     const array: HeapNode<T>[] = [];
     for (let i = 0, length = this.size; i < length; i++) {

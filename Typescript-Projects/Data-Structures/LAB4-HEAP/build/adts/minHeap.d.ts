@@ -124,7 +124,7 @@ export declare class MinHeap<T> {
      * @param node2 - The node to compare against.
      * @returns The node with the smallest item.
      */
-    private minItemNode;
+    private minChildNode;
     /**
      * "While the current node has a parent, and the current node's item is less than the parent's item,
      * swap the items and set the current node to the parent."
@@ -161,6 +161,10 @@ export declare class MinHeap<T> {
      * @complexity O(log(n))
      */
     removeMin(flag?: 'node'): T | HeapNode<T> | null;
+    /**
+     * We're going to remove the minimum value from the heap until the heap is empty, and then we're going
+     * to set the heap's data to the array of removed values
+     */
     sort(): void;
 }
 export {};

@@ -4,6 +4,7 @@ import {heapSort, heapSortOOP} from './algorithms/heapSort';
 import {mergeSort} from './algorithms/merge-sort';
 import {quickSort} from './algorithms/quick-sort';
 import {arrayToQueue, queueToArray} from './adts/queue';
+import {insertionSort} from './algorithms/insertion-sort';
 
 // ------------- trial arrays -------------- //
 
@@ -19,5 +20,5 @@ export const testArrays = new Map([
 /* Iterating over the testArrays array and logging the test number and the sorted array. */
 testArrays.forEach((array, testNumber) => {
   console.log(`testing test input #${testNumber}`);
-  console.log(heapSortOOP(array), '\n');
+  console.log(heapSort(array), '\n');
 });

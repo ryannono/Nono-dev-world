@@ -107,9 +107,8 @@ function mergeSortQueue(queue) {
         return queue;
     const queue2 = new queue_1.llQueue();
     let half = Math.floor(queue.size() / 2);
-    while (half--) {
+    while (half--)
         queue2.enqueue(queue.dequeue());
-    }
     return mergeQueues(mergeSortQueue(queue), mergeSortQueue(queue2));
 }
 exports.mergeSortQueue = mergeSortQueue;

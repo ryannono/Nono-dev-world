@@ -1,6 +1,7 @@
 // ------------------ Queue ------------------ //
 
 import {llQueue} from '../adts/queue';
+import {swap} from '../functions/swap';
 
 // ------------- MergeSort Array ------------- //
 
@@ -130,9 +131,7 @@ export function mergeSortQueue(queue: llQueue<number>): llQueue<number> {
   const queue2 = new llQueue<number>();
   let half = Math.floor(queue.size() / 2);
 
-  while (half--) {
-    queue2.enqueue(queue.dequeue()!);
-  }
+  while (half--) queue2.enqueue(queue.dequeue()!);
 
   return mergeQueues(mergeSortQueue(queue), mergeSortQueue(queue2));
 }

@@ -15,20 +15,24 @@ function getParentIndex(itemIndex: number) {
 }
 
 /**
- * "Given an array and an index, return the index of the smaller of the two children of the item at the
- * given index."
+ * "Given an array and an index, return the index of the child with the largest value."
+ *
+ * The function takes two arguments:
+ *
+ * - `array`: The array to search.
+ * - `itemIndex`: The index of the item to find the largest child of
  * @param {number[]} array - the array we're working with
- * @param {number} itemIndex - The index of the item we're looking at.
- * @returns The index of the smallest child of the item at the given index.
+ * @param {number} itemIndex - The index of the item we're currently looking at.
+ * @returns The index of the child with the largest value.
  */
-function getMinChildIndex(array: number[], itemIndex: number) {
+function getMaxChildIndex(array: number[], itemIndex: number) {
   const leftChildIndex = itemIndex * 2 + 1;
   const rightChildIndex = itemIndex * 2 + 2;
   const leftItem = array[leftChildIndex];
   const rightItem = array[rightChildIndex];
 
   if (typeof leftItem === 'number' && typeof rightItem === 'number') {
-    return leftItem <= rightItem ? leftChildIndex : rightChildIndex;
+    return leftItem <= rightItem ? rightChildIndex : leftChildIndex;
   } else if (typeof leftItem === 'number') {
     return leftChildIndex;
   } else if (typeof rightItem === 'number') {
@@ -39,9 +43,10 @@ function getMinChildIndex(array: number[], itemIndex: number) {
 }
 
 /**
- * While the parent index is valid, swap the current index with the parent index if the current index
- * is less than the parent index.
- * @param {number[]} array - the array we're sifting up in
+ * While the parent index is greater than or equal to zero, if the current index is greater than the
+ * parent index, swap the current index with the parent index and set the current index to the parent
+ * index.
+ * @param {number[]} array - the array to sort
  * @param {number} startIndex - The index of the element that we want to sift up.
  */
 function siftUp(array: number[], startIndex: number) {
@@ -49,26 +54,32 @@ function siftUp(array: number[], startIndex: number) {
   let parentIndex: number;
 
   while ((parentIndex = getParentIndex(currIndex)) >= 0) {
-    if (array[currIndex] > array[parentIndex]) break;
-    swap(array, currIndex, parentIndex);
-    currIndex = parentIndex;
+    if (array[currIndex] < array[parentIndex]) break;
+    currIndex = (swap(array, currIndex, parentIndex), parentIndex);
   }
 }
 
 /**
- * "While there is a child, if the child is greater than the parent, swap them and update the current
- * index to the child's index."
- * @param {number[]} array - the array we're sorting
- * @param {number} startIndex - The index of the element we want to sift down.
+ * "While the current index has a child that is less than the current index, swap the current index
+ * with the child index."
+ * @param {number[]} array - The array to sort.
+ * @param {number} startIndex - The index of the element we're currently sifting down.
+ * @param {number} partitionLength - The length of the array that we're currently partitioning.
  */
-function siftDown(array: number[], startIndex: number) {
+function siftDown(
+  array: number[],
+  startIndex: number,
+  partitionLength: number
+) {
   let currIndex = startIndex;
-  let minChildIndex: number | null;
+  let maxChildIndex: number | null;
 
-  while ((minChildIndex = getMinChildIndex(array, currIndex))) {
-    if (array[minChildIndex] > array[currIndex]) break;
-    swap(array, currIndex, minChildIndex);
-    currIndex = minChildIndex;
+  while (
+    (maxChildIndex = getMaxChildIndex(array, currIndex)) !== null &&
+    maxChildIndex < partitionLength
+  ) {
+    if (array[maxChildIndex] < array[currIndex]) break;
+    currIndex = (swap(array, currIndex, maxChildIndex), maxChildIndex);
   }
 }
 
@@ -83,40 +94,29 @@ function heapify(array: number[]) {
 }
 
 /**
- * We swap the first and last elements of the array, pop the last element off the array, and then sift
- * down the first element
- * @param {number[]} array - the array to remove the minimum from
- * @returns The minimum value in the array.
+ * We swap the first element with the last element, then sift down the first element to its correct
+ * position
+ * @param {number[]} array - the array to sort
+ * @param {number} partitionLength - The length of the array that we're partitioning.
  */
-function removeMin(array: number[]) {
-  const min = array[0];
-  const length = array.length;
-
-  if (!array.length) return;
-
-  swap(array, 0, length - 1);
-  array.pop();
-  siftDown(array, 0);
-
-  return min;
+function moveMax(array: number[], partitionLength: number) {
+  swap(array, 0, --partitionLength);
+  siftDown(array, 0, partitionLength);
 }
 
 /**
- * Heapify the array, then remove the min element from the heap until the heap is empty
+ * "Heapify the array, then move the max element to the end of the array, and repeat until the array is
+ * sorted."
  * @param {number[]} array - The array to sort.
- * @returns The sorted array.
+ * @returns The array is being returned.
  */
 export function heapSort(array: number[]) {
-  const sortedArray: number[] = [];
   let length = array.length;
 
   heapify(array);
+  while (length) moveMax(array, length--);
 
-  while (length--) {
-    sortedArray.push(removeMin(array)!);
-  }
-
-  return sortedArray;
+  return array;
 }
 
 // --------- Heap sort Object Oriented --------- //
@@ -130,6 +130,5 @@ export function heapSort(array: number[]) {
  */
 export function heapSortOOP(array: number[]) {
   const heap = new MinHeap(array);
-  heap.sort();
-  return heap.items();
+  return heap.sort(), heap.items();
 }

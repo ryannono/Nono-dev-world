@@ -14,6 +14,6 @@ exports.testArrays = new Map([
 /* Iterating over the testArrays array and logging the test number and the sorted array. */
 exports.testArrays.forEach((array, testNumber) => {
     console.log(`testing test input #${testNumber}`);
-    console.log((0, heapSort_1.heapSortOOP)(array), '\n');
+    console.log((0, heapSort_1.heapSort)(array), '\n');
 });
 //# sourceMappingURL=testArrays.js.map

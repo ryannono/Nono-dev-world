@@ -1,7 +1,8 @@
 /**
- * Heapify the array, then remove the min element from the heap until the heap is empty
+ * "Heapify the array, then move the max element to the end of the array, and repeat until the array is
+ * sorted."
  * @param {number[]} array - The array to sort.
- * @returns The sorted array.
+ * @returns The array is being returned.
  */
 export declare function heapSort(array: number[]): number[];
 /**
