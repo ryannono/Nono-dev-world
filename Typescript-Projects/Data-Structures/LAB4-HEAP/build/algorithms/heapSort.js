@@ -52,9 +52,8 @@ function getMaxChildIndex(array, itemIndex) {
 function siftUp(array, startIndex) {
     let currIndex = startIndex;
     let parentIndex;
-    while ((parentIndex = getParentIndex(currIndex)) >= 0) {
-        if (array[currIndex] < array[parentIndex])
-            break;
+    while ((parentIndex = getParentIndex(currIndex)) >= 0 &&
+        array[currIndex] > array[parentIndex]) {
         currIndex = ((0, swap_1.swap)(array, currIndex, parentIndex), parentIndex);
     }
 }
@@ -69,9 +68,8 @@ function siftDown(array, startIndex, partitionLength) {
     let currIndex = startIndex;
     let maxChildIndex;
     while ((maxChildIndex = getMaxChildIndex(array, currIndex)) !== null &&
-        maxChildIndex < partitionLength) {
-        if (array[maxChildIndex] < array[currIndex])
-            break;
+        maxChildIndex < partitionLength &&
+        array[maxChildIndex] > array[currIndex]) {
         currIndex = ((0, swap_1.swap)(array, currIndex, maxChildIndex), maxChildIndex);
     }
 }

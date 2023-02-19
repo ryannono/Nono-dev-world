@@ -53,8 +53,10 @@ function siftUp(array: number[], startIndex: number) {
   let currIndex = startIndex;
   let parentIndex: number;
 
-  while ((parentIndex = getParentIndex(currIndex)) >= 0) {
-    if (array[currIndex] < array[parentIndex]) break;
+  while (
+    (parentIndex = getParentIndex(currIndex)) >= 0 &&
+    array[currIndex] > array[parentIndex]
+  ) {
     currIndex = (swap(array, currIndex, parentIndex), parentIndex);
   }
 }
@@ -76,9 +78,9 @@ function siftDown(
 
   while (
     (maxChildIndex = getMaxChildIndex(array, currIndex)) !== null &&
-    maxChildIndex < partitionLength
+    maxChildIndex < partitionLength &&
+    array[maxChildIndex] > array[currIndex]
   ) {
-    if (array[maxChildIndex] < array[currIndex]) break;
     currIndex = (swap(array, currIndex, maxChildIndex), maxChildIndex);
   }
 }
