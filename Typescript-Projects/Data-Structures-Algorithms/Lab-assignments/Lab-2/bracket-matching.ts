@@ -1,6 +1,6 @@
 // ------------------- Stack ------------------- //
 
-import {llStack} from '../../../LAB2-LINKED-LISTS-AND-MERGING/src/adts/stack';
+import {llStack} from '../../Library/adts/linkedListStack';
 
 // ------------------- Tuples ------------------- //
 

@@ -1,12 +1,7 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "/build",
     "resolveJsonModule": true,
   },
-  "include": [
-    "Library/**/*.ts",
-    "Lab-assignments/**/*.ts",
-    "Lab-assignments/**/**/*.ts",
-  ]
 }
