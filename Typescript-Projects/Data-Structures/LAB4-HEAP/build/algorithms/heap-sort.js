@@ -119,4 +119,4 @@ function heapSortOOP(array) {
     return heap.sort(), heap.items();
 }
 exports.heapSortOOP = heapSortOOP;
-//# sourceMappingURL=heapSort.js.map
+//# sourceMappingURL=heap-sort.js.map

@@ -1,6 +1,6 @@
 // --------------- imports ----------------- //
 
-import {heapSort, heapSortOOP} from './algorithms/heapSort';
+import {heapSort, heapSortOOP} from './algorithms/heap-sort';
 import {mergeSort} from './algorithms/merge-sort';
 import {quickSort} from './algorithms/quick-sort';
 import {arrayToQueue, queueToArray} from './adts/queue';

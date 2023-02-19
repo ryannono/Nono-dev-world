@@ -2,7 +2,7 @@
 // ---------------- imports ---------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
-const heapSort_1 = require("../heapSort");
+const heap_sort_1 = require("../heap-sort");
 const insertion_sort_1 = require("../insertion-sort");
 const merge_sort_1 = require("../merge-sort");
 const quick_sort_1 = require("../quick-sort");
@@ -19,7 +19,7 @@ function chooseSortAlg(algorithm) {
         case 'insertionSort':
             return insertion_sort_1.insertionSort;
         case 'heapSort':
-            return heapSort_1.heapSort;
+            return heap_sort_1.heapSort;
         case 'mergeSort':
             return merge_sort_1.mergeSort;
         default:

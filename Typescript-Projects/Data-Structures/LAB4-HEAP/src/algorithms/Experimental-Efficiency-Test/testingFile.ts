@@ -1,7 +1,7 @@
 // ---------------- imports ---------------- //
 
 import {writeFileSync} from 'fs';
-import {heapSort, heapSortOOP} from '../heapSort';
+import {heapSort, heapSortOOP} from '../heap-sort';
 import {insertionSort} from '../insertion-sort';
 import {mergeSort} from '../merge-sort';
 import {quickSort} from '../quick-sort';
