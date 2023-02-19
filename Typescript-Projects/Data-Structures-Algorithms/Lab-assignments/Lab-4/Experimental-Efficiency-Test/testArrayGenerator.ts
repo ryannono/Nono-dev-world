@@ -28,6 +28,6 @@ while (i <= 2 ** 20) {
 }
 
 writeFileSync(
-  'src/algorithms/Experimental-Efficiency-Test/CPURuntimeTestArrays.json',
+  'Lab-assignments/Lab-4/Experimental-Efficiency-Test/CPURuntimeTestArrays.json',
   JSON.stringify(randTestArrays)
 );

@@ -96,7 +96,7 @@ async function generateCSVString(algorithm: sortAlg): Promise<string> {
  */
 async function getTestResult(algorithm: sortAlg): Promise<string> {
   const csvString = await generateCSVString(algorithm);
-  const filePath = `src/algorithms/Experimental-Efficiency-Test/CPURuntimeLogs/${algorithm}-CPURuntimeLog.csv`;
+  const filePath = `Lab-assignments/Lab-4/Experimental-Efficiency-Test/CPURuntimeLogs/${algorithm}-CPURuntimeLog.csv`;
 
   writeFileSync(filePath, csvString);
   return filePath;
