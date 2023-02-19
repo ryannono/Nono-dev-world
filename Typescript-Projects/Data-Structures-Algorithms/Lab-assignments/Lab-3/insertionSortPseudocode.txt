@@ -1,0 +1,17 @@
+Algorithm insertionSort (array)
+  input: array to sort
+  output: sorted array
+
+  for (
+    unsortedStart <- 1, length <- array.length;
+    unsortedStart < length;
+    unsortedStart++
+  )
+    currElementIndex <- unsortedStart
+    sortedIndex <- unsortedStart - 1
+
+    while(sortedIndex >= 0 && array[sortedIndex] > array[currElementIndex])
+      swap(array, sortedIndex, currElementIndex);
+      currElementIndex = sortedIndex--;
+  
+  return array
