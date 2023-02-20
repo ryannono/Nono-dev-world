@@ -20,11 +20,6 @@ const merge_sort_1 = require("./merge-sort");
 function bucketSort(array, minKey, maxKey, keyAccessor = keyAccessor_1.defaultNumKeyAccessor, comparator = comparator_1.defaultComparator) {
     if (!array.length)
         return array;
-    /**
-     * It takes an array of elements, and returns an array of elements grouped by the floored value of the
-     * key accessor function
-     * @param {T} element - T
-     */
     const getFlooredKey = (element) => Math.floor(keyAccessor(element));
     /* If the user does not specify the max and min key,
     we find the max and min key by iterating through the array. */
