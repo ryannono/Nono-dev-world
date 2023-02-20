@@ -1,51 +1,32 @@
 // ------------------- Swap ------------------- //
 
-import {swap} from '../functions/swap';
+import {insertionSort} from '../algorithms/insertion-sort';
+import {Comparator} from '../functions/comparator';
 
 // ------------------ Types ------------------- //
 
 export type Entry<K, V> = {key: K; value: V};
 
-type Comparator<K, V> = (
-  element1: Entry<K, V>,
-  element2: Entry<K, V>
-) => -1 | 0 | 1;
-
 // ------------------- Queue ------------------- //
 
 /**
- * It's a priority queue that uses insertion sort to keep the data sorted
- * */
+ * It's a priority queue that uses insertion sort to insert elements
+ */
 export class PriorityQueue<K, V> {
   private data: Entry<K, V>[] = [];
-  private comparator: Comparator<K, V>;
+  private comparator: Comparator<Entry<K, V>>;
 
-  constructor(comparator: Comparator<K, V>) {
+  constructor(comparator: Comparator<Entry<K, V>>) {
     this.comparator = comparator;
   }
 
-  private insertionSort(unsortedStart: number) {
-    for (
-      let length = this.data.length;
-      unsortedStart < length;
-      unsortedStart++
-    ) {
-      let currElementIndex = unsortedStart;
-      let sortedIndex = unsortedStart - 1;
+  insert(elements: Entry<K, V> | Entry<K, V>[]) {
+    const unsortedStart = this.data.length;
 
-      while (
-        sortedIndex >= 0 &&
-        this.comparator(this.data[sortedIndex], this.data[currElementIndex]) > 0
-      ) {
-        swap(this.data, sortedIndex, currElementIndex);
-        currElementIndex = sortedIndex--;
-      }
-    }
-  }
+    if (Array.isArray(elements)) this.data.push(...elements);
+    else this.data.push(elements);
 
-  insert(element: Entry<K, V>) {
-    this.data.push(element);
-    this.insertionSort(this.data.length - 1);
+    insertionSort(this.data, unsortedStart, this.comparator);
     return this.data.length;
   }
 

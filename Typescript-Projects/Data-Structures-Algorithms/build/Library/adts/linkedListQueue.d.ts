@@ -9,6 +9,18 @@ export declare class llQueue<T> {
     private data;
     constructor(data?: LinkedList<T>);
     /**
+     * Take an array of any type, and return a queue of that type.
+     * @param {T[]} array - The array you want to convert to a queue.
+     * @returns A new queue with the values of the array in the order they were in the array.
+     */
+    static arrayToQueue<T>(array: T[]): llQueue<T>;
+    /**
+     * Convert a queue to an array.
+     * @param queue - llQueue<T>
+     * @returns An array of the values in the queue.
+     */
+    static queueToArray<T>(queue: llQueue<T>): (T | null)[];
+    /**
      * "Add the item to the end of the queue."
      *
      * The function is called enqueue because it adds an item to the queue
@@ -40,15 +52,3 @@ export declare class llQueue<T> {
      */
     isEmpty(): boolean;
 }
-/**
- * Take an array and return a queue.
- * @param {T[]} array - The array to be converted to a queue.
- * @returns A queue with the values of the array in the order they were in the array.
- */
-export declare function arrayToQueue<T>(array: T[]): llQueue<T>;
-/**
- * Convert a queue to an array.
- * @param queue - The queue to convert to an array
- * @returns An array of the values in the queue.
- */
-export declare function queueToArray<T>(queue: llQueue<T>): T[];

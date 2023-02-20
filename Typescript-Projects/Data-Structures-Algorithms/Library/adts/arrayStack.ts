@@ -1,8 +1,8 @@
 // ------------------- Stack ------------------- //
 
 /* It's a class that creates a stack data structure */
-export class ArrayStack<dataType> {
-  private data: dataType[];
+export class ArrayStack<T> {
+  private data: T[];
   private dataLength: number;
 
   constructor() {
@@ -18,25 +18,24 @@ export class ArrayStack<dataType> {
   }
 
   /**
-   * It adds an item to the end of the array and returns the new length of the array
-   * @param {dataType} item - The item to be added to the end of the array.
+   * The push function takes an item of type T and adds it to the end of the array, returning the new
+   * length of the array.
+   * @param {T} item - The item to be added to the end of the array.
    * @returns The length of the array.
    */
-  push(item: dataType) {
-    this.data[this.dataLength] = item;
-    this.dataLength++;
+  push(item: T) {
+    this.data[this.dataLength++] = item;
     return this.dataLength;
   }
 
   /**
-   * If the stack is empty, return null, otherwise, decrement the dataLength property and return the
-   * value at the new dataLength index.
+   * If the stack is empty, return null, otherwise return the last element in the array and decrement the
+   * dataLength property
    * @returns The last element in the array.
    */
   pop() {
     if (this.isEmpty()) return null;
-    this.dataLength--;
-    return this.data[this.dataLength];
+    return this.data[--this.dataLength];
   }
 
   /**
@@ -57,12 +56,11 @@ export class ArrayStack<dataType> {
   }
 
   /**
-   * If the dataLength property of the object is not equal to zero, return false. Otherwise, return
-   * true
+   * Return true if the dataLength property is falsy, otherwise return false.
    * @returns The return value is a boolean.
    */
   isEmpty() {
-    return !this.dataLength ? true : false;
+    return !this.dataLength;
   }
 
   /**

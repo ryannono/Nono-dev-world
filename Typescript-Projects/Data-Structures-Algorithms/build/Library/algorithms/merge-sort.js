@@ -3,18 +3,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mergeSortQueue = exports.mergeSort = void 0;
 const linkedListQueue_1 = require("../adts/linkedListQueue");
+const comparator_1 = require("../functions/comparator");
 // ------------- MergeSort Array ------------- //
 /**
- * It's merging two sorted arrays into one sorted array
- * @param {number[]} array - The original array.
- * @param {number} leftIndex1 - The leftmost index of the first array.
- * @param {number} rightIndex1 - The last index of the first array.
- * @param {number} leftIndex2 - The leftmost index of the second array.
- * @param {number} rightIndex2 - The last index of the second array.
- * @returns The array is being returned.
- * @complexity O(n) - iterates over every element in the queues
+ * It merges two sorted arrays into a new array and then copies the elements of the new array into the
+ * original array
+ * @param {T[]} array - The array to sort.
+ * @param {number} leftIndex1 - The left index of the first array.
+ * @param {number} rightIndex1 - the last index of the first array
+ * @param {number} leftIndex2 - The left index of the second array.
+ * @param {number} rightIndex2 - the last index of the second array
+ * @param comparator - A function that compares two items and returns a number.
+ * @returns The array that was passed in.
  */
-function merge(array, leftIndex1, rightIndex1, leftIndex2, rightIndex2) {
+function merge(array, leftIndex1, rightIndex1, leftIndex2, rightIndex2, comparator) {
     const array3 = [];
     let start1 = leftIndex1;
     let start2 = leftIndex2;
@@ -26,7 +28,7 @@ function merge(array, leftIndex1, rightIndex1, leftIndex2, rightIndex2) {
     // than array 1's) push array2s item
     while (fullLength--) {
         if (start1 <= rightIndex1 &&
-            (start2 > rightIndex2 || array[start2] >= array[start1])) {
+            (start2 > rightIndex2 || comparator(array[start2], array[start1]) >= 0)) {
             array3.push(array[start1++]);
         }
         else {
@@ -40,19 +42,19 @@ function merge(array, leftIndex1, rightIndex1, leftIndex2, rightIndex2) {
     return array;
 }
 /**
- * We recursively split the array in half until we have arrays of length 1, then we merge them back
- * together in sorted order
- * @param {number[]} array - the array to sort
- * @param [leftIndex=0] - the left index of the array
- * @param rightIndex - the last index of the array
- * @returns The sorted array.
+ * We split the array in half, sort the halves, and then merge the sorted halves
+ * @param {T[]} array - the array to sort
+ * @param [leftIndex=0] - the index of the first element in the left half of the array
+ * @param rightIndex - the index of the last element in the array
+ * @param comparator - a function that takes two values and returns a number.
+ * @returns The sorted array
  * @ComplexityBestCase O(1) - queue of size 1 otherwise O(nlog(n))
  * @ComplexityAvgCase O(nlog(n)) - spliting to a single element depends on how many times the
  * initial queue is divisible by 2 so log2(n). We have to do the spliting for every element so
  * the splitting will be nlog(n). The merging is O(n). nlog(n) > n so the function is O(nlogn(n))
  * @ComplexityWorstCase O(nlog(n)) - there's no input that will make the program run any slower
  */
-function mergeSort(array, leftIndex = 0, rightIndex = array.length - 1) {
+function mergeSort(array, leftIndex = 0, rightIndex = array.length - 1, comparator = comparator_1.defaultComparator) {
     if (leftIndex >= rightIndex)
         return array;
     const half = Math.floor((leftIndex + rightIndex) / 2);
@@ -61,9 +63,9 @@ function mergeSort(array, leftIndex = 0, rightIndex = array.length - 1) {
     /* if the array that was split is already sorted return the array
     so we can merge it with another array and skip merging
     it's two already sorted halves with themselves */
-    if (array[half] <= array[half + 1])
+    if (comparator(array[half], array[half + 1]) <= 0)
         return array;
-    return merge(array, leftIndex, half, half + 1, rightIndex);
+    return merge(array, leftIndex, half, half + 1, rightIndex, comparator);
 }
 exports.mergeSort = mergeSort;
 // --------------- Sort Queue ---------------- //

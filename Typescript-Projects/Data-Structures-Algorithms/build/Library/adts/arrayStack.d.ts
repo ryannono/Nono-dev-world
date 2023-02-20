@@ -1,4 +1,4 @@
-export declare class ArrayStack<dataType> {
+export declare class ArrayStack<T> {
     private data;
     private dataLength;
     constructor();
@@ -7,30 +7,30 @@ export declare class ArrayStack<dataType> {
      */
     print(): void;
     /**
-     * It adds an item to the end of the array and returns the new length of the array
-     * @param {dataType} item - The item to be added to the end of the array.
+     * The push function takes an item of type T and adds it to the end of the array, returning the new
+     * length of the array.
+     * @param {T} item - The item to be added to the end of the array.
      * @returns The length of the array.
      */
-    push(item: dataType): number;
+    push(item: T): number;
     /**
-     * If the stack is empty, return null, otherwise, decrement the dataLength property and return the
-     * value at the new dataLength index.
+     * If the stack is empty, return null, otherwise return the last element in the array and decrement the
+     * dataLength property
      * @returns The last element in the array.
      */
-    pop(): dataType | null;
+    pop(): T | null;
     /**
      * It returns the last element in the array
      * @returns The last element in the array.
      */
-    top(): dataType | null;
+    top(): T | null;
     /**
      * It returns the length of the data array
      * @returns The size of the data array.
      */
     size(): number;
     /**
-     * If the dataLength property of the object is not equal to zero, return false. Otherwise, return
-     * true
+     * Return true if the dataLength property is falsy, otherwise return false.
      * @returns The return value is a boolean.
      */
     isEmpty(): boolean;

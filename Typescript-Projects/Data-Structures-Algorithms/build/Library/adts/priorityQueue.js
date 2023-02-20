@@ -2,30 +2,23 @@
 // ------------------- Swap ------------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PriorityQueue = void 0;
-const swap_1 = require("../functions/swap");
+const insertion_sort_1 = require("../algorithms/insertion-sort");
 // ------------------- Queue ------------------- //
 /**
- * It's a priority queue that uses insertion sort to keep the data sorted
- * */
+ * It's a priority queue that uses insertion sort to insert elements
+ */
 class PriorityQueue {
     constructor(comparator) {
         this.data = [];
         this.comparator = comparator;
     }
-    insertionSort(unsortedStart) {
-        for (let length = this.data.length; unsortedStart < length; unsortedStart++) {
-            let currElementIndex = unsortedStart;
-            let sortedIndex = unsortedStart - 1;
-            while (sortedIndex >= 0 &&
-                this.comparator(this.data[sortedIndex], this.data[currElementIndex]) > 0) {
-                (0, swap_1.swap)(this.data, sortedIndex, currElementIndex);
-                currElementIndex = sortedIndex--;
-            }
-        }
-    }
-    insert(element) {
-        this.data.push(element);
-        this.insertionSort(this.data.length - 1);
+    insert(elements) {
+        const unsortedStart = this.data.length;
+        if (Array.isArray(elements))
+            this.data.push(...elements);
+        else
+            this.data.push(elements);
+        (0, insertion_sort_1.insertionSort)(this.data, unsortedStart, this.comparator);
         return this.data.length;
     }
     min() {

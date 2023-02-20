@@ -20,6 +20,13 @@ export declare class LinkedList<T> {
      */
     constructor(headOrItem?: llNode<T> | T);
     /**
+     * We're going to create a new array, and then we're going to loop through the linked list, and for
+     * each node in the linked list, we're going to push the item in that node into the array.
+     * @param linkedList - LinkedList<T>
+     * @returns An array of the items in the linked list.
+     */
+    static linkedListToArray<T>(linkedList: LinkedList<T>): (T | null)[];
+    /**
      * If the elementToCheck has an item property, then it's a Node<T> and we return true. Otherwise, it's
      * a T and we return false
      * @param {llNode<T> | T} elementToCheck - Node<T> | T
@@ -35,10 +42,10 @@ export declare class LinkedList<T> {
      */
     private getSecondLastNode;
     /**
-     * We create a new node, set the next property of the new node to the current head, increment the
-     * length, set the head to the new node, and return the new node
+     * We create a new node, set the next property of the new node to the current head, and then set the
+     * head to the new node
      * @param {T} item - the item to be added to the list
-     * @returns The head of the linked list.
+     * @returns The length of the linked list
      */
     addFirst(item: T): number;
     /**

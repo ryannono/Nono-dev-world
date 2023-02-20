@@ -42,6 +42,22 @@ class LinkedList {
         }
     }
     /**
+     * We're going to create a new array, and then we're going to loop through the linked list, and for
+     * each node in the linked list, we're going to push the item in that node into the array.
+     * @param linkedList - LinkedList<T>
+     * @returns An array of the items in the linked list.
+     */
+    static linkedListToArray(linkedList) {
+        var _a;
+        let currentNode = linkedList.head;
+        const array = new Array();
+        while (currentNode) {
+            array.push(currentNode.item);
+            currentNode = (_a = currentNode.next) !== null && _a !== void 0 ? _a : null;
+        }
+        return array;
+    }
+    /**
      * If the elementToCheck has an item property, then it's a Node<T> and we return true. Otherwise, it's
      * a T and we return false
      * @param {llNode<T> | T} elementToCheck - Node<T> | T
@@ -60,23 +76,21 @@ class LinkedList {
     getSecondLastNode(head) {
         var _a;
         let currentNode = head;
-        while ((_a = currentNode.next) === null || _a === void 0 ? void 0 : _a.next) {
+        while ((_a = currentNode.next) === null || _a === void 0 ? void 0 : _a.next)
             currentNode = currentNode.next;
-        }
         return currentNode;
     }
     /**
-     * We create a new node, set the next property of the new node to the current head, increment the
-     * length, set the head to the new node, and return the new node
+     * We create a new node, set the next property of the new node to the current head, and then set the
+     * head to the new node
      * @param {T} item - the item to be added to the list
-     * @returns The head of the linked list.
+     * @returns The length of the linked list
      */
     addFirst(item) {
         const newNode = new llNode(item);
         newNode.next = this.head;
-        this.length++;
         this.head = newNode;
-        return this.length;
+        return ++this.length;
     }
     /**
      * "Remove the first node from the list and return it."
@@ -107,8 +121,7 @@ class LinkedList {
             const lastNode = this.getSecondLastNode(this.head).next;
             lastNode.next = newNode;
         }
-        this.length++;
-        return this.length;
+        return ++this.length;
     }
     /**
      * We're removing the last node by setting the second last node's next property to null

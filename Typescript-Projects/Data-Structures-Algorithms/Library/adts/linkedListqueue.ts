@@ -18,6 +18,26 @@ export class llQueue<T> {
   }
 
   /**
+   * Take an array of any type, and return a queue of that type.
+   * @param {T[]} array - The array you want to convert to a queue.
+   * @returns A new queue with the values of the array in the order they were in the array.
+   */
+  static arrayToQueue<T>(array: T[]) {
+    const temp = new llQueue<T>();
+    array.forEach(val => temp.enqueue(val));
+    return temp;
+  }
+
+  /**
+   * Convert a queue to an array.
+   * @param queue - llQueue<T>
+   * @returns An array of the values in the queue.
+   */
+  static queueToArray<T>(queue: llQueue<T>) {
+    return LinkedList.linkedListToArray(queue.data);
+  }
+
+  /**
    * "Add the item to the end of the queue."
    *
    * The function is called enqueue because it adds an item to the queue
@@ -62,33 +82,4 @@ export class llQueue<T> {
   isEmpty() {
     return !this.data.size() ? true : false;
   }
-}
-
-// ------------- Utility functions ------------- //
-
-/**
- * Take an array and return a queue.
- * @param {T[]} array - The array to be converted to a queue.
- * @returns A queue with the values of the array in the order they were in the array.
- */
-export function arrayToQueue<T>(array: T[]) {
-  const temp = new llQueue<T>();
-  array.forEach(val => temp.enqueue(val));
-  return temp;
-}
-
-/**
- * Convert a queue to an array.
- * @param queue - The queue to convert to an array
- * @returns An array of the values in the queue.
- */
-export function queueToArray<T>(queue: llQueue<T>) {
-  const temp = new Array<T>();
-  let i = 0;
-  while (queue.size()) {
-    temp[i] = queue.dequeue()!;
-    i++;
-  }
-  temp.forEach(val => queue.enqueue(val));
-  return temp;
 }

@@ -4,7 +4,7 @@ import {writeFileSync} from 'fs';
 import {convertArrayToCSV} from 'convert-array-to-csv';
 import * as CPURuntimeTestArrays from './CPURuntimeTestArrays.json';
 import {insertionSort} from '../../../Library/algorithms/insertion-sort';
-import {heapSort, heapSortOOP} from '../../../Library/algorithms/heap-sort';
+import {heapSort} from '../../../Library/algorithms/heap-sort';
 import {mergeSort} from '../../../Library/algorithms/merge-sort';
 import {quickSort} from '../../../Library/algorithms/quick-sort';
 

@@ -1,3 +1,4 @@
+import { Comparator } from '../functions/comparator';
 /**
  * We start with a pivot, and then we move all the elements that are greater than the pivot to the
  * right of the pivot, and all the elements that are less than the pivot to the left of the pivot
@@ -12,4 +13,4 @@
  * @ComplexityWorstCase O(n**2) - when the pivot is extremely unbalanced relative to the array.
  * Ex. smallest or greatest element
  */
-export declare function quickSort(array: number[], leftIndex?: number, rightIndex?: number): number[];
+export declare function quickSort<T>(array: T[], leftIndex?: number, rightIndex?: number, comparator?: Comparator<T>): T[];
