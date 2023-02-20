@@ -2,7 +2,9 @@
 // ------------------- Stack ------------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ArrayStack = void 0;
-/* It's a class that creates a stack data structure */
+/*
+ * It's a class that creates a stack data structure
+ */
 class ArrayStack {
     constructor() {
         this.data = [];

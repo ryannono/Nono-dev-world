@@ -1,6 +1,8 @@
 // ------------------- Stack ------------------- //
 
-/* It's a class that creates a stack data structure */
+/*
+ * It's a class that creates a stack data structure
+ */
 export class ArrayStack<T> {
   private data: T[];
   private dataLength: number;
