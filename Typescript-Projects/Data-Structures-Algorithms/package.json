@@ -4,9 +4,6 @@
   "description": "",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
-  "files": [
-    "build/src"
-  ],
   "license": "Apache-2.0",
   "keywords": [],
   "scripts": {
@@ -21,6 +18,8 @@
     "test-heapSortTest": "node ./build/heapSortTest.js",
     "generate-test": "node ./build/algorithms/Experimental-Efficiency-Test/testArrayGenerator.js",
     "experiment": "node ./build/algorithms/Experimental-Efficiency-Test/testingFile.js",
+    "test-pq": "node ./build/Library/adts/priorityQueue.js",
+    "test-bucket": "node ./build/Library/algorithms/bucket-sort.js",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
