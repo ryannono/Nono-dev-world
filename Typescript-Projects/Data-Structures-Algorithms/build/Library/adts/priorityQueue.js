@@ -44,7 +44,7 @@ class PriorityQueue {
         return this.data.length;
     }
     isEmpty() {
-        return !this.data.length ? true : false;
+        return !this.data.length;
     }
     items() {
         return this.data;

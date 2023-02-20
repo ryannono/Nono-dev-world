@@ -70,7 +70,7 @@ export class PriorityQueue<K, V> {
   }
 
   isEmpty() {
-    return !this.data.length ? true : false;
+    return !this.data.length;
   }
 
   items() {
