@@ -95,15 +95,17 @@ function heapify(array, comparator) {
     }
 }
 /**
- * Move the maximum element to the end of the array, and then sift down the root element to restore the
- * heap property.
- * @param {T[]} array - The array to sort.
- * @param {number} partitionLength - The length of the array to partition.
+ * Swap the last element with the first element, then sift down the first element to its correct
+ * position.
+ * @param {T[]} array - The array to extract the maximum from.
+ * @param {number} partitionLength - The length of the array to be partitioned.
  * @param comparator - A function that compares two elements and returns a number.
+ * @returns The index of the element that was swapped with the first element.
  */
-function moveMax(array, partitionLength, comparator) {
+function extractMax(array, partitionLength, comparator) {
     (0, swap_1.swap)(array, 0, --partitionLength);
     siftDown(array, 0, partitionLength, comparator);
+    return partitionLength;
 }
 /**
  * Heapify the array, then move the max element to the end of the array, and repeat until the array is
@@ -117,9 +119,11 @@ function moveMax(array, partitionLength, comparator) {
 function heapSort(array, comparator = comparator_1.defaultComparator) {
     let length = array.length;
     heapify(array, comparator);
-    while (length)
-        moveMax(array, length--, comparator);
+    while (extractMax(array, length--, comparator))
+        ;
     return array;
 }
 exports.heapSort = heapSort;
+const q = [8, 7, 6, 9, 77, 5, 36, 97, 68, 4];
+console.log(heapSort(q));
 //# sourceMappingURL=heap-sort.js.map
