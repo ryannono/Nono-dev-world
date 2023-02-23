@@ -10,7 +10,7 @@
   "license": "Apache-2.0",
   "keywords": [],
   "scripts": {
-    "test": "node ./build/index.js",
+    "test": "node ./build/weight.js",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",

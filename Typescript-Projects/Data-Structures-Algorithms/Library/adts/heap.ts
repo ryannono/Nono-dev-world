@@ -1,8 +1,11 @@
+import {heapSort} from '../algorithms/heap-sort';
 // ---------------- Types ---------------- //
 
 type nodePosition = 'left' | 'right' | null;
 
 type descendant = {index: number; occupied: boolean};
+
+type heapType = 'min' | 'max';
 
 // -------------- Tree Node -------------- //
 
@@ -47,8 +50,9 @@ class HeapNode<T> {
  * "The MinHeap class is a binary tree that stores items in a way that allows us to quickly find the
  * smallest item in the tree."
  */
-export class ArrayMinHeap<T> {
+export class Heap<T> {
   private data: HeapNode<T>[] = [];
+  private heapType: heapType;
   private size = 0;
   private height = 0;
 
@@ -59,7 +63,8 @@ export class ArrayMinHeap<T> {
    * heap.
    * @returns A new instance of the Heap class.
    */
-  constructor(itemOrArray?: T | T[]) {
+  constructor(heapType: heapType, itemOrArray?: T | T[]) {
+    this.heapType = heapType;
     if (!itemOrArray) return;
     else if (Array.isArray(itemOrArray)) this.buildHeap(itemOrArray);
     else this.insert(itemOrArray);
@@ -101,22 +106,25 @@ export class ArrayMinHeap<T> {
   }
 
   /**
-   * It returns an array of the items in the tree
+   * It returns a new array containing the items of the nodes in the data array
    * @returns An array of the items in the tree.
    */
   items() {
-    const elements: T[] = [];
-    this.data.forEach(node => {
-      if (node.item !== null) elements.push(node.item);
-    });
-    return elements;
+    return [...this.data].map(node => node.item);
+  }
+
+  /**
+   * The printItems function prints the items in the list.
+   */
+  printItems() {
+    console.log(this.items());
   }
 
   /**
    * We're going to print out the elements in the heap, starting with the root, then the first level,
    * then the second level, and so on
    */
-  printElements() {
+  printHeap() {
     for (let level = 0, startIndex = 0; level <= this.height; level++) {
       const levelItemCount = 2 ** level;
       const maxIndex = levelItemCount + startIndex;
@@ -249,40 +257,41 @@ export class ArrayMinHeap<T> {
   }
 
   /**
-   * If both node1 and node2 are not null, return the node with the smaller item. If only one of them is
-   * not null, return the non-null node. If both are null, return null
-   * @param node1 - The first node to compare
-   * @param node2 - The node to compare against.
-   * @returns The node with the smallest item.
+   * It returns the minimum and maximum child nodes of a given node
+   * @param node - The node to find the children of
+   * @returns An object with two properties, min and max.
    */
-  private minChildNode(node: HeapNode<T>) {
+  private childNode(node: HeapNode<T>) {
     const left = this.left(node);
     const right = this.right(node);
+    let min, max;
 
-    if (left && right) {
-      return left.item! > right.item! ? right : left;
-    } else if (left) {
-      return left;
-    } else if (right) {
-      return right;
-    } else {
-      return null;
-    }
+    if (!right?.item && !left?.item) min = max = null;
+    else if (!right?.item) min = max = left;
+    else if (!left?.item) min = max = right;
+    else if (left.item > right.item) (min = right), (max = left);
+    else (min = left), (max = right);
+
+    return {min, max};
   }
 
   /**
-   * "While the current node has a parent, and the current node's item is less than the parent's item,
-   * swap the items and set the current node to the parent."
-   *
+   * "While the current node has a parent and the current node's item is less than the parent's item,
+   * swap the items and set the current node to the parent node."
    * @param startNode - The node to start sifting up from.
    */
   private siftUp(startNode: HeapNode<T>) {
     let currNode = startNode;
     let parentNode: HeapNode<T> | null;
 
+    const parentValidation = (parentNode: HeapNode<T>) =>
+      this.heapType === 'min'
+        ? currNode.item! < parentNode.item!
+        : currNode.item! > parentNode.item!;
+
     while (
       (parentNode = this.parent(currNode)) &&
-      currNode.item! < parentNode.item!
+      parentValidation(parentNode)
     ) {
       this.swapItems(currNode, parentNode);
       currNode = parentNode;
@@ -297,14 +306,24 @@ export class ArrayMinHeap<T> {
    */
   private siftDown(startNode: HeapNode<T>) {
     let currNode = startNode;
-    let minChild: HeapNode<T> | null;
+    let childNode: HeapNode<T> | null;
+
+    const childAssignment = (currNode: HeapNode<T>) =>
+      this.heapType === 'min'
+        ? this.childNode(currNode).min
+        : this.childNode(currNode).max;
+
+    const childValidation = (childNode: HeapNode<T>) =>
+      this.heapType === 'min'
+        ? childNode.item! < currNode.item!
+        : childNode.item! > currNode.item!;
 
     while (
-      (minChild = this.minChildNode(currNode)) &&
-      minChild.item! < currNode.item!
+      (childNode = childAssignment(currNode)) &&
+      childValidation(childNode)
     ) {
-      this.swapItems(currNode, minChild);
-      currNode = minChild;
+      this.swapItems(currNode, childNode);
+      currNode = childNode;
     }
   }
 
@@ -360,7 +379,7 @@ export class ArrayMinHeap<T> {
    * @returns The item that was removed.
    * @complexity O(log(n))
    */
-  removeMin(flag?: 'node') {
+  removeMin() {
     if (this.isEmpty()) return null;
 
     /* It's swapping the root node with the last node in the tree. */
@@ -377,18 +396,32 @@ export class ArrayMinHeap<T> {
 
     this.removeLast();
     this.siftDown(root);
-    return flag === 'node' ? lastNode : lastNode.item;
+    return lastNode.item;
   }
 
   /**
-   * We're going to remove the minimum value from the heap until the heap is empty, and then we're going
-   * to set the heap's data to the array of removed values
+   * We're using the heapSort function from the heap-sort package to sort the array of items in the heap
+   * @param [reverse=false] - boolean
+   * @returns The array is being returned.
    */
-  sort() {
-    const array: HeapNode<T>[] = [];
-    for (let i = 0, length = this.size; i < length; i++) {
-      array.push(this.removeMin('node') as HeapNode<T>);
-    }
-    this.data = array;
+  sort(reverse = false) {
+    const array = heapSort(
+      [...this.data].map(node => node.item),
+      this.heapType === 'max' ? true : false
+    );
+    return reverse ? array.reverse() : array;
   }
 }
+
+const min = new Heap(
+  'min',
+  [99, 0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+);
+
+const max = new Heap(
+  'max',
+  [99, 0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+);
+
+max.printItems();
+min.printItems();

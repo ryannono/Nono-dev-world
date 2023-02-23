@@ -165,8 +165,7 @@ export declare class Heap<T> {
      */
     removeMin(): T | null;
     /**
-     * It creates a copy of the heap's data, maps the copy to an array of items, and then sorts the array
-     * using the heap's type
+     * We're using the heapSort function from the heap-sort package to sort the array of items in the heap
      * @param [reverse=false] - boolean
      * @returns The array is being returned.
      */

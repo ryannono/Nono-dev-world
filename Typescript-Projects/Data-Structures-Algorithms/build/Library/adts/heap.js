@@ -334,20 +334,18 @@ class Heap {
         return lastNode.item;
     }
     /**
-     * It creates a copy of the heap's data, maps the copy to an array of items, and then sorts the array
-     * using the heap's type
+     * We're using the heapSort function from the heap-sort package to sort the array of items in the heap
      * @param [reverse=false] - boolean
      * @returns The array is being returned.
      */
     sort(reverse = false) {
-        const array = [...this.data].map(node => node.item);
-        (0, heap_sort_1.heapSort)(array, this.heapType === 'max' ? true : false);
+        const array = (0, heap_sort_1.heapSort)([...this.data].map(node => node.item), this.heapType === 'max' ? true : false);
         return reverse ? array.reverse() : array;
     }
 }
 exports.Heap = Heap;
-const min = new Heap('min', [0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
-const max = new Heap('max', [0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
-console.log(max.sort(true), '\n\n');
-console.log(min.sort(true));
-//# sourceMappingURL=arrayMinHeap.js.map
+const min = new Heap('min', [99, 0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+const max = new Heap('max', [99, 0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+max.printItems();
+min.printItems();
+//# sourceMappingURL=heap.js.map

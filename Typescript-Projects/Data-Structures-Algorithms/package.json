@@ -13,7 +13,7 @@
     "test-insert": "node ./build/algorithms/insertion-sort.js",
     "test-quick": "node ./build/algorithms/quick-sort.js",
     "test-mergeSort": "node ./build/algorithms/merge-sort.js",
-    "test-heap": "node ./build/adts/minHeap.js",
+    "test-heap": "node ./build/Library/adts/heap.js",
     "test-priority": "node ./build/Library/adts/priorityQueue.js",
     "test-bucketSort": "node ./build/Library/algorithms/bucket-sort.js",
     "test-heapSort": "node ./build/Library/algorithms/heap-sort.js",
