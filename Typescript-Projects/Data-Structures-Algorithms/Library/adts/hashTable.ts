@@ -2,20 +2,22 @@
 
 import {binarySearch} from '../algorithms/binary-search';
 import {defaultComparator, Comparator} from '../functions/comparator';
+import {HashFunction, defaultHashFunction} from '../functions/hashFunction';
 import {Entry, PriorityQueue} from './priorityQueue';
 
 // ---------------- HashTable ---------------- //
 
 export class HashTable<T> {
   private data: PriorityQueue<number, T>[] = [];
-  private hashFunction = (key: number) => key % this.maxSize;
+  private hashFunction: HashFunction;
   private comparator: Comparator<Entry<number, T>> = (entry1, entry2) =>
     defaultComparator(entry1.key, entry2.key);
   private maxSize = 0;
   private size = 0;
   private numItems = 0;
 
-  constructor(size = 1024) {
+  constructor(size = 1024, hashFunction = defaultHashFunction) {
+    this.hashFunction = hashFunction;
     let fillTemp = (this.maxSize = size);
     while (fillTemp--) this.data.push(new PriorityQueue(this.comparator));
   }
@@ -28,7 +30,7 @@ export class HashTable<T> {
    * @returns The number of occupied indices and the number of items in the hash table.
    */
   set(entry: Entry<number, T>) {
-    const index = this.hashFunction(entry.key);
+    const index = this.hashFunction(entry.key, this.maxSize);
     const queue = this.data[index];
 
     if (this.isFull()) return -1;
@@ -52,7 +54,7 @@ export class HashTable<T> {
    * @returns The value of the key
    */
   get(key: number) {
-    const index = this.hashFunction(key);
+    const index = this.hashFunction(key, this.maxSize);
     const queue = this.data[index];
 
     if (queue.size() <= 1) return queue.min();
@@ -72,7 +74,7 @@ export class HashTable<T> {
    * @returns The value of the key that was removed.
    */
   remove(key: number) {
-    const index = this.hashFunction(key);
+    const index = this.hashFunction(key, this.maxSize);
     const queue = this.data[index];
     if (queue.size() === 0) return null;
     if (queue.size() === 1) {

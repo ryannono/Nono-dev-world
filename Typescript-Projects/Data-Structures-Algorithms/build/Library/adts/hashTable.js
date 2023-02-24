@@ -4,16 +4,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HashTable = void 0;
 const binary_search_1 = require("../algorithms/binary-search");
 const comparator_1 = require("../functions/comparator");
+const hashFunction_1 = require("../functions/hashFunction");
 const priorityQueue_1 = require("./priorityQueue");
 // ---------------- HashTable ---------------- //
 class HashTable {
-    constructor(size = 1024) {
+    constructor(size = 1024, hashFunction = hashFunction_1.defaultHashFunction) {
         this.data = [];
-        this.hashFunction = (key) => key % this.maxSize;
         this.comparator = (entry1, entry2) => (0, comparator_1.defaultComparator)(entry1.key, entry2.key);
         this.maxSize = 0;
         this.size = 0;
         this.numItems = 0;
+        this.hashFunction = hashFunction;
         let fillTemp = (this.maxSize = size);
         while (fillTemp--)
             this.data.push(new priorityQueue_1.PriorityQueue(this.comparator));
@@ -26,7 +27,7 @@ class HashTable {
      * @returns The number of occupied indices and the number of items in the hash table.
      */
     set(entry) {
-        const index = this.hashFunction(entry.key);
+        const index = this.hashFunction(entry.key, this.maxSize);
         const queue = this.data[index];
         if (this.isFull())
             return -1;
@@ -47,7 +48,7 @@ class HashTable {
      */
     get(key) {
         var _a;
-        const index = this.hashFunction(key);
+        const index = this.hashFunction(key, this.maxSize);
         const queue = this.data[index];
         if (queue.size() <= 1)
             return queue.min();
@@ -61,7 +62,7 @@ class HashTable {
      * @returns The value of the key that was removed.
      */
     remove(key) {
-        const index = this.hashFunction(key);
+        const index = this.hashFunction(key, this.maxSize);
         const queue = this.data[index];
         if (queue.size() === 0)
             return null;

@@ -1,3 +1,4 @@
+import { defaultHashFunction } from '../functions/hashFunction';
 import { Entry } from './priorityQueue';
 export declare class HashTable<T> {
     private data;
@@ -6,7 +7,7 @@ export declare class HashTable<T> {
     private maxSize;
     private size;
     private numItems;
-    constructor(size?: number);
+    constructor(size?: number, hashFunction?: typeof defaultHashFunction);
     /**
      * If the hash table is full, return -1, else if the queue at the index is empty, increment the size of
      * the hash table and insert the entry into the queue, else if the entry is already in the queue,
