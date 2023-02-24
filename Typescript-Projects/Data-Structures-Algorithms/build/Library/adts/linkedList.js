@@ -4,14 +4,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LinkedList = void 0;
 /** A Node is a class that has an item and a next property */
 class llNode {
-    constructor(item, next) {
+    constructor(item, prev, next) {
         this.item = item !== null && item !== void 0 ? item : null;
+        this.prev = prev !== null && prev !== void 0 ? prev : null;
         this.next = next !== null && next !== void 0 ? next : null;
+    }
+    /**
+     * If the object is an instance of the llNode class, then return true, otherwise return false.
+     * @param {unknown} obj - unknown - this is the object we're checking to see if it's an instance of
+     * llNode.
+     * @returns a boolean value.
+     */
+    static isLlNode(obj) {
+        return obj instanceof llNode;
     }
 }
 // ---------------- Linked list ---------------- //
 /**
- * "We're creating a linked list class that has a head property, a length property, and methods to add
+ * "We're creating a linked list class that has a front, back, and length property, and methods to add
  * and remove nodes from the list."
  */
 class LinkedList {
@@ -23,21 +33,20 @@ class LinkedList {
      * @returns A new instance of the LinkedList class.
      */
     constructor(headOrItem) {
-        var _a;
-        this.head = null;
+        this.front = null;
+        this.back = null;
         this.length = 0;
         if (!headOrItem)
             return;
-        if (this.isllNode(headOrItem)) {
-            this.head = headOrItem;
-            let currentNode = this.head;
+        if (llNode.isLlNode(headOrItem)) {
+            let currentNode = (this.front = this.back = headOrItem);
             while (currentNode) {
                 this.length++;
-                currentNode = (_a = currentNode.next) !== null && _a !== void 0 ? _a : null;
+                currentNode = currentNode.next;
             }
         }
         else {
-            this.head = new llNode(headOrItem);
+            this.front = this.back = new llNode(headOrItem);
             this.length++;
         }
     }
@@ -48,120 +57,99 @@ class LinkedList {
      * @returns An array of the items in the linked list.
      */
     static linkedListToArray(linkedList) {
-        var _a;
-        let currentNode = linkedList.head;
-        const array = new Array();
+        let currentNode = linkedList.front;
+        const array = [];
         while (currentNode) {
             array.push(currentNode.item);
-            currentNode = (_a = currentNode.next) !== null && _a !== void 0 ? _a : null;
+            currentNode = currentNode.next;
         }
         return array;
     }
     /**
-     * If the elementToCheck has an item property, then it's a Node<T> and we return true. Otherwise, it's
-     * a T and we return false
-     * @param {llNode<T> | T} elementToCheck - Node<T> | T
+     * "If the object is an instance of the LinkedList class, then it is a LinkedList."
+     *
+     * The above function is a type guard. It's a function that takes an object and returns a boolean. If
+     * the boolean is true, then the object is of the type specified in the function
+     * @param {unknown} obj - unknown
      * @returns a boolean value.
      */
-    isllNode(elementToCheck) {
-        return elementToCheck.item !== undefined;
+    static isLinkedList(obj) {
+        return obj instanceof LinkedList;
     }
     /**
-     * "Get the second last node in the linked list."
+     * We create a new node with the item and the current front node as its next node.
      *
-     * The function takes in a head node and returns the second last node
-     * @param head - The head of the linked list.
-     * @returns The second to last node in the linked list.
-     */
-    getSecondLastNode(head) {
-        var _a;
-        let currentNode = head;
-        while ((_a = currentNode.next) === null || _a === void 0 ? void 0 : _a.next)
-            currentNode = currentNode.next;
-        return currentNode;
-    }
-    /**
-     * We create a new node, set the next property of the new node to the current head, and then set the
-     * head to the new node
-     * @param {T} item - the item to be added to the list
+     * Then we set the new node's next node's (old front), previous node to the new node.
+     *
+     * Finally, we set the front node to the new node and return the new length of the list.
+     * @param {T} item - T - the item to be added to the list
      * @returns The length of the linked list
      */
     addFirst(item) {
-        const newNode = new llNode(item);
-        newNode.next = this.head;
-        this.head = newNode;
+        if (!this.length)
+            this.front = this.back = new llNode(item);
+        else {
+            this.front = new llNode(item, null, this.front);
+            this.front.next.prev = this.front;
+        }
         return ++this.length;
     }
     /**
-     * "Remove the first node from the list and return it."
-     *
-     * The first thing we do is decrement the length of the list
-     * @returns The old head is being returned.
+     * If the list is empty, return null, otherwise, if the list has only one node, set the front and back
+     * to null, otherwise, set the front to the next node and set the previous node of the new front to
+     * null
+     * @returns The old head of the list.
      */
     removeFirst() {
-        var _a, _b;
-        this.length--;
-        const oldHead = this.head;
-        this.head = (_b = (_a = this.head) === null || _a === void 0 ? void 0 : _a.next) !== null && _b !== void 0 ? _b : null;
+        const oldHead = this.front;
+        if (this.length <= 1)
+            this.front = this.back = null;
+        else
+            (this.front = this.front.next).prev = null;
+        this.length = !this.length ? 0 : this.length - 1;
         return oldHead;
     }
     /**
-     * If the list is empty, set the head to the new node. If the list has one item, set the head's next to
-     * the new node. If the list has two or more items, set the second last node's next to the new node
-     * @param {T} item - T - the item to add to the end of the list
-     * @returns The length of the linked list.
+     * If the list is empty, set the front and back to the new node, otherwise set the back's next to the
+     * new node and set the back to the new node
+     * @param {T} item - the item to be added to the list
+     * @returns The length of the linked list
      */
     addLast(item) {
-        const newNode = new llNode(item);
-        if (!this.head)
-            this.head = newNode;
-        else if (this.length < 2)
-            this.head.next = newNode;
-        else {
-            const lastNode = this.getSecondLastNode(this.head).next;
-            lastNode.next = newNode;
-        }
+        const newNode = new llNode(item, this.back);
+        if (!this.length)
+            this.front = this.back = newNode;
+        else
+            this.back = this.back.next = newNode;
         return ++this.length;
     }
     /**
-     * We're removing the last node by setting the second last node's next property to null
-     * @returns The last node in the linked list.
+     * If the list is empty, set the front and back to null, otherwise, set the back to the previous node
+     * and set the next pointer of the new back to null
+     * @returns The last node in the list.
      */
     removeLast() {
-        if (!this.head)
-            return null;
-        let oldLast;
-        if (this.length < 2) {
-            oldLast = this.head.next;
-            this.head.next = null;
-        }
-        else {
-            const newLast = this.getSecondLastNode(this.head);
-            oldLast = newLast === null || newLast === void 0 ? void 0 : newLast.next;
-            newLast.next = null;
-        }
-        this.length--;
+        const oldLast = this.back;
+        if (this.length <= 1)
+            this.front = this.back = null;
+        else
+            (this.back = this.back.prev).next = null;
+        this.length = !this.length ? 0 : this.length - 1;
         return oldLast;
     }
     /**
-     * Return the first node in the linked list.
-     * @returns The first node in the linked list.
+     * Return the first element in the linkedlist.
+     * @returns The first node in the linkedlist
      */
     getFirst() {
-        return this.head;
+        return this.front;
     }
     /**
-     * If the list is empty, return null. If the list has one node, return the head. Otherwise, return the
-     * second last node's next property
-     * @returns The last node in the linked list.
+     * Return the last node in the list.
+     * @returns The last node in the list.
      */
     getLast() {
-        var _a;
-        if (!this.head)
-            return null;
-        if (this.length < 2)
-            return this.head;
-        return (_a = this.getSecondLastNode(this.head).next) !== null && _a !== void 0 ? _a : this.head;
+        return this.back;
     }
     /**
      * Return the length of the list.

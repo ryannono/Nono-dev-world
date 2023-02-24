@@ -1,15 +1,24 @@
 /** A Node is a class that has an item and a next property */
 declare class llNode<T> {
     item: T | null;
+    prev: llNode<T> | null;
     next: llNode<T> | null;
-    constructor(item?: T, next?: llNode<T>);
+    constructor(item?: T, prev?: llNode<T> | null, next?: llNode<T> | null);
+    /**
+     * If the object is an instance of the llNode class, then return true, otherwise return false.
+     * @param {unknown} obj - unknown - this is the object we're checking to see if it's an instance of
+     * llNode.
+     * @returns a boolean value.
+     */
+    static isLlNode<T>(obj: unknown): obj is llNode<T>;
 }
 /**
- * "We're creating a linked list class that has a head property, a length property, and methods to add
+ * "We're creating a linked list class that has a front, back, and length property, and methods to add
  * and remove nodes from the list."
  */
 export declare class LinkedList<T> {
-    private head;
+    private front;
+    private back;
     private length;
     /**
      * If the constructor is called with a Node, set the head to that node and count the length of the
@@ -27,55 +36,52 @@ export declare class LinkedList<T> {
      */
     static linkedListToArray<T>(linkedList: LinkedList<T>): (T | null)[];
     /**
-     * If the elementToCheck has an item property, then it's a Node<T> and we return true. Otherwise, it's
-     * a T and we return false
-     * @param {llNode<T> | T} elementToCheck - Node<T> | T
+     * "If the object is an instance of the LinkedList class, then it is a LinkedList."
+     *
+     * The above function is a type guard. It's a function that takes an object and returns a boolean. If
+     * the boolean is true, then the object is of the type specified in the function
+     * @param {unknown} obj - unknown
      * @returns a boolean value.
      */
-    private isllNode;
+    static isLinkedList<T>(obj: unknown): obj is LinkedList<T>;
     /**
-     * "Get the second last node in the linked list."
+     * We create a new node with the item and the current front node as its next node.
      *
-     * The function takes in a head node and returns the second last node
-     * @param head - The head of the linked list.
-     * @returns The second to last node in the linked list.
-     */
-    private getSecondLastNode;
-    /**
-     * We create a new node, set the next property of the new node to the current head, and then set the
-     * head to the new node
-     * @param {T} item - the item to be added to the list
+     * Then we set the new node's next node's (old front), previous node to the new node.
+     *
+     * Finally, we set the front node to the new node and return the new length of the list.
+     * @param {T} item - T - the item to be added to the list
      * @returns The length of the linked list
      */
     addFirst(item: T): number;
     /**
-     * "Remove the first node from the list and return it."
-     *
-     * The first thing we do is decrement the length of the list
-     * @returns The old head is being returned.
+     * If the list is empty, return null, otherwise, if the list has only one node, set the front and back
+     * to null, otherwise, set the front to the next node and set the previous node of the new front to
+     * null
+     * @returns The old head of the list.
      */
     removeFirst(): llNode<T> | null;
     /**
-     * If the list is empty, set the head to the new node. If the list has one item, set the head's next to
-     * the new node. If the list has two or more items, set the second last node's next to the new node
-     * @param {T} item - T - the item to add to the end of the list
-     * @returns The length of the linked list.
+     * If the list is empty, set the front and back to the new node, otherwise set the back's next to the
+     * new node and set the back to the new node
+     * @param {T} item - the item to be added to the list
+     * @returns The length of the linked list
      */
     addLast(item: T): number;
     /**
-     * We're removing the last node by setting the second last node's next property to null
-     * @returns The last node in the linked list.
+     * If the list is empty, set the front and back to null, otherwise, set the back to the previous node
+     * and set the next pointer of the new back to null
+     * @returns The last node in the list.
      */
     removeLast(): llNode<T> | null;
     /**
-     * Return the first node in the linked list.
-     * @returns The first node in the linked list.
+     * Return the first element in the linkedlist.
+     * @returns The first node in the linkedlist
      */
     getFirst(): llNode<T> | null;
     /**
-     * If the list is empty, return null. If the list has one node, return the head. Otherwise, return the
-     * second last node's next property
-     * @returns The last node in the linked list.
+     * Return the last node in the list.
+     * @returns The last node in the list.
      */
     getLast(): llNode<T> | null;
     /**

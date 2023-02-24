@@ -8,7 +8,7 @@
   "keywords": [],
   "scripts": {
     "test-stack": "node ./build/adts/stack.js",
-    "test-list": "node ./build/adts/linkedList.js",
+    "test-list": "node ./build/Library/adts/linkedList.js",
     "test-merge": "node ./build/merge.js",
     "test-insert": "node ./build/algorithms/insertion-sort.js",
     "test-quick": "node ./build/algorithms/quick-sort.js",
@@ -19,6 +19,8 @@
     "test-heapSort": "node ./build/Library/algorithms/heap-sort.js",
     "test-lab4Arrays": "node ./build/Lab-assignments/Lab-4/testArrays.js",
     "test-lab4Experiment": "node ./build/Lab-assignments/Lab-4/Experimental-Efficiency-Test/testingFile.js",
+    "test-search": "node ./build/Library/algorithms/binary-search.js",
+    "test-hash": "node ./build/Library/adts/hashTable.js",
     "generate-test": "node ./build/algorithms/Experimental-Efficiency-Test/testArrayGenerator.js",
     "experiment": "node ./build/algorithms/Experimental-Efficiency-Test/testingFile.js",
     "lint": "gts lint",

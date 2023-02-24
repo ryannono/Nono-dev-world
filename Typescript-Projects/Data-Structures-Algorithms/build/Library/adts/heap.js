@@ -159,7 +159,7 @@ class Heap {
         if (positionOnParent === 'left') {
             this.parent(newNode).left.occupied = true;
         }
-        if (positionOnParent === 'right') {
+        else if (positionOnParent === 'right') {
             this.parent(newNode).right.occupied = true;
         }
         return ++this.size;
@@ -344,8 +344,4 @@ class Heap {
     }
 }
 exports.Heap = Heap;
-const min = new Heap('min', [99, 0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
-const max = new Heap('max', [99, 0, 3, 4, 9, 90, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
-max.printItems();
-min.printItems();
 //# sourceMappingURL=heap.js.map
