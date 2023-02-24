@@ -1,10 +1,11 @@
 "use strict";
-// ---------------- Entry ---------------- //
+// ---------------- Imports ---------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HashTable = void 0;
 const binary_search_1 = require("../algorithms/binary-search");
 const comparator_1 = require("../functions/comparator");
 const priorityQueue_1 = require("./priorityQueue");
+// ---------------- HashTable ---------------- //
 class HashTable {
     constructor(size = 1024) {
         this.data = [];

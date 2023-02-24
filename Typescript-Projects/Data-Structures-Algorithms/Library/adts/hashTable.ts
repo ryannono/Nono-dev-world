@@ -1,8 +1,10 @@
-// ---------------- Entry ---------------- //
+// ---------------- Imports ---------------- //
 
 import {binarySearch} from '../algorithms/binary-search';
 import {defaultComparator, Comparator} from '../functions/comparator';
 import {Entry, PriorityQueue} from './priorityQueue';
+
+// ---------------- HashTable ---------------- //
 
 export class HashTable<T> {
   private data: PriorityQueue<number, T>[] = [];
