@@ -21,6 +21,18 @@ export class PriorityQueue<K, V> {
   }
 
   /**
+   * "If the object is an instance of the PriorityQueue class, then it's a PriorityQueue object."
+   *
+   * The above function is a type guard. It's a function that returns a boolean value. If the boolean
+   * value is true, then the object is of the type specified in the function
+   * @param {unknown} obj - unknown - this is the object that we want to check if it's a PriorityQueue.
+   * @returns a boolean value.
+   */
+  static isPriorityQueue<T, V>(obj: unknown): obj is PriorityQueue<T, V> {
+    return obj instanceof PriorityQueue;
+  }
+
+  /**
    * It inserts the given elements into the heap, and then sorts the heap
    * @param {Entry<K, V> | Entry<K, V>[]} elements - The element(s) to insert into the heap.
    * @returns The length of the data array.
@@ -74,6 +86,18 @@ export class PriorityQueue<K, V> {
    */
   removeMax() {
     return this.data.pop() ?? null;
+  }
+
+  /**
+   * "Remove the element at the given index and return it, or return null if the index is out of bounds."
+   *
+   * The first line of the function is a guard clause. It checks if the index is out of bounds, and if it
+   * is, it returns null
+   * @param {number} index - The index of the element to remove.
+   * @returns The element at the given index is being removed from the array and returned.
+   */
+  removeElementAt(index: number) {
+    return this.data.splice(index, 1)[0] ?? null;
   }
 
   /**

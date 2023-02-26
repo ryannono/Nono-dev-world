@@ -12,30 +12,26 @@ export class HashTable<T> {
   private hashFunction: HashFunction;
   private comparator: Comparator<Entry<number, T>> = (entry1, entry2) =>
     defaultComparator(entry1.key, entry2.key);
-  private maxSize = 0;
+  private hashConstant: number;
   private size = 0;
-  private numItems = 0;
 
-  constructor(size = 1024, hashFunction = defaultHashFunction) {
+  constructor(hashConstant = 1024, hashFunction = defaultHashFunction) {
     this.hashFunction = hashFunction;
-    let fillTemp = (this.maxSize = size);
-    while (fillTemp--) this.data.push(new PriorityQueue(this.comparator));
+    this.hashConstant = hashConstant;
   }
 
   /**
-   * If the hash table is full, return -1, else if the queue at the index is empty, increment the size of
-   * the hash table and insert the entry into the queue, else if the entry is already in the queue,
-   * return -1, else insert the entry into the queue
+   * If the entry is not already in the hash table, insert it into the hash table
    * @param entry - Entry<number, T>
-   * @returns The number of occupied indices and the number of items in the hash table.
+   * @returns The index of the entry in the queue.
    */
   set(entry: Entry<number, T>) {
-    const index = this.hashFunction(entry.key, this.maxSize);
-    const queue = this.data[index];
+    const index = this.hashFunction(entry.key, this.hashConstant);
+    let queue: PriorityQueue<number, T> | undefined = this.data[index];
 
-    if (this.isFull()) return -1;
-    else if (queue.isEmpty()) ++this.size, queue.insert(entry);
-    else if (
+    if (!PriorityQueue.isPriorityQueue(queue)) {
+      queue = this.data[index] = new PriorityQueue(this.comparator);
+    } else if (
       binarySearch(
         queue.items(),
         {key: entry.key, value: {} as T},
@@ -43,69 +39,61 @@ export class HashTable<T> {
       ) !== -1
     ) {
       return -1;
-    } else queue.insert(entry);
-    return {occupiedIndices: this.size, numberOfItems: ++this.numItems};
+    }
+
+    return queue.insert(entry), ++this.size;
   }
 
   /**
-   * We use the hash function to find the index of the queue, then we use binary search to find the item
-   * in the queue
-   * @param {number} key - The key to search for
-   * @returns The value of the key
+   * We use the hash function to find the index of the queue we want to search, then we use binary search
+   * to find the item in the queue
+   * @param {number} key - number - the key to search for
+   * @returns The value of the key in the hash table.
    */
   get(key: number) {
-    const index = this.hashFunction(key, this.maxSize);
-    const queue = this.data[index];
-
-    if (queue.size() <= 1) return queue.min();
-
+    const index = this.hashFunction(key, this.hashConstant);
+    const queue: PriorityQueue<number, T> | undefined = this.data[index];
     const items = queue.items();
 
+    if (!PriorityQueue.isPriorityQueue(queue)) return null;
+    if (queue.size() === 1) return queue.min();
+
     return (
-      items[binarySearch(items, {key: key, value: {} as T}, this.comparator)] ??
-      null
+      items[
+        binarySearch(queue.items(), {key: key, value: {} as T}, this.comparator)
+      ] ?? null
     );
   }
 
   /**
-   * We first find the index of the key in the hash table, then we find the index of the key in the queue
-   * at that index, and then we remove the key from the queue
-   * @param {number} key - The key to be removed
+   * We first find the index of the key in the queue, and then we remove the element at that index
+   * @param {number} key - number - The key to remove from the hash table.
    * @returns The value of the key that was removed.
    */
   remove(key: number) {
-    const index = this.hashFunction(key, this.maxSize);
+    const index = this.hashFunction(key, this.hashConstant);
     const queue = this.data[index];
-    if (queue.size() === 0) return null;
-    if (queue.size() === 1) {
-      return --this.size, --this.numItems, queue.removeMin();
-    }
-
     const items = queue.items();
+
+    if (!PriorityQueue.isPriorityQueue(queue)) return null;
+    if (queue.size() === 1) return --this.size, queue.removeMin();
+
     const subIndex = binarySearch(
       items,
       {key: key, value: {} as T},
       this.comparator
     );
 
-    return subIndex === -1
-      ? null
-      : (--this.numItems, items.splice(subIndex, 1)[0]);
+    return (
+      subIndex === -1 ? null : --this.size, queue.removeElementAt(subIndex)
+    );
   }
 
   /**
-   * It returns an object with two properties, occupiedIndices and numberOfItems
-   * @returns The size of the hash table and the number of items in the hash table.
+   * @returns The getSize function returns the size of the current object.
    */
   getSize() {
-    return {occupiedIndices: this.size, numberOfItems: this.numItems};
-  }
-
-  /**
-   * @returns  Return true if the size of the hashtable is equal to the maxSize of the hashtable.
-   */
-  isFull() {
-    return this.size === this.maxSize;
+    return this.size;
   }
 
   /**
