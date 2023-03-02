@@ -1,0 +1,28 @@
+Algorithm extractMax (array, partitionLength)
+  input: array, partitionLength
+  output: new partitionLength
+
+  swap array[0] with array[--partitionLength]
+  siftDown(array, 0, partitionLength)
+  return partitionLength
+
+----------------------------------------------------------------
+
+Algorithm heapify(array)
+  input: array
+
+  for i = 0 to array.length - 1
+    siftup(array, i)
+
+----------------------------------------------------------------
+
+Algorithm heapSort (itemToInsert)
+  this: heap class
+  output: min item
+
+  let length = array.length;
+
+  heapify(array)
+  while (extractMax(array, length--))
+  
+return array;

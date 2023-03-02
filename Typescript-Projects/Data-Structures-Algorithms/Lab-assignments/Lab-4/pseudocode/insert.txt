@@ -1,0 +1,14 @@
+Algorithm insert (itemToInsert)
+  this: heap class
+  input: itemToInsert
+  output: new array size
+
+  if (this.isEmpty())
+    this.data[0] = itemToInsert
+  else if (last level full) 
+    this.data[this.size] = itemToInsert
+  else 
+    this.data[this.size] = itemToInsert
+    this.siftUp(this.data[this.size - 1]);
+
+return ++this.size;

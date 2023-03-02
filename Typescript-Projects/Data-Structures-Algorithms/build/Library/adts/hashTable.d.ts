@@ -1,5 +1,5 @@
 import { defaultHashFunction } from '../functions/hashFunction';
-import { Entry } from './priorityQueue';
+import { Entry, PriorityQueue } from './priorityQueue';
 export declare class HashTable<T> {
     private data;
     private hashFunction;
@@ -46,4 +46,9 @@ export declare class HashTable<T> {
      * @returns An array of all the values in the queue.
      */
     values(): T[];
+    /**
+     * It returns a copy of the data array, where each queue is replaced with its items
+     * @returns An array of arrays.
+     */
+    table(): (PriorityQueue<number, T> | Entry<number, T>[])[];
 }

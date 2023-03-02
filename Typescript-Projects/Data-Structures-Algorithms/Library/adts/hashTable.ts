@@ -7,6 +7,8 @@ import {Entry, PriorityQueue} from './priorityQueue';
 
 // ---------------- HashTable ---------------- //
 
+/* We use a hash function to map a key to an index in an array, and then we use a priority queue to
+store the entries at that index */
 export class HashTable<T> {
   private data: PriorityQueue<number, T>[] = [];
   private hashFunction: HashFunction;
@@ -128,4 +130,23 @@ export class HashTable<T> {
     });
     return values;
   }
+
+  /**
+   * It returns a copy of the data array, where each queue is replaced with its items
+   * @returns An array of arrays.
+   */
+  table() {
+    return [...this.data].map(queue => {
+      if (!PriorityQueue.isPriorityQueue(queue)) return queue;
+      return queue.items();
+    });
+  }
 }
+
+const hash = new HashTable();
+hash.set({key: 1, value: 1});
+hash.set({key: 2, value: 2});
+hash.set({key: 3, value: 3});
+hash.set({key: 4, value: 4});
+
+console.log(hash.table());
