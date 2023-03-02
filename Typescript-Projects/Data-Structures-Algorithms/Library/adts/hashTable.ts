@@ -61,9 +61,7 @@ export class HashTable<T> {
     if (queue.size() === 1) return queue.min();
 
     return (
-      items[
-        binarySearch(queue.items(), {key: key, value: {} as T}, this.comparator)
-      ] ?? null
+      items[binarySearch(items, {key, value: {} as T}, this.comparator)] ?? null
     );
   }
 
@@ -82,7 +80,7 @@ export class HashTable<T> {
 
     const subIndex = binarySearch(
       items,
-      {key: key, value: {} as T},
+      {key, value: {} as T},
       this.comparator
     );
 
