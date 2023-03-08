@@ -47,55 +47,7 @@ class BinarySearchTree<T> {
     this.comparator = comparator;
   }
 
-  getSize() {
-    return this.size;
-  }
-
-  /**
-   * If the item is less than the current node, search the left subtree, if the item is greater than the
-   * current node, search the right subtree, otherwise return the current node
-   * @param {T} item - The item to search for.
-   * @param {TreeNode<T> | null} startNode - The node to start searching from.
-   * @returns The node that contains the item being searched for.
-   */
-  search(
-    item: T,
-    startNode: TreeNode<T> | null = this.root
-  ): TreeNode<T> | null {
-    if (!startNode || startNode.item === null) return startNode;
-    if (this.comparator(item, startNode.item) < 0) {
-      return this.search(item, startNode.left);
-    }
-    if (this.comparator(item, startNode.item) > 0) {
-      return this.search(item, startNode.right);
-    }
-    return startNode;
-  }
-
-  /**
-   * If the item is already in the tree, insert it in the left subtree, otherwise insert it in the
-   * current node
-   * @param {T} item - The item to insert into the tree.
-   * @param startNode - The node to start searching from.
-   * @returns The number of items in the tree.
-   */
-  insert(item: T, startNode = this.root): number {
-    const insertionNode =
-      startNode.item === null ? startNode : this.search(item, startNode)!;
-
-    if (
-      insertionNode.item !== null &&
-      this.comparator(insertionNode.item, item) === 0
-    ) {
-      return this.insert(item, insertionNode.left!);
-    }
-
-    insertionNode.item = item;
-    (insertionNode.left = new TreeNode<T>()).parent = insertionNode;
-    (insertionNode.right = new TreeNode<T>()).parent = insertionNode;
-
-    return ++this.size;
-  }
+  // ---------- helper methods ---------- //
 
   /**
    * It returns the parent and the position of the node on the parent
@@ -178,6 +130,58 @@ class BinarySearchTree<T> {
     } else {
       swapNode.parent!.right = swapNode.right;
     }
+  }
+
+  // ---------- public methods ---------- //
+
+  getSize() {
+    return this.size;
+  }
+
+  /**
+   * If the item is less than the current node, search the left subtree, if the item is greater than the
+   * current node, search the right subtree, otherwise return the current node
+   * @param {T} item - The item to search for.
+   * @param {TreeNode<T> | null} startNode - The node to start searching from.
+   * @returns The node that contains the item being searched for.
+   */
+  search(
+    item: T,
+    startNode: TreeNode<T> | null = this.root
+  ): TreeNode<T> | null {
+    if (!startNode || startNode.item === null) return startNode;
+    if (this.comparator(item, startNode.item) < 0) {
+      return this.search(item, startNode.left);
+    }
+    if (this.comparator(item, startNode.item) > 0) {
+      return this.search(item, startNode.right);
+    }
+    return startNode;
+  }
+
+  /**
+   * If the item is already in the tree, insert it in the left subtree, otherwise insert it in the
+   * current node
+   * @param {T} item - The item to insert into the tree.
+   * @param startNode - The node to start searching from.
+   * @returns The number of items in the tree.
+   */
+  insert(item: T, startNode = this.root): number {
+    const insertionNode =
+      startNode.item === null ? startNode : this.search(item, startNode)!;
+
+    if (
+      insertionNode.item !== null &&
+      this.comparator(insertionNode.item, item) === 0
+    ) {
+      return this.insert(item, insertionNode.left!);
+    }
+
+    insertionNode.item = item;
+    (insertionNode.left = new TreeNode<T>()).parent = insertionNode;
+    (insertionNode.right = new TreeNode<T>()).parent = insertionNode;
+
+    return ++this.size;
   }
 
   /**
