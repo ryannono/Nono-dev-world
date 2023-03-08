@@ -48,7 +48,7 @@ class HashTable {
             return null;
         if (queue.size() === 1)
             return queue.min();
-        return ((_a = items[(0, binary_search_1.binarySearch)(queue.items(), { key: key, value: {} }, this.comparator)]) !== null && _a !== void 0 ? _a : null);
+        return ((_a = items[(0, binary_search_1.binarySearch)(items, { key, value: {} }, this.comparator)]) !== null && _a !== void 0 ? _a : null);
     }
     /**
      * We first find the index of the key in the queue, and then we remove the element at that index
@@ -63,7 +63,7 @@ class HashTable {
             return null;
         if (queue.size() === 1)
             return --this.size, queue.removeMin();
-        const subIndex = (0, binary_search_1.binarySearch)(items, { key: key, value: {} }, this.comparator);
+        const subIndex = (0, binary_search_1.binarySearch)(items, { key, value: {} }, this.comparator);
         return (subIndex === -1 ? null : --this.size, queue.removeElementAt(subIndex));
     }
     /**
