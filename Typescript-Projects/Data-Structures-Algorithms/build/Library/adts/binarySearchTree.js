@@ -58,18 +58,18 @@ class BinarySearchTree {
      * @returns The left and right children of the node, and the occupation of the children.
      */
     getChildren(node) {
-        const left = node.left;
-        const right = node.right;
+        const leftChild = node.left;
+        const rightChild = node.right;
         let occupation;
-        if ((left === null || left === void 0 ? void 0 : left.item) === null && (right === null || right === void 0 ? void 0 : right.item) === null)
+        if ((leftChild === null || leftChild === void 0 ? void 0 : leftChild.item) === null && (rightChild === null || rightChild === void 0 ? void 0 : rightChild.item) === null)
             occupation = 'both null';
-        else if ((left === null || left === void 0 ? void 0 : left.item) === null)
+        else if ((leftChild === null || leftChild === void 0 ? void 0 : leftChild.item) === null)
             occupation = 'left null';
-        else if ((right === null || right === void 0 ? void 0 : right.item) === null)
+        else if ((rightChild === null || rightChild === void 0 ? void 0 : rightChild.item) === null)
             occupation = 'right null';
         else
             occupation = 'both';
-        return { left, right, occupation };
+        return { leftChild, rightChild, occupation };
     }
     /**
      * Get the next node in order by going right once and then left as far as possible.
@@ -153,24 +153,24 @@ class BinarySearchTree {
         if (!deletionNode || deletionNode.item === null)
             return null;
         // get info on the node to be deleted's position on the parent
-        const { parent, positionOnParent } = this.getPositionOnParent(deletionNode);
+        const { positionOnParent } = this.getPositionOnParent(deletionNode);
         // get node to be deleted's children info
-        const { left, right, occupation } = this.getChildren(deletionNode);
+        const { leftChild, rightChild, occupation } = this.getChildren(deletionNode);
         switch (occupation) {
             case 'both null':
                 this.dummify(deletionNode);
                 break;
             case 'left null':
                 if (positionOnParent === 'left')
-                    parent.left = right;
+                    deletionNode.parent.left = rightChild;
                 else
-                    parent.right = right;
+                    deletionNode.parent.right = rightChild;
                 break;
             case 'right null':
                 if (positionOnParent === 'left')
-                    parent.left = left;
+                    deletionNode.parent.left = leftChild;
                 else
-                    parent.right = left;
+                    deletionNode.parent.right = leftChild;
                 break;
             default:
                 this.deleteInternal(deletionNode);

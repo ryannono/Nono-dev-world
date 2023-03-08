@@ -88,16 +88,17 @@ class BinarySearchTree<T> {
    * @returns The left and right children of the node, and the occupation of the children.
    */
   private getChildren(node: TreeNode<T>) {
-    const left = node.left;
-    const right = node.right;
+    const leftChild = node.left;
+    const rightChild = node.right;
     let occupation;
 
-    if (left?.item === null && right?.item === null) occupation = 'both null';
-    else if (left?.item === null) occupation = 'left null';
-    else if (right?.item === null) occupation = 'right null';
+    if (leftChild?.item === null && rightChild?.item === null)
+      occupation = 'both null';
+    else if (leftChild?.item === null) occupation = 'left null';
+    else if (rightChild?.item === null) occupation = 'right null';
     else occupation = 'both';
 
-    return {left, right, occupation};
+    return {leftChild, rightChild, occupation};
   }
 
   /**
@@ -198,10 +199,10 @@ class BinarySearchTree<T> {
     if (!deletionNode || deletionNode.item === null) return null;
 
     // get info on the node to be deleted's position on the parent
-    const {parent, positionOnParent} = this.getPositionOnParent(deletionNode);
+    const {positionOnParent} = this.getPositionOnParent(deletionNode);
 
     // get node to be deleted's children info
-    const {left, right, occupation} = this.getChildren(deletionNode);
+    const {leftChild, rightChild, occupation} = this.getChildren(deletionNode);
 
     switch (occupation) {
       case 'both null':
@@ -209,13 +210,13 @@ class BinarySearchTree<T> {
         break;
 
       case 'left null':
-        if (positionOnParent === 'left') parent!.left = right;
-        else parent!.right = right;
+        if (positionOnParent === 'left') deletionNode.parent!.left = rightChild;
+        else deletionNode.parent!.right = rightChild;
         break;
 
       case 'right null':
-        if (positionOnParent === 'left') parent!.left = left;
-        else parent!.right = left;
+        if (positionOnParent === 'left') deletionNode.parent!.left = leftChild;
+        else deletionNode.parent!.right = leftChild;
         break;
 
       default:
