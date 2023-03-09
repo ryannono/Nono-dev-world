@@ -1,3 +1,6 @@
+/**
+ * A TreeNode is a node in a binary tree that has a value, a parent, and two children
+ */
 export declare class TreeNode<T> {
     item: T | null;
     parent: TreeNode<T> | null;
