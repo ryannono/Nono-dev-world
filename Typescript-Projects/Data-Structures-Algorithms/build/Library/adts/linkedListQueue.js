@@ -77,4 +77,4 @@ class llQueue {
     }
 }
 exports.llQueue = llQueue;
-//# sourceMappingURL=linkedListQueue.js.map
+//# sourceMappingURL=linkedListqueue.js.map

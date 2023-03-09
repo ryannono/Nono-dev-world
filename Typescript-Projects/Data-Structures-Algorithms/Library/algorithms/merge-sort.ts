@@ -1,6 +1,6 @@
 // ------------------ Queue ------------------ //
 
-import {llQueue} from '../adts/linkedListQueue';
+import {llQueue} from '../adts/linkedListqueue';
 import {Comparator, defaultComparator} from '../functions/comparator';
 
 // ------------- MergeSort Array ------------- //

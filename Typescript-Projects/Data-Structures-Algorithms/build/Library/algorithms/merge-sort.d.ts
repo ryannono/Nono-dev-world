@@ -1,4 +1,4 @@
-import { llQueue } from '../adts/linkedListQueue';
+import { llQueue } from '../adts/linkedListqueue';
 import { Comparator } from '../functions/comparator';
 /**
  * We split the array in half, sort the halves, and then merge the sorted halves

@@ -228,10 +228,10 @@ class BinarySearchTree<T> {
   }
 
   /**
-   * If the node has no children, return the node's item. If the node has a left child, return the node's
-   * item and the left child's inorder traversal. If the node has a right child, return the node's item
-   * and the right child's inorder traversal. If the node has both children, return the node's item, the
-   * left child's inorder traversal, and the right child's inorder traversal
+   * If the node has no children, return the node's item. If the node has a left child and a right child,
+   * return the left subtree, the node's item, and the right subtree. If the node has only has a right child,
+   * return the node's item, and the right subtree. If the node only has a left child return the left subtree
+   * and the node's item,
    * @param {TreeNode<T> | null} node - TreeNode<T> | null = this.root
    * @returns An array of the items in the tree in order.
    */
@@ -248,12 +248,12 @@ class BinarySearchTree<T> {
         return [node.item, ...this.inorderTraversal(node.right)];
 
       case 'right null':
-        return [node.item, ...this.inorderTraversal(node.left)];
+        return [...this.inorderTraversal(node.left), node.item];
 
       default:
         return [
-          node.item,
           ...this.inorderTraversal(node.left),
+          node.item,
           ...this.inorderTraversal(node.right),
         ];
     }
@@ -262,7 +262,7 @@ class BinarySearchTree<T> {
 
 const bst = new BinarySearchTree<number>();
 
-bst.insert(1);
+bst.insert(10);
 bst.insert(2);
 bst.insert(3);
 bst.insert(4);
