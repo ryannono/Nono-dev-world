@@ -40,7 +40,7 @@ export class TreeNode<T> {
 
 // ---------------- BST ----------------- //
 
-class BinarySearchTree<T> {
+export class BinarySearchTree<T> {
   private root: TreeNode<T> = new TreeNode<T>();
   private comparator: Comparator<T>;
   private size = 0;
@@ -257,24 +257,3 @@ class BinarySearchTree<T> {
     }
   }
 }
-
-const bst = new BinarySearchTree<number>();
-
-bst.insert(5);
-bst.insert(2);
-bst.insert(3);
-bst.insert(4);
-bst.insert(5);
-bst.insert(6);
-bst.insert(7);
-bst.insert(8);
-bst.insert(9);
-bst.insert(10);
-bst.insert(11);
-bst.insert(12);
-bst.insert(13);
-bst.insert(14);
-bst.insert(15);
-bst.delete(5);
-
-console.log(bst.getSize(), bst.inorderTraversal(), bst.search(15)); // 1

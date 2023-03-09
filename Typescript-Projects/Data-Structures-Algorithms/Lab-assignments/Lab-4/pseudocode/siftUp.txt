@@ -1,0 +1,9 @@
+Algorithm siftUp (startNode)
+  input: startNode
+  output: void
+
+  currNode <- startNode;
+
+  while ((parentNode <- parent(currNode)) && currNode.item < parentNode.item)
+    swap currNode.item with parentNode.item
+    currNode = parentNode;

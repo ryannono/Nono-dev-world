@@ -1,0 +1,10 @@
+Algorithm siftDown (startNode)
+  input: startNode
+  output: void
+
+  currNode <- startNode;
+
+  while ((childNode <- minChild(currNode)) && childNode.item < currNode.item)
+    swap currNode.item with childNode.item
+    currNode = childNode;
+

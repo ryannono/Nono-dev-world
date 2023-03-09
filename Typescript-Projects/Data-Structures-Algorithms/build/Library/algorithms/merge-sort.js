@@ -2,7 +2,7 @@
 // ------------------ Queue ------------------ //
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mergeSortQueue = exports.mergeSort = void 0;
-const linkedListqueue_1 = require("../adts/linkedListqueue");
+const linkedListQueue_1 = require("../adts/linkedListQueue");
 const comparator_1 = require("../functions/comparator");
 // ------------- MergeSort Array ------------- //
 /**
@@ -81,7 +81,7 @@ exports.mergeSort = mergeSort;
  * @complexity O(n) - iterates over every element in the queues
  */
 function mergeQueues(queue1, queue2) {
-    const queue3 = new linkedListqueue_1.llQueue();
+    const queue3 = new linkedListQueue_1.llQueue();
     let fullLength = queue1.size() + queue2.size();
     while (fullLength--) {
         if (queue1.size() &&
@@ -107,7 +107,7 @@ function mergeQueues(queue1, queue2) {
 function mergeSortQueue(queue) {
     if (queue.size() < 2)
         return queue;
-    const queue2 = new linkedListqueue_1.llQueue();
+    const queue2 = new linkedListQueue_1.llQueue();
     let half = Math.floor(queue.size() / 2);
     while (half--)
         queue2.enqueue(queue.dequeue());
