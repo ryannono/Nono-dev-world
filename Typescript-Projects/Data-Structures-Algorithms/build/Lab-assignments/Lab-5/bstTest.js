@@ -2,7 +2,7 @@
 // ------------- Imports -------------- //
 Object.defineProperty(exports, "__esModule", { value: true });
 const binarySearchTree_1 = require("../../Library/adts/binarySearchTree");
-// -------------- Tests --------------- //
+// ---------- Test funtions ----------- //
 /**
  * It inserts a number of items into the tree, and then prints the tree in order
  * @param tree - BinarySearchTree<number> - The tree to insert into.
@@ -71,7 +71,7 @@ const getTestTree = {
         return tree;
     },
 };
-// -------------- Main -------------- //
+// ------------ Main ------------ //
 // ------ Tree 1 ------ //
 /* Creating a new tree, inserting a number of items into it, and then searching for the
 number 1 and 15 in the tree 100,000 times. It then removes the number 5, 15, and 1 from the tree,

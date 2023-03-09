@@ -2,7 +2,7 @@
 
 import {BinarySearchTree} from '../../Library/adts/binarySearchTree';
 
-// -------------- Tests --------------- //
+// ---------- Test funtions ----------- //
 
 /**
  * It inserts a number of items into the tree, and then prints the tree in order
@@ -80,7 +80,7 @@ const getTestTree = {
   },
 };
 
-// -------------- Main -------------- //
+// ------------ Main ------------ //
 
 // ------ Tree 1 ------ //
 /* Creating a new tree, inserting a number of items into it, and then searching for the
