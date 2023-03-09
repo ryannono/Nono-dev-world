@@ -140,11 +140,3 @@ export class HashTable<T> {
     });
   }
 }
-
-const hash = new HashTable();
-hash.set({key: 1, value: 1});
-hash.set({key: 2, value: 2});
-hash.set({key: 3, value: 3});
-hash.set({key: 4, value: 4});
-
-console.log(hash.table());

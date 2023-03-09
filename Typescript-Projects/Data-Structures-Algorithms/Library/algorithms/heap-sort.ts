@@ -17,15 +17,13 @@ function getParentIndex(itemIndex: number) {
 /**
  * "Given an array, an index, and a comparator, return the index of the child with the largest value."
  *
- * The function is generic, meaning that it can work with any type of array. The comparator is a
- * function that takes two items and returns a number. If the number is less than 0, the first item is
- * less than the second item. If the number is greater than 0, the first item is greater than the
- * second item. If the number is 0, the items are equal
+ * The function is recursive, but it's not recursive in the way that you might expect. It's not
+ * recursive in the way that a function like `getMaxChildIndex` is recursive:
  * @param {T[]} array - The array to sort.
  * @param {number} itemIndex - The index of the item we're looking at.
  * @param comparator - A function that takes two items and returns a number. If the number is less than
- * 0, the first item is less than the second item. If the number is greater than 0, the first item is
- * greater than the second item. If the number is 0, the items are equal.
+ * 0, the first item is less than the second. If the number is greater than 0, the first item is
+ * greater than the second. If the number is 0, the two items are equal.
  * @returns The index of the child with the largest value.
  */
 function getMaxChildIndex<T>(
@@ -38,13 +36,13 @@ function getMaxChildIndex<T>(
   const leftItem = array[leftChildIndex];
   const rightItem = array[rightChildIndex];
 
-  if (typeof leftItem === 'number' && typeof rightItem === 'number') {
+  if (leftItem !== undefined && rightItem !== undefined) {
     return comparator(leftItem, rightItem) < 0
       ? rightChildIndex
       : leftChildIndex;
-  } else if (typeof leftItem === 'number') {
+  } else if (leftItem !== undefined) {
     return leftChildIndex;
-  } else if (typeof rightItem === 'number') {
+  } else if (rightItem !== undefined) {
     return rightChildIndex;
   } else {
     return null;
