@@ -22,6 +22,7 @@
     "test-search": "node ./build/Library/algorithms/binary-search.js",
     "test-hash": "node ./build/Library/adts/hashTable.js",
     "test-BST": "node ./build/Library/adts/binarySearchTree.js",
+    "test-BST-insert": "node ./build/Lab-assignments/Lab-5/bstTest.js",
     "generate-test": "node ./build/algorithms/Experimental-Efficiency-Test/testArrayGenerator.js",
     "experiment": "node ./build/algorithms/Experimental-Efficiency-Test/testingFile.js",
     "lint": "gts lint",

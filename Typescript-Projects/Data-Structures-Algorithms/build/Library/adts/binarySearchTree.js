@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TreeNode = void 0;
+exports.BinarySearchTree = exports.TreeNode = void 0;
 const comparator_1 = require("../functions/comparator");
 // -------------- Tree Node -------------- //
-/* A TreeNode is a node in a binary tree that has a value, a parent, and two children */
+/**
+ * A TreeNode is a node in a binary tree that has a value, a parent, and two children
+ */
 class TreeNode {
     constructor(item, parent, left, right) {
         // node info
@@ -18,23 +20,24 @@ class TreeNode {
 exports.TreeNode = TreeNode;
 // ---------------- BST ----------------- //
 class BinarySearchTree {
-    constructor(comparator = comparator_1.defaultComparator) {
+    constructor(comparator = (comparator_1.defaultComparator)) {
         this.root = new TreeNode();
         this.size = 0;
         this.comparator = comparator;
     }
     // ---------- helper methods ---------- //
     /**
-     * It returns the parent and the position of the node on the parent
-     * @param node - The node to be removed.
+     * It returns the parent of the node and the position of the node on the parent
+     * @param node - The node we want to find the position of.
      * @returns An object with two properties: parent and positionOnParent.
      */
     getPositionOnParent(node) {
         const parent = node.parent;
         let positionOnParent;
-        let leftItem;
-        if (((leftItem = parent.left.item) === null && node.item === null) ||
-            this.comparator(leftItem, node.item) === 0) {
+        if (!parent) {
+            positionOnParent = null;
+        }
+        else if (this.comparator(parent.left.item, node.item) === 0) {
             positionOnParent = 'left';
         }
         else {
@@ -72,27 +75,25 @@ class BinarySearchTree {
         return { leftChild, rightChild, occupation };
     }
     /**
-     * Get the next node in order by going right once and then left as far as possible.
-     * @param node - The node to start from.
-     * @returns The next node in order.
+     * If the node has a left child, return the left child, otherwise return the node.
+     * @param node - TreeNode<T>
+     * @returns The left most node in the tree.
      */
-    getNextInOrder(node) {
-        let currNode = node.right;
-        while ((currNode === null || currNode === void 0 ? void 0 : currNode.left) && currNode.left.item !== null) {
-            currNode = currNode.left;
-        }
-        return currNode;
+    traverseLeft(node) {
+        if (!node.left || node.left.item === null)
+            return node;
+        return this.traverseLeft(node.left);
     }
     /**
      * We're going to replace the node we want to delete with the next node in order, and then delete the
      * next node in order
+     * @requires the passed node must have both left and right children
      * @param node - The node to delete.
      */
     deleteInternal(node) {
-        const swapNode = this.getNextInOrder(node);
-        const swapNodePositionOnParent = this.getPositionOnParent(swapNode).positionOnParent;
+        const swapNode = this.traverseLeft(node.right);
         node.item = swapNode.item;
-        if (swapNodePositionOnParent === 'left') {
+        if (this.getPositionOnParent(swapNode).positionOnParent === 'left') {
             swapNode.parent.left = swapNode.right;
         }
         else {
@@ -153,7 +154,7 @@ class BinarySearchTree {
         if (!deletionNode || deletionNode.item === null)
             return null;
         // get info on the node to be deleted's position on the parent
-        const { positionOnParent } = this.getPositionOnParent(deletionNode);
+        const { positionOnParent, parent } = this.getPositionOnParent(deletionNode);
         // get node to be deleted's children info
         const { leftChild, rightChild, occupation } = this.getChildren(deletionNode);
         switch (occupation) {
@@ -162,15 +163,19 @@ class BinarySearchTree {
                 break;
             case 'left null':
                 if (positionOnParent === 'left')
-                    deletionNode.parent.left = rightChild;
+                    parent.left = rightChild;
+                else if (positionOnParent === 'right')
+                    parent.right = rightChild;
                 else
-                    deletionNode.parent.right = rightChild;
+                    this.root = rightChild;
                 break;
             case 'right null':
                 if (positionOnParent === 'left')
-                    deletionNode.parent.left = leftChild;
+                    parent.left = leftChild;
+                else if (positionOnParent === 'right')
+                    parent.right = leftChild;
                 else
-                    deletionNode.parent.right = leftChild;
+                    this.root = leftChild;
                 break;
             default:
                 this.deleteInternal(deletionNode);
@@ -179,10 +184,10 @@ class BinarySearchTree {
         return --this.size, deletionNode.item;
     }
     /**
-     * If the node has no children, return the node's item. If the node has a left child, return the node's
-     * item and the left child's inorder traversal. If the node has a right child, return the node's item
-     * and the right child's inorder traversal. If the node has both children, return the node's item, the
-     * left child's inorder traversal, and the right child's inorder traversal
+     * If the node has no children, return the node's item. If the node has a left child and a right child,
+     * return the left subtree, the node's item, and the right subtree. If the node has only has a right child,
+     * return the node's item, and the right subtree. If the node only has a left child return the left subtree
+     * and the node's item,
      * @param {TreeNode<T> | null} node - TreeNode<T> | null = this.root
      * @returns An array of the items in the tree in order.
      */
@@ -196,31 +201,15 @@ class BinarySearchTree {
             case 'left null':
                 return [node.item, ...this.inorderTraversal(node.right)];
             case 'right null':
-                return [node.item, ...this.inorderTraversal(node.left)];
+                return [...this.inorderTraversal(node.left), node.item];
             default:
                 return [
-                    node.item,
                     ...this.inorderTraversal(node.left),
+                    node.item,
                     ...this.inorderTraversal(node.right),
                 ];
         }
     }
 }
-const bst = new BinarySearchTree();
-bst.insert(1);
-bst.insert(2);
-bst.insert(3);
-bst.insert(4);
-bst.insert(5);
-bst.insert(6);
-bst.insert(7);
-bst.insert(8);
-bst.insert(9);
-bst.insert(10);
-bst.insert(11);
-bst.insert(12);
-bst.insert(13);
-bst.insert(14);
-bst.insert(15);
-console.log(bst.getSize(), bst.inorderTraversal(), bst.search(15)); // 1
+exports.BinarySearchTree = BinarySearchTree;
 //# sourceMappingURL=binarySearchTree.js.map

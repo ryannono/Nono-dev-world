@@ -6,4 +6,4 @@ export declare type Comparator<T> = (element1: T, element2: T) => -1 | 0 | 1;
  * @param {T} element2 - The element to compare against.
  * @returns A function that takes two arguments and returns a number.
  */
-export declare function defaultComparator<T>(element1: T, element2: T): 0 | 1 | -1;
+export declare function defaultComparator<T>(element1: T, element2: T): 1 | 0 | -1;

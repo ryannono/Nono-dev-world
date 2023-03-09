@@ -45,7 +45,7 @@ export class BinarySearchTree<T> {
   private comparator: Comparator<T>;
   private size = 0;
 
-  constructor(comparator = defaultComparator) {
+  constructor(comparator = defaultComparator<T>) {
     this.comparator = comparator;
   }
 
