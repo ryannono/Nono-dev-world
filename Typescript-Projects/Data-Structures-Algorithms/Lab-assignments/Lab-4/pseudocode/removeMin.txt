@@ -6,8 +6,8 @@ Algorithm removeMin (itemToInsert)
     return null
   else
     min <- this.data[0]
-    max <- this.data[this.size - 1]
-    swap min with max
+    last <- this.data[this.size - 1]
+    swap min with last
     this.size--
     this.siftdown(this.data[0])
 
