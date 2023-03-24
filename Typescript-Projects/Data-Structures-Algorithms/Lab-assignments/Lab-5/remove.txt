@@ -1,0 +1,40 @@
+Algorithm remove (item)
+  input: item to remove
+  output: item that was removed
+
+  if (this.root.item === null) return null
+
+  // get node we want to delete
+  deletionNode <- this.search(item, this.root)
+  if (!deletionNode || deletionNode.item === null) return null
+
+  // get info on the node to be deleted's position on the parent
+  positionOnParent <- this.getPositionOnParent(deletionNode)
+
+  // get node to be deleted's children info - if it has a left, a right, both or none
+  occupation <- this.getOccupation(deletionNode);
+
+  switch (occupation) 
+    case 'both null':
+      this.dummify(deletionNode); // turn node to dummy node
+      break;
+
+    case 'left null': // swap node with available child
+      if (positionOnParent === 'left') parent!.left = rightChild;
+      else if (positionOnParent === 'right') parent!.right = rightChild;
+      else this.root = rightChild!;
+      break;
+
+    case 'right null':  // swap node with available child
+      if (positionOnParent === 'left') parent!.left = leftChild;
+      else if (positionOnParent === 'right') parent!.right = leftChild;
+      else this.root = leftChild!;
+      break;
+
+    default: // swap node with next in order node then remove the item
+      this.deleteInternal(deletionNode);
+      break;
+  
+
+  return --this.size, deletionNode.item
+

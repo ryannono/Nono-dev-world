@@ -123,9 +123,9 @@ export class BinarySearchTree<T> {
     node.item = swapNode.item;
 
     if (this.getPositionOnParent(swapNode).positionOnParent === 'left') {
-      swapNode.parent!.left = swapNode.right;
+      swapNode.parent!.left = swapNode.left;
     } else {
-      swapNode.parent!.right = swapNode.right;
+      swapNode.parent!.right = swapNode.left;
     }
   }
 
