@@ -236,9 +236,7 @@ export class BinarySearchTree<T> {
   inorderTraversal(node: TreeNode<T> | null = this.root): (T | null)[] {
     if (!node) return [null];
 
-    const {occupation} = this.getChildren(node);
-
-    switch (occupation) {
+    switch (this.getChildren(node).occupation) {
       case 'both null':
         return [node.item];
 
