@@ -226,10 +226,9 @@ export class BinarySearchTree<T> {
   }
 
   /**
-   * If the node has no children, return the node's item. If the node has a left child and a right child,
-   * return the left subtree, the node's item, and the right subtree. If the node has only has a right child,
-   * return the node's item, and the right subtree. If the node only has a left child return the left subtree
-   * and the node's item,
+   * If the node is null, return null. If the node has no children, return the node. If the node has one
+   * child, return the node and the child. If the node has two children, return the left child, the node,
+   * and the right child
    * @param {TreeNode<T> | null} node - TreeNode<T> | null = this.root
    * @returns An array of the items in the tree in order.
    */
